@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Livingstone International School</title>
+    <title>Admin Dashboard - Livingstone Academy</title>
     <style>
         :root {
             --primary: #2c3e50;
@@ -67,6 +67,14 @@
         .nav-item:hover, .nav-item.active {
             background-color: var(--secondary);
             border-left: 4px solid var(--accent);
+        }
+
+        .nav-item a {
+            color: inherit;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            width: 100%;
         }
 
         .nav-item span {
@@ -219,20 +227,17 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-header">
-            <h2>Livingstone Int.</h2>
+            <h2>Livingstone Academy</h2>
             <p style="font-size: 0.7rem; opacity: 0.7;">Administrator Portal</p>
         </div>
         <ul class="nav-links">
-            <li class="nav-item active"><a href="admin_dashboard.html" style="color: inherit; text-decoration: none;">📊 Dashboard</a></li>
-            <li class="nav-item"><a href="student_admission.html" style="color: inherit; text-decoration: none;">👨‍🎓 Students</a></li>
-            <li class="nav-item"><a href="teacher_attendance.html" style="color: inherit; text-decoration: none;">📚 Academic</a></li>
-            <li class="nav-item"><a href="staff_registration.html" style="color: inherit; text-decoration: none;">👨‍🏫 Staff</a></li>
-            <li class="nav-item"><a href="fee_management.html" style="color: inherit; text-decoration: none;">💳 Finance</a></li>
-            <li class="nav-item"><a href="library_management.html" style="color: inherit; text-decoration: none;">📚 Library</a></li>
-            <li class="nav-item"><a href="operations.html" style="color: inherit; text-decoration: none;">🚌 Operations</a></li>
-            <li class="nav-item"><a href="ai_insights.html" style="color: inherit; text-decoration: none;">🧠 AI Insights</a></li>
-            <li class="nav-item"><a href="communication.html" style="color: inherit; text-decoration: none;">💬 Communication</a></li>
-            <li class="nav-item"><span>⚙️ Settings</span></li>
+            <li class="nav-item active"><a href="index.html"><span>📊 Dashboard</span></a></li>
+            <li class="nav-item"><a href="student_list.html"><span>👨‍🎓 Student Directory</span></a></li>
+            <li class="nav-item"><a href="student_admission.html"><span>📝 Admissions</span></a></li>
+            <li class="nav-item"><a href="financial_reports.html"><span>💳 Financial Reports</span></a></li>
+            <li class="nav-item"><a href="teacher_attendance.html"><span>🏫 Academic</span></a></li>
+            <li class="nav-item"><a href="communication.html"><span>💬 Communication</span></a></li>
+            <li class="nav-item"><a href="#" onclick="api.logout()"><span>🚪 <span style="color: #e74c3c;">Logout</span></span></a></li>
         </ul>
     </div>
 
@@ -352,5 +357,6 @@
         </div>
     </div>
 
+    <script src="api.js"></script>
 </body>
 </html>
