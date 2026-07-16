@@ -38,15 +38,24 @@
             </select>
         </div>
         <div class="student-grid" id="studentContainer">
-            <!-- Example Student Card -->
+            <!-- Updated Card with Actions -->
             <div class="student-card" data-name="Samuel Okon" data-class="Grade 10">
-                <h3>Samuel Okon</h3>
+                <div style="display:flex; justify-content:space-between;">
+                    <h3>Samuel Okon</h3>
+                    <span class="badge">ACTIVE</span>
+                </div>
                 <p><b>ID:</b> LIS-2026-0042</p>
-                <p><b>Class:</b> <span class="badge">Grade 10 - Science</span></p>
-                <p><b>Parent:</b> Mrs. Okon (+233 24 123 4567)</p>
-                <button style="width:100%; margin-top:10px; cursor:pointer;">View Full Record</button>
+                <p><b>Class:</b> Grade 10 - Science</p>
+                <p><b>Parent:</b> Mrs. Okon (+233...)</p>
+                
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px; margin-top:15px;">
+                    <button onclick="api.showNotification('Editing Samuel...')">✏️ Edit</button>
+                    <button onclick="api.showNotification('Promoting Student...')">📈 Promote</button>
+                    <button onclick="api.showNotification('Record Updated')">🚚 Transfer</button>
+                    <button onclick="api.showNotification('Student Suspended', 'error')" style="color:red">🚫 Suspend</button>
+                    <button onclick="window.print()" style="grid-column: span 2;">🖨️ Print ID Card</button>
+                </div>
             </div>
-            <!-- More cards would be generated here from the DB -->
         </div>
     </div>
     <script src="api.js"></script>
