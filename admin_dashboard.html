@@ -12,23 +12,12 @@
             --success: #27ae60;
             --warning: #f1c40f;
             --danger: #e74c3c;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
-            --sidebar-width: 250px;
+            --bg: #f4f7f6;
+            --sidebar-width: 280px;
         }
 
-        * {
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            display: flex;
-            background-color: #f4f7f6;
-            color: var(--dark);
-        }
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
+        body { display: flex; background-color: var(--bg); color: var(--primary); height: 100vh; overflow: hidden; }
 
         /* Sidebar Styles */
         .sidebar {
@@ -36,32 +25,33 @@
             height: 100vh;
             background-color: var(--primary);
             color: white;
-            position: fixed;
-            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
         }
 
         .sidebar-header {
-            padding: 0 20px 20px;
+            padding: 25px 20px;
             text-align: center;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
-        .sidebar-header h2 {
-            font-size: 1.2rem;
-            color: var(--accent);
-        }
+        .sidebar-header h2 { color: var(--accent); font-size: 1.4rem; }
 
         .nav-links {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 10px 0;
             list-style: none;
-            margin-top: 20px;
         }
 
         .nav-item {
-            padding: 15px 20px;
+            padding: 12px 25px;
             cursor: pointer;
             transition: 0.3s;
             display: flex;
             align-items: center;
+            font-size: 0.95rem;
         }
 
         .nav-item:hover, .nav-item.active {
@@ -69,55 +59,36 @@
             border-left: 4px solid var(--accent);
         }
 
-        .nav-item a {
-            color: inherit;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            width: 100%;
-        }
+        .nav-item a { color: white; text-decoration: none; width: 100%; display: block; }
 
-        .nav-item span {
-            margin-left: 10px;
-        }
-
-        /* Main Content Styles */
-        .main-content {
-            margin-left: var(--sidebar-width);
-            width: calc(100% - var(--sidebar-width));
+        .logout-btn {
             padding: 20px;
+            background: #c0392b;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 30px;
         }
 
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 20px;
-            background: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             margin-bottom: 30px;
-            border-radius: 8px;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            background: var(--accent);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-        }
-
-        /* Dashboard Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -128,98 +99,37 @@
         .stat-card {
             background: white;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-bottom: 4px solid var(--accent);
         }
 
-        .stat-card .label {
-            color: #7f8c8d;
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-        }
+        .stat-card .label { color: #7f8c8d; font-size: 0.85rem; margin-bottom: 8px; font-weight: 600; }
+        .stat-card .value { font-size: 1.6rem; font-weight: bold; color: var(--primary); }
+        .stat-card.financial .value { color: var(--success); }
 
-        .stat-card .value {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--primary);
-        }
-
-        .stat-card.revenue .value { color: var(--success); }
-
-        /* Tables & Lists */
         .dashboard-sections {
             display: grid;
             grid-template-columns: 2fr 1fr;
-            gap: 20px;
+            gap: 25px;
         }
 
-        .section-card {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .card h3 { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; font-size: 1.1rem; }
 
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+        th { color: #7f8c8d; }
 
-        .btn-view {
-            color: var(--accent);
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
+        .notification-item { padding: 10px 0; border-bottom: 1px solid #eee; font-size: 0.85rem; }
+        .notification-item:last-child { border: none; }
+        .tag { padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; color: white; margin-right: 5px; }
+        .tag-urgent { background: var(--danger); }
+        .tag-info { background: var(--accent); }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            text-align: left;
-            padding: 12px;
-            border-bottom: 1px solid #eee;
-        }
-
-        th {
-            color: #7f8c8d;
-            font-weight: 600;
-        }
-
-        .status {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-        }
-
-        .status.paid { background: #eafaf1; color: var(--success); }
-        .status.pending { background: #fef9e7; color: var(--warning); }
-
-        .activity-list {
-            list-style: none;
-        }
-
-        .activity-item {
-            padding: 15px 0;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .activity-item .time {
-            font-size: 0.75rem;
-            color: #bdc3c7;
-        }
-
-        .activity-item .desc {
-            font-size: 0.9rem;
-        }
+        /* Custom Scrollbar */
+        .nav-links::-webkit-scrollbar { width: 5px; }
+        .nav-links::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); }
     </style>
 </head>
 <body>
@@ -228,31 +138,36 @@
     <div class="sidebar">
         <div class="sidebar-header">
             <h2>Livingstone Academy</h2>
-            <p style="font-size: 0.7rem; opacity: 0.7;">Administrator Portal</p>
+            <p style="font-size: 0.7rem; opacity: 0.7; margin-top: 5px;">Admin Management System</p>
         </div>
         <ul class="nav-links">
-            <li class="nav-item active"><a href="index.html"><span>📊 Dashboard</span></a></li>
-            <li class="nav-item"><a href="student_list.html"><span>👨‍🎓 Student Directory</span></a></li>
-            <li class="nav-item"><a href="student_admission.html"><span>📝 Admissions</span></a></li>
-            <li class="nav-item"><a href="financial_reports.html"><span>💳 Financial Reports</span></a></li>
-            <li class="nav-item"><a href="teacher_attendance.html"><span>🏫 Academic</span></a></li>
-            <li class="nav-item"><a href="communication.html"><span>💬 Communication</span></a></li>
-            <li class="nav-item"><a href="#" onclick="api.logout()"><span>🚪 <span style="color: #e74c3c;">Logout</span></span></a></li>
+            <li class="nav-item active"><a href="index.html">📊 Dashboard</a></li>
+            <li class="nav-item"><a href="student_list.html">👨‍🎓 Students, Classes & Timetable</a></li>
+            <li class="nav-item"><a href="staff_registration.html">👨‍🏫 Staff & Teachers</a></li>
+            <li class="nav-item"><a href="financial_reports.html">💳 Fees & Accounts</a></li>
+            <li class="nav-item"><a href="enter_grades.html">📝 Examinations & Academics</a></li>
+            <li class="nav-item"><a href="#">👪 Parents</a></li>
+            <li class="nav-item"><a href="library_management.html">📚 Library</a></li>
+            <li class="nav-item"><a href="operations.html">🚌 Transport</a></li>
+            <li class="nav-item"><a href="operations.html">🏠 Hostel</a></li>
+            <li class="nav-item"><a href="#">📦 Inventory</a></li>
+            <li class="nav-item"><a href="communication.html">💬 Communication</a></li>
+            <li class="nav-item"><a href="#">📅 Calendar & Events</a></li>
+            <li class="nav-item"><a href="financial_reports.html">📈 Reports & Analytics</a></li>
+            <li class="nav-item"><a href="#">⚙️ System Administration</a></li>
         </ul>
+        <a href="#" class="logout-btn" onclick="api.logout()">Logout 🚪</a>
     </div>
 
     <!-- Main Content -->
     <div class="main-content">
         <header>
             <div class="search-bar">
-                <input type="text" placeholder="Search students, staff, IDs..." style="padding: 8px 15px; border-radius: 20px; border: 1px solid #ddd; width: 300px;">
+                <input type="text" placeholder="Global Search..." style="padding: 10px 20px; border-radius: 20px; border: 1px solid #ddd; width: 350px;">
             </div>
-            <div class="user-info">
-                <div style="text-align: right;">
-                    <p style="font-weight: bold; font-size: 0.9rem;">Admin User</p>
-                    <p style="font-size: 0.75rem; color: #7f8c8d;">Super Administrator</p>
-                </div>
-                <div class="user-avatar">AD</div>
+            <div style="text-align: right;">
+                <p style="font-weight: bold;">Admin Portal</p>
+                <p style="font-size: 0.8rem; color: #7f8c8d;">Session: 2026/2027</p>
             </div>
         </header>
 
@@ -261,96 +176,63 @@
             <div class="stat-card">
                 <span class="label">Total Students</span>
                 <span class="value">1,240</span>
-                <span style="color: var(--success); font-size: 0.8rem;">↑ 12 new this week</span>
             </div>
             <div class="stat-card">
                 <span class="label">Total Staff</span>
-                <span class="value">85</span>
-                <span style="color: #7f8c8d; font-size: 0.8rem;">5 Active departments</span>
-            </div>
-            <div class="stat-card revenue">
-                <span class="label">Monthly Revenue</span>
-                <span class="value">$45,200</span>
-                <span style="color: var(--success); font-size: 0.8rem;">85% Collected</span>
+                <span class="value">42</span>
             </div>
             <div class="stat-card">
-                <span class="label">Avg. Attendance</span>
-                <span class="value">94.2%</span>
-                <span style="color: var(--warning); font-size: 0.8rem;">↓ 1.5% from last month</span>
+                <span class="label">Total Teachers</span>
+                <span class="value">58</span>
+            </div>
+            <div class="stat-card">
+                <span class="label">Today's Attendance</span>
+                <span class="value" style="color:var(--success)">94.2%</span>
+            </div>
+            <div class="stat-card financial">
+                <span class="label">Pending Fees</span>
+                <span class="value" style="color:var(--danger)">GH₵ 12,400</span>
             </div>
         </div>
 
         <div class="dashboard-sections">
-            <!-- Recent Payments Table -->
-            <div class="section-card">
-                <div class="section-header">
-                    <h3>Recent Fee Payments</h3>
-                    <a href="#" class="btn-view">View All Transactions</a>
+            <div class="main-column">
+                <!-- Recent Payments -->
+                <div class="card">
+                    <h3>💳 Recent Payments</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Student Name</th>
+                                <th>Class</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Kofi Mensah</td><td>Grade 10-A</td><td>GH₵ 450.00</td><td><span style="color:var(--success)">● Success</span></td></tr>
+                            <tr><td>Ama Serwaa</td><td>Grade 12-S</td><td>GH₵ 1,200.00</td><td><span style="color:var(--success)">● Success</span></td></tr>
+                            <tr><td>Jane Doe</td><td>Grade 9-B</td><td>GH₵ 300.00</td><td><span style="color:var(--warning)">● Pending</span></td></tr>
+                        </tbody>
+                    </table>
                 </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Student Name</th>
-                            <th>Class</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>John Doe</td>
-                            <td>Grade 10 - A</td>
-                            <td>$500.00</td>
-                            <td><span class="status paid">Paid</span></td>
-                            <td>July 12, 2026</td>
-                        </tr>
-                        <tr>
-                            <td>Jane Smith</td>
-                            <td>Grade 8 - B</td>
-                            <td>$250.00</td>
-                            <td><span class="status pending">Partial</span></td>
-                            <td>July 11, 2026</td>
-                        </tr>
-                        <tr>
-                            <td>Samuel Okon</td>
-                            <td>Grade 12 - Science</td>
-                            <td>$1,200.00</td>
-                            <td><span class="status paid">Paid</span></td>
-                            <td>July 10, 2026</td>
-                        </tr>
-                        <tr>
-                            <td>Mary Johnson</td>
-                            <td>Grade 7 - C</td>
-                            <td>$450.00</td>
-                            <td><span class="status pending">Unpaid</span></td>
-                            <td>July 09, 2026</td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
 
-            <!-- Activity Log -->
-            <div class="section-card">
-                <div class="section-header">
-                    <h3>System Activity</h3>
+            <div class="side-column">
+                <!-- Upcoming Events -->
+                <div class="card">
+                    <h3>📅 Upcoming Events</h3>
+                    <div class="notification-item">
+                        <strong>Mid-Term Exams</strong>
+                        <p style="font-size: 0.8rem;">July 20th - July 25th</p>
+                    </div>
                 </div>
-                <div class="activity-list">
-                    <div class="activity-item">
-                        <span class="desc"><b>New Student</b> admitted: David Adeleke</span>
-                        <span class="time">2 hours ago</span>
-                    </div>
-                    <div class="activity-item">
-                        <span class="desc"><b>Exam Marks</b> uploaded for Grade 10 Math</span>
-                        <span class="time">5 hours ago</span>
-                    </div>
-                    <div class="activity-item">
-                        <span class="desc"><b>Staff Meeting</b> scheduled for July 15th</span>
-                        <span class="time">Yesterday</span>
-                    </div>
-                    <div class="activity-item">
-                        <span class="desc"><b>Payroll</b> generated for Month of June</span>
-                        <span class="time">2 days ago</span>
+
+                <!-- Notifications -->
+                <div class="card">
+                    <h3>🔔 Notifications</h3>
+                    <div class="notification-item">
+                        <span class="tag tag-urgent">Urgent</span> 3 Staff leave requests pending.
                     </div>
                 </div>
             </div>
