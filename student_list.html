@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Directory - Livingstone Academy</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #3498db; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; display: flex; }
+        .sidebar { width: 240px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 280px; padding: 30px; width: calc(100% - 310px); }
+        .controls { display: flex; gap: 15px; margin-bottom: 25px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        input, select { padding: 10px; border: 1px solid #ddd; border-radius: 4px; flex-grow: 1; }
+        .student-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        .student-card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-top: 4px solid var(--accent); }
+        .student-card h3 { margin: 0 0 10px 0; color: var(--primary); }
+        .student-card p { margin: 5px 0; color: #666; font-size: 0.9rem; }
+        .badge { background: #e1f5fe; color: #0288d1; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
+            <p><b>👨‍🎓 Student Directory</b></p>
+            <p><a href="#" onclick="api.logout()" style="color: #e74c3c; text-decoration:none;">🚪 Logout</a></p>
+        </nav>
+    </div>
+    <div class="main">
+        <h1>👨‍🎓 Student Directory</h1>
+        <div class="controls">
+            <input type="text" id="searchInput" placeholder="Search by name or ID..." onkeyup="filterStudents()">
+            <select id="classFilter" onchange="filterStudents()">
+                <option value="">All Classes</option>
+                <option value="Grade 10">Grade 10</option>
+                <option value="Grade 11">Grade 11</option>
+                <option value="Grade 12">Grade 12</option>
+            </select>
+        </div>
+        <div class="student-grid" id="studentContainer">
+            <!-- Example Student Card -->
+            <div class="student-card" data-name="Samuel Okon" data-class="Grade 10">
+                <h3>Samuel Okon</h3>
+                <p><b>ID:</b> LIS-2026-0042</p>
+                <p><b>Class:</b> <span class="badge">Grade 10 - Science</span></p>
+                <p><b>Parent:</b> Mrs. Okon (+233 24 123 4567)</p>
+                <button style="width:100%; margin-top:10px; cursor:pointer;">View Full Record</button>
+            </div>
+            <!-- More cards would be generated here from the DB -->
+        </div>
+    </div>
+    <script src="api.js"></script>
+    <script>
+        function filterStudents() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const classVal = document.getElementById('classFilter').value;
+            const cards = document.querySelectorAll('.student-card');
+            
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name').toLowerCase();
+                const sClass = card.getAttribute('data-class');
+                const matchesSearch = name.includes(search);
+                const matchesClass = classVal === "" || sClass === classVal;
+                
+                card.style.display = (matchesSearch && matchesClass) ? "block" : "none";
+            });
+        }
+    </script>
+</body>
+</html>
