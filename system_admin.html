@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>System Admin - Livingstone Academy</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #e74c3c; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 280px; padding: 30px; width: 100%; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
+            <p><b>⚙️ System Admin</b></p>
+        </nav>
+    </div>
+    <div class="main">
+        <h1>⚙️ System Administration</h1>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+            <div class="card">
+                <h3>💾 Database & Backup</h3>
+                <p style="color:#666; margin-bottom:15px;">Last backup: 2 hours ago</p>
+                <button style="padding:10px; background:#27ae60; color:white; border:none; border-radius:5px; cursor:pointer; width:100%;">Generate New Backup</button>
+            </div>
+            <div class="card">
+                <h3>🕒 Activity Logs</h3>
+                <div style="font-size:0.85rem;">
+                    <p><b>10:45 AM:</b> Admin logged in.</p>
+                    <p><b>09:12 AM:</b> New student registered (ID: 0042).</p>
+                    <p><b>Yesterday:</b> Fee structure updated.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="api.js"></script>
+</body>
+</html>

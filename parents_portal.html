@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Parents Management - Livingstone Academy</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 280px; padding: 30px; width: 100%; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
+        .btn { background: var(--accent); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
+            <p><b>👪 Parent Directory</b></p>
+        </nav>
+    </div>
+    <div class="main">
+        <h1>👪 Parents & Guardians</h1>
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3>Registered Parents</h3>
+                <button class="btn">+ Add New Parent</button>
+            </div>
+            <table>
+                <thead>
+                    <tr><th>Parent Name</th><th>Phone</th><th>Email</th><th>Child(ren)</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Mrs. Sarah Okon</td>
+                        <td>+233 24 123 4567</td>
+                        <td>sarah@example.com</td>
+                        <td>Samuel Okon (G10)</td>
+                        <td><button class="btn">Message</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="api.js"></script>
+</body>
+</html>

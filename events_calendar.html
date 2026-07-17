@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calendar - Livingstone Academy</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #8e44ad; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 280px; padding: 30px; width: 100%; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .event-item { display: flex; gap: 20px; padding: 15px 0; border-bottom: 1px solid #eee; }
+        .date-box { width: 60px; height: 60px; background: var(--accent); color: white; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
+            <p><b>📅 School Calendar</b></p>
+        </nav>
+    </div>
+    <div class="main">
+        <h1>📅 Calendar & Events</h1>
+        <div class="card">
+            <h3>Upcoming School Events</h3>
+            <div class="event-item">
+                <div class="date-box"><span>JUL</span><span>20</span></div>
+                <div><h4>Mid-Term Exams Start</h4><p>Duration: 5 days | All Classes</p></div>
+            </div>
+            <div class="event-item">
+                <div class="date-box"><span>JUL</span><span>28</span></div>
+                <div><h4>Parent-Teacher Meeting</h4><p>Time: 2:00 PM | School Assembly Hall</p></div>
+            </div>
+            <div class="event-item">
+                <div class="date-box"><span>AUG</span><span>12</span></div>
+                <div><h4>Annual Sports Day</h4><p>Location: School Field</p></div>
+            </div>
+        </div>
+    </div>
+    <script src="api.js"></script>
+</body>
+</html>
