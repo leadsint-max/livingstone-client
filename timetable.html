@@ -26,13 +26,24 @@
         </nav>
     </div>
     <div class="main">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h1>📅 School Timetable</h1>
-            <select style="padding: 10px; border-radius: 5px;"><option>Class: Grade 10-A</option><option>Teacher: Mr. Mensah</option></select>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h1>📅 Timetable Management</h1>
+            <div style="display:flex; gap:10px;">
+                <button class="btn" style="background:var(--primary); padding:10px 20px;" onclick="api.showNotification('Switched to Class View')">Class View</button>
+                <button class="btn" style="background:#27ae60; padding:10px 20px;" onclick="api.showNotification('Switched to Teacher View')">Teacher View</button>
+                <button class="btn" style="background:#e74c3c; padding:10px 20px;" onclick="api.showNotification('Switched to Exam Mode')">Exam Timetable</button>
+            </div>
+        </div>
+
+        <div class="card" style="background: #fff9db; border-left: 5px solid #f1c40f; margin-bottom:20px;">
+            <p>💡 <b>Smart Clash Prevention:</b> The system will alert you if a teacher or classroom is booked for two lessons at the same time.</p>
         </div>
 
         <div class="card">
-            <table class="timetable">
+            <div style="margin-bottom:15px; display:flex; gap:15px;">
+                <select style="padding: 10px; border-radius: 5px; flex-grow:1;"><option>Select Class: Grade 10-A</option></select>
+                <button class="btn" style="width:200px;">+ Add Slot</button>
+            </div>
                 <thead>
                     <tr>
                         <th>Time</th>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Students & Classes Hub - Livingstone Academy</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 280px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 300px; padding: 30px; width: 100%; }
+        .hub-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-top: 20px; }
+        .hub-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 5px solid var(--accent); transition: 0.3s; }
+        .hub-card:hover { transform: translateY(-5px); }
+        .hub-card h2 { color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .feature-list { list-style: none; padding: 0; }
+        .feature-list li { padding: 10px 0; border-bottom: 1px solid #eee; font-size: 0.9rem; color: #555; }
+        .feature-list li:last-child { border: none; }
+        .btn-action { display: block; width: 100%; padding: 12px; background: var(--primary); color: white; text-align: center; text-decoration: none; border-radius: 8px; margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Back to Dashboard</a></p>
+            <hr style="opacity:0.2; margin: 20px 0;">
+            <p><b>👨‍🎓 Student Management</b></p>
+            <p>🏫 Class Management</p>
+            <p>📅 Timetables</p>
+        </nav>
+    </div>
+
+    <div class="main">
+        <h1>👨‍🎓 Students, Classes & Timetable Hub</h1>
+        <p style="color:#666;">Central management for all academic groupings and schedules.</p>
+
+        <div class="hub-grid">
+            <!-- Student Management -->
+            <div class="hub-card">
+                <h2>👨‍🎓 Student Management</h2>
+                <ul class="feature-list">
+                    <li>✅ Add & Edit Students</li>
+                    <li>✅ View Full Profiles</li>
+                    <li>✅ Mass Promotion Logic</li>
+                    <li>✅ Student Transfers</li>
+                    <li>✅ Generate ID Cards</li>
+                </ul>
+                <a href="student_list.html" class="btn-action">Manage Students</a>
+            </div>
+
+            <!-- Class Management -->
+            <div class="hub-card" style="border-top-color: #27ae60;">
+                <h2>🏫 Class Management</h2>
+                <ul class="feature-list">
+                    <li>✅ Create Classes & Streams</li>
+                    <li>✅ Assign Class Teachers</li>
+                    <li>✅ Set Capacity Limits</li>
+                    <li>✅ Manage School Houses</li>
+                </ul>
+                <a href="class_management.html" class="btn-action" style="background:#27ae60;">Manage Classes</a>
+            </div>
+
+            <!-- Timetable Management -->
+            <div class="hub-card" style="border-top-color: #8e44ad;">
+                <h2>📅 Timetable Hub</h2>
+                <ul class="feature-list">
+                    <li>✅ Class & Teacher Timetables</li>
+                    <li>✅ Examination Schedules</li>
+                    <li>✅ Automatic Clash Detection</li>
+                    <li>✅ Printable Schedules</li>
+                </ul>
+                <a href="timetable.html" class="btn-action" style="background:#8e44ad;">Manage Timetables</a>
+            </div>
+        </div>
+    </div>
+    <script src="api.js"></script>
+</body>
+</html>

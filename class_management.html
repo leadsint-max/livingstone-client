@@ -82,10 +82,25 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td>Grade 10</td><td>Science A</td><td>Mr. Mensah</td><td>38</td><td>40</td></tr>
-                        <tr><td>Grade 10</td><td>Arts B</td><td>Mrs. Owusu</td><td>35</td><td>40</td></tr>
+                        <tr><td>Grade 10</td><td>Science A</td><td>Mr. Mensah</td><td>38</td><td><input type="number" value="40" style="width:50px;"></td></tr>
+                        <tr><td>Grade 10</td><td>Arts B</td><td>Mrs. Owusu</td><td>35</td><td><input type="number" value="40" style="width:50px;"></td></tr>
                     </tbody>
                 </table>
+            </div>
+
+            <!-- House Management Section -->
+            <div class="card" style="grid-column: span 2; border-top: 4px solid #f1c40f;">
+                <h3>🏠 School House Management</h3>
+                <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:15px; margin-bottom:20px;">
+                    <input type="text" placeholder="House Name (e.g. Eagle House)">
+                    <input type="color" value="#e74c3c" style="height:40px;">
+                    <button class="btn" style="background:#f1c40f; color:#000;">Add House</button>
+                </div>
+                <div style="display:flex; gap:15px;">
+                    <span class="stock-tag good" style="background:#e74c3c; color:white; padding:10px; border-radius:5px;">Red House (120 Students)</span>
+                    <span class="stock-tag good" style="background:#3498db; color:white; padding:10px; border-radius:5px;">Blue House (115 Students)</span>
+                    <span class="stock-tag good" style="background:#27ae60; color:white; padding:10px; border-radius:5px;">Green House (122 Students)</span>
+                </div>
             </div>
         </div>
     </div>
