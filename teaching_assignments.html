@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Teacher Assignments - Livingstone Academy</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #f39c12; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 280px; padding: 30px; width: 100%; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
+        .workload-bar { background: #eee; height: 8px; border-radius: 4px; width: 100%; overflow: hidden; margin-top: 5px; }
+        .workload-fill { background: var(--accent); height: 100%; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
+            <p><a href="staff_directory.html" style="color:white; text-decoration:none;">👨‍🏫 Staff Directory</a></p>
+            <p><b>📚 Assignments</b></p>
+        </nav>
+    </div>
+    <div class="main">
+        <h1>📚 Teacher Subject & Class Assignments</h1>
+        
+        <div class="card">
+            <h3>New Assignment</h3>
+            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 0.5fr; gap:15px; align-items:end;">
+                <div>
+                    <label style="display:block; margin-bottom:5px;">Select Teacher</label>
+                    <select style="width:100%; padding:10px;"><option>Mr. Eric Mensah</option></select>
+                </div>
+                <div>
+                    <label style="display:block; margin-bottom:5px;">Select Class</label>
+                    <select style="width:100%; padding:10px;"><option>Grade 10 - Science A</option></select>
+                </div>
+                <div>
+                    <label style="display:block; margin-bottom:5px;">Select Subject</label>
+                    <select style="width:100%; padding:10px;"><option>Mathematics</option></select>
+                </div>
+                <button style="padding:10px; background:var(--primary); color:white; border:none; border-radius:5px; cursor:pointer;">Assign</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Active Assignments & Teaching Load</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Teacher Name</th>
+                        <th>Subject(s) Assigned</th>
+                        <th>Classes</th>
+                        <th>Weekly Load (Hours)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Mr. Eric Mensah</td>
+                        <td>Mathematics, Physics</td>
+                        <td>Grade 10-A, Grade 11-S</td>
+                        <td>
+                            <span>18 / 24 hrs</span>
+                            <div class="workload-bar"><div class="workload-fill" style="width: 75%;"></div></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Mrs. Akua Owusu</td>
+                        <td>English, History</td>
+                        <td>Grade 12-A, Grade 9-B</td>
+                        <td>
+                            <span>12 / 24 hrs</span>
+                            <div class="workload-bar"><div class="workload-fill" style="width: 50%;"></div></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="api.js"></script>
+</body>
+</html>
