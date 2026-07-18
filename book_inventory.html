@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Inventory - Livingstone Academy</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #e67e22; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 280px; padding: 30px; width: calc(100% - 310px); }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .form-row { display: grid; grid-template-columns: 2fr 1fr 1fr 0.5fr; gap: 15px; align-items: end; margin-bottom: 20px; }
+        input, select { padding: 10px; border: 1px solid #ddd; border-radius: 5px; width: 100%; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
+        .btn { background: var(--accent); color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
+            <p><a href="library_hub.html" style="color:white; text-decoration:none;">📚 Library Hub</a></p>
+            <p><b>📖 Catalog</b></p>
+        </nav>
+    </div>
+    <div class="main">
+        <h1>📖 Book Catalog & Inventory</h1>
+        
+        <div class="card">
+            <h3>Add New Book</h3>
+            <div class="form-row">
+                <div><label>Title</label><input type="text" placeholder="e.g. Things Fall Apart"></div>
+                <div><label>Author</label><input type="text" placeholder="Chinua Achebe"></div>
+                <div><label>Category</label><select><option>Literature</option><option>Science</option><option>History</option></select></div>
+                <button class="btn" onclick="api.showNotification('Book Added')">Save</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Library Collection</h3>
+            <table>
+                <thead>
+                    <tr><th>Title</th><th>Author</th><th>ISBN</th><th>Category</th><th>Copies</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Advanced Physics</td><td>H.C. Verma</td><td>978-012345</td><td>Science</td><td>10</td><td><span style="color:green">Available</span></td></tr>
+                    <tr><td>The Great Gatsby</td><td>F. Scott Fitzgerald</td><td>978-098765</td><td>Fiction</td><td>5</td><td><span style="color:orange">Limited</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="api.js"></script>
+</body>
+</html>

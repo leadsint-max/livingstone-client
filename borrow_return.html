@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Issue/Return - Livingstone Academy</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 280px; padding: 30px; width: calc(100% - 310px); }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        input, select { padding: 10px; border: 1px solid #ddd; border-radius: 5px; width: 100%; margin-bottom: 10px; }
+        .btn { border: none; padding: 10px; border-radius: 5px; cursor: pointer; color: white; font-weight: bold; width: 100%; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
+            <p><a href="library_hub.html" style="color:white; text-decoration:none;">📚 Library Hub</a></p>
+            <p><b>🔄 Issue/Return</b></p>
+        </nav>
+    </div>
+    <div class="main">
+        <h1>🔄 Book Borrowing & Returns</h1>
+        
+        <div class="grid">
+            <div class="card">
+                <h3>📖 Issue a Book</h3>
+                <label>Student/Staff Name</label>
+                <input type="text" placeholder="e.g. Samuel Okon">
+                <label>Book Title / ISBN</label>
+                <input type="text" placeholder="e.g. Things Fall Apart">
+                <label>Return Date</label>
+                <input type="date">
+                <button class="btn" style="background:var(--accent)" onclick="api.showNotification('Book Issued Successfully')">Issue Book</button>
+            </div>
+
+            <div class="card">
+                <h3>📥 Return a Book</h3>
+                <label>Book Title / ISBN</label>
+                <input type="text" placeholder="Search for issued book...">
+                <button class="btn" style="background:#27ae60" onclick="api.showNotification('Book Returned Successfully')">Confirm Return</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Currently Issued Books</h3>
+            <table>
+                <thead>
+                    <tr><th>Borrower</th><th>Book Title</th><th>Issue Date</th><th>Due Date</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Samuel Okon</td><td>Advanced Physics</td><td>Jul 10, 2026</td><td>Jul 17, 2026</td><td><button style="color:#3498db; background:none; border:none; cursor:pointer;">Renew</button></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="api.js"></script>
+</body>
+</html>
