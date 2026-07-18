@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Send Messages - Livingstone Academy</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 280px; padding: 30px; width: calc(100% - 310px); }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        input, select, textarea { padding: 10px; border: 1px solid #ddd; border-radius: 5px; width: 100%; margin-bottom: 10px; }
+        .btn { background: var(--accent); color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; }
+        .channel-selector { display: flex; gap: 15px; margin-bottom: 20px; }
+        .channel-opt { flex: 1; text-align: center; padding: 15px; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; }
+        .channel-opt.active { border-color: var(--accent); background: #ebf5fb; color: var(--accent); }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
+            <p><a href="communication_hub.html" style="color:white; text-decoration:none;">💬 Comm. Hub</a></p>
+            <p><b>📱 Send Messages</b></p>
+        </nav>
+    </div>
+    <div class="main">
+        <h1>📱 Send Mass Notifications</h1>
+        
+        <div class="card">
+            <h3>1. Select Delivery Channel</h3>
+            <div class="channel-selector">
+                <div class="channel-opt active"><b>💬 SMS</b><br><small>Direct to Phone</small></div>
+                <div class="channel-opt"><b>📧 Email</b><br><small>In-box Newsletter</small></div>
+                <div class="channel-opt"><b>🔔 Push</b><br><small>App Notification</small></div>
+            </div>
+
+            <h3>2. Compose Message</h3>
+            <label>Recipients</label>
+            <select>
+                <option>All Parents</option>
+                <option>All Staff</option>
+                <option>Class: Grade 10-A Parents</option>
+                <option>Custom List</option>
+            </select>
+            
+            <label>Message Content</label>
+            <textarea rows="6" placeholder="Type your message here..."></textarea>
+            <p style="font-size: 0.8rem; color: #888; text-align: right;">160 characters (1 SMS unit)</p>
+            
+            <button class="btn" onclick="api.showNotification('Message Queued for Delivery')">Send Broadcast Now</button>
+        </div>
+
+        <div class="card">
+            <h3>📜 Message History</h3>
+            <div style="font-size: 0.9rem; color: #555;">
+                <p><b>Today 10:00 AM:</b> "Mid-term break notice..." sent to 850 parents. <span style="color:green">Delivered</span></p>
+                <hr style="opacity: 0.1; margin: 10px 0;">
+                <p><b>Yesterday:</b> "Staff meeting at 2PM..." sent to 45 staff members. <span style="color:green">Delivered</span></p>
+            </div>
+        </div>
+    </div>
+    <script src="api.js"></script>
+</body>
+</html>

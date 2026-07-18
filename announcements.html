@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Notice Board - Livingstone Academy</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #1abc9c; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 280px; padding: 30px; width: calc(100% - 310px); }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        input, select, textarea { padding: 10px; border: 1px solid #ddd; border-radius: 5px; width: 100%; margin-bottom: 10px; }
+        .btn { background: var(--accent); color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; }
+        .notice-item { padding: 15px; border-left: 5px solid var(--accent); background: #f9fbfb; margin-bottom: 15px; border-radius: 4px; }
+        .notice-meta { font-size: 0.8rem; color: #888; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
+            <p><a href="communication_hub.html" style="color:white; text-decoration:none;">💬 Comm. Hub</a></p>
+            <p><b>📢 Notice Board</b></p>
+        </nav>
+    </div>
+    <div class="main">
+        <h1>📢 Notice Board Management</h1>
+        
+        <div style="display:grid; grid-template-columns: 1fr 2fr; gap:20px;">
+            <div class="card">
+                <h3>Post New Notice</h3>
+                <label>Title</label>
+                <input type="text" placeholder="e.g. Mid-Term Break Notice">
+                <label>Audience</label>
+                <select>
+                    <option>All Users</option>
+                    <option>Parents Only</option>
+                    <option>Staff Only</option>
+                    <option>Students Only</option>
+                </select>
+                <label>Content</label>
+                <textarea rows="5" placeholder="Type announcement here..."></textarea>
+                <button class="btn" onclick="api.showNotification('Notice Published Successfully')">Post Announcement</button>
+            </div>
+
+            <div class="card">
+                <h3>Live Notice Board</h3>
+                <div class="notice-item">
+                    <h4>Mid-Term Break (July 25-28)</h4>
+                    <p>School will be closed for mid-term break. Classes resume on July 29th.</p>
+                    <div class="notice-meta">Posted by Admin | July 16, 2026 | Audience: All</div>
+                </div>
+                <div class="notice-item" style="border-left-color: #e74c3c;">
+                    <h4>Outstanding Fee Deadline</h4>
+                    <p>Parents are reminded that all outstanding fees should be settled by Friday.</p>
+                    <div class="notice-meta">Posted by Finance | July 15, 2026 | Audience: Parents</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="api.js"></script>
+</body>
+</html>

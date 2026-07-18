@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Communication Hub - Livingstone Academy</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #1abc9c; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 280px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 300px; padding: 30px; width: 100%; }
+        .hub-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-top: 20px; }
+        .hub-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 5px solid var(--accent); transition: 0.3s; }
+        .hub-card:hover { transform: translateY(-5px); }
+        .hub-card h2 { color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .feature-list { list-style: none; padding: 0; }
+        .feature-list li { padding: 10px 0; border-bottom: 1px solid #eee; font-size: 0.9rem; color: #555; }
+        .feature-list li:last-child { border: none; }
+        .btn-action { display: block; width: 100%; padding: 12px; background: var(--primary); color: white; text-align: center; text-decoration: none; border-radius: 8px; margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Back to Dashboard</a></p>
+            <hr style="opacity:0.2; margin: 20px 0;">
+            <p><b>💬 Communication</b></p>
+            <p><a href="announcements.html" style="color:white; text-decoration:none;">📢 Notice Board</a></p>
+            <p><a href="send_messages.html" style="color:white; text-decoration:none;">📱 Send Messages</a></p>
+        </nav>
+    </div>
+
+    <div class="main">
+        <h1>💬 Communication & Engagement Hub</h1>
+        <p style="color:#666;">Keep parents, students, and staff informed via SMS, Email, and Announcements.</p>
+
+        <div class="hub-grid">
+            <!-- Announcements -->
+            <div class="hub-card">
+                <h2>📢 School Notice Board</h2>
+                <ul class="feature-list">
+                    <li>✅ General Announcements</li>
+                    <li>✅ Departmental Updates</li>
+                    <li>✅ Parent Notifications</li>
+                    <li>✅ Public/Private Visibility</li>
+                </ul>
+                <a href="announcements.html" class="btn-action">Manage Notices</a>
+            </div>
+
+            <!-- Bulk Messaging -->
+            <div class="hub-card" style="border-top-color: #3498db;">
+                <h2>📱 Multi-Channel Messaging</h2>
+                <ul class="feature-list">
+                    <li>✅ Bulk SMS (Ghana Gateways)</li>
+                    <li>✅ Email Newsletters</li>
+                    <li>✅ In-app Push Notifications</li>
+                    <li>✅ Group/Class-based Messaging</li>
+                </ul>
+                <a href="send_messages.html" class="btn-action" style="background:#3498db;">Send Message</a>
+            </div>
+
+            <!-- Automated Alerts -->
+            <div class="hub-card" style="border-top-color: #f1c40f; grid-column: span 2;">
+                <h2>🔔 Automated Alerts</h2>
+                <ul class="feature-list" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <li>✅ Fee Arrears Reminders</li>
+                    <li>✅ Attendance Alerts</li>
+                    <li>✅ Exam Result Publication</li>
+                    <li>✅ Emergency Notifications</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script src="api.js"></script>
+</body>
+</html>
