@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Transport Management - Livingstone Academy</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #f39c12; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 280px; padding: 30px; width: calc(100% - 310px); }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        input, select { padding: 10px; border: 1px solid #ddd; border-radius: 5px; width: 100%; margin-bottom: 10px; }
+        .btn { background: var(--accent); color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
+            <p><a href="transport_hostel_hub.html" style="color:white; text-decoration:none;">🚌 Logistics Hub</a></p>
+            <p><b>🚌 Transport</b></p>
+        </nav>
+    </div>
+    <div class="main">
+        <h1>🚌 Transport Management</h1>
+        
+        <div class="grid">
+            <!-- Add Vehicle -->
+            <div class="card">
+                <h3>🚐 Add New Vehicle</h3>
+                <label>Vehicle Number</label>
+                <input type="text" placeholder="e.g. GV-123-26">
+                <label>Vehicle Model</label>
+                <input type="text" placeholder="e.g. Toyota Coaster">
+                <label>Driver Name</label>
+                <input type="text" placeholder="e.g. John Koomson">
+                <button class="btn" style="width:100%" onclick="api.showNotification('Vehicle Added')">Add Vehicle</button>
+            </div>
+
+            <!-- Add Route -->
+            <div class="card">
+                <h3>📍 Define New Route</h3>
+                <label>Route Name</label>
+                <input type="text" placeholder="e.g. East Legon - School">
+                <label>Assigned Vehicle</label>
+                <select><option>GV-123-26</option></select>
+                <label>Transport Fee (GH₵)</label>
+                <input type="number" placeholder="500">
+                <button class="btn" style="width:100%" onclick="api.showNotification('Route Created')">Create Route</button>
+            </div>
+        </div>
+
+        <!-- Student Assignment -->
+        <div class="card">
+            <h3>👥 Assign Students to Routes</h3>
+            <div style="display:flex; gap:10px;">
+                <select style="flex-grow:1"><option>Select Student: Samuel Okon</option></select>
+                <select style="flex-grow:1"><option>Select Route: East Legon</option></select>
+                <button class="btn" style="padding:0 20px" onclick="api.showNotification('Student Assigned to Route')">Assign</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>📑 Active Transport List</h3>
+            <table>
+                <thead>
+                    <tr><th>Vehicle</th><th>Route</th><th>Driver</th><th>Students</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>GV-123-26</td><td>East Legon</td><td>John Koomson</td><td>24/30</td><td><span style="color:green">Active</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="api.js"></script>
+</body>
+</html>

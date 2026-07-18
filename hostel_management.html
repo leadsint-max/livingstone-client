@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hostel Management - Livingstone Academy</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #8e44ad; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 280px; padding: 30px; width: calc(100% - 310px); }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        input, select { padding: 10px; border: 1px solid #ddd; border-radius: 5px; width: 100%; margin-bottom: 10px; }
+        .btn { background: var(--accent); color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
+            <p><a href="transport_hostel_hub.html" style="color:white; text-decoration:none;">🚌 Logistics Hub</a></p>
+            <p><b>🏢 Hostel</b></p>
+        </nav>
+    </div>
+    <div class="main">
+        <h1>🏢 Hostel Management</h1>
+        
+        <div class="grid">
+            <!-- Add Room -->
+            <div class="card">
+                <h3>🏘️ Add New Room</h3>
+                <label>Hostel Name</label>
+                <input type="text" placeholder="e.g. Hall A (Male)">
+                <label>Room Number</label>
+                <input type="text" placeholder="e.g. 101">
+                <label>No. of Beds (Capacity)</label>
+                <input type="number" placeholder="4">
+                <button class="btn" onclick="api.showNotification('Room Added')">Add Room</button>
+            </div>
+
+            <!-- Allocate Bed -->
+            <div class="card">
+                <h3>🛏️ Bed Allocation</h3>
+                <label>Student Name</label>
+                <input type="text" placeholder="e.g. David Adeleke">
+                <label>Select Room</label>
+                <select><option>Hall A - Room 101</option></select>
+                <label>Hostel Fee (GH₵)</label>
+                <input type="number" placeholder="1200">
+                <button class="btn" style="background:#27ae60" onclick="api.showNotification('Bed Allocated Successfully')">Assign Bed</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>🏢 Occupancy Overview</h3>
+            <table>
+                <thead>
+                    <tr><th>Hostel</th><th>Room</th><th>Total Beds</th><th>Occupied</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Hall A (Male)</td><td>101</td><td>4</td><td>2</td><td><span style="color:blue">Available</span></td></tr>
+                    <tr><td>Hall B (Female)</td><td>201</td><td>4</td><td>4</td><td><span style="color:red">Full</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="api.js"></script>
+</body>
+</html>
