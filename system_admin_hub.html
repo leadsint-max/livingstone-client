@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>System Administration Hub - Livingstone Academy</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #e74c3c; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 280px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 300px; padding: 30px; width: 100%; }
+        .hub-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-top: 20px; }
+        .hub-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 5px solid var(--accent); transition: 0.3s; }
+        .hub-card:hover { transform: translateY(-5px); }
+        .hub-card h2 { color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .feature-list { list-style: none; padding: 0; }
+        .feature-list li { padding: 10px 0; border-bottom: 1px solid #eee; font-size: 0.9rem; color: #555; }
+        .feature-list li:last-child { border: none; }
+        .btn-action { display: block; width: 100%; padding: 12px; background: var(--primary); color: white; text-align: center; text-decoration: none; border-radius: 8px; margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Back to Dashboard</a></p>
+            <hr style="opacity:0.2; margin: 20px 0;">
+            <p><b>⚙️ System Admin</b></p>
+            <p><a href="user_management.html" style="color:white; text-decoration:none;">👥 User Management</a></p>
+            <p><a href="school_settings.html" style="color:white; text-decoration:none;">🏫 School Settings</a></p>
+            <p><a href="system_admin.html" style="color:white; text-decoration:none;">💾 Audit & Backup</a></p>
+        </nav>
+    </div>
+
+    <div class="main">
+        <h1>⚙️ System Administration Hub</h1>
+        <p style="color:#666;">Core configuration and governance for Livingstone Academy system.</p>
+
+        <div class="hub-grid">
+            <!-- User Management -->
+            <div class="hub-card" style="border-top-color: #3498db;">
+                <h2>👥 User & Security</h2>
+                <ul class="feature-list">
+                    <li>✅ Manage Admin, Staff & Parent logins</li>
+                    <li>✅ Define Roles & specific Permissions</li>
+                    <li>✅ Reset User Passwords</li>
+                    <li>✅ Deactivate/Activate Accounts</li>
+                </ul>
+                <a href="user_management.html" class="btn-action" style="background:#3498db;">Manage Users</a>
+            </div>
+
+            <!-- School Settings -->
+            <div class="hub-card" style="border-top-color: #27ae60;">
+                <h2>🏫 School Configuration</h2>
+                <ul class="feature-list">
+                    <li>✅ General Settings (Logo, Address)</li>
+                    <li>✅ Academic Year Setup (2026/27)</li>
+                    <li>✅ Term & Semester Intervals</li>
+                    <li>✅ Global System Preferences</li>
+                </ul>
+                <a href="school_settings.html" class="btn-action" style="background:#27ae60;">School Settings</a>
+            </div>
+
+            <!-- Audit Logs -->
+            <div class="hub-card">
+                <h2>🕒 Audit & Activity Logs</h2>
+                <ul class="feature-list">
+                    <li>✅ Track every login attempt</li>
+                    <li>✅ Monitor financial data changes</li>
+                    <li>✅ See record deletion history</li>
+                    <li>✅ User action timestamps</li>
+                </ul>
+                <a href="system_admin.html" class="btn-action">View Audit Logs</a>
+            </div>
+
+            <!-- Backup & Restore -->
+            <div class="hub-card" style="border-top-color: #f1c40f;">
+                <h2>💾 Backup & Restore</h2>
+                <ul class="feature-list">
+                    <li>✅ Manual Database Backups</li>
+                    <li>✅ Scheduled Auto-backups</li>
+                    <li>✅ System Restore Points</li>
+                    <li>✅ Data Export for Safety</li>
+                </ul>
+                <a href="system_admin.html" class="btn-action" style="background:#f1c40f; color:#000;">Manage Backups</a>
+            </div>
+        </div>
+    </div>
+    <script src="api.js"></script>
+</body>
+</html>

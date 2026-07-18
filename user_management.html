@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Management - Livingstone Academy</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 280px; padding: 30px; width: calc(100% - 310px); }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
+        .role-badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
+        .admin { background: #fee2e2; color: #991b1b; }
+        .teacher { background: #e0f2fe; color: #075985; }
+        .parent { background: #fef3c7; color: #92400e; }
+        .btn-sm { padding: 5px 10px; border-radius: 4px; border: 1px solid #ddd; cursor: pointer; background: white; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
+            <p><a href="system_admin_hub.html" style="color:white; text-decoration:none;">⚙️ Admin Hub</a></p>
+            <p><b>👥 User Management</b></p>
+        </nav>
+    </div>
+    <div class="main">
+        <h1>👥 User Management & Roles</h1>
+        
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3>System Users</h3>
+                <button style="padding:10px 15px; background:var(--accent); color:white; border:none; border-radius:5px; cursor:pointer;">+ Create New User</button>
+            </div>
+            <table>
+                <thead>
+                    <tr><th>User Email</th><th>Role</th><th>Status</th><th>Last Login</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>admin@livingstone.edu</td>
+                        <td><span class="role-badge admin">Admin</span></td>
+                        <td><span style="color:green">● Active</span></td>
+                        <td>10 mins ago</td>
+                        <td><button class="btn-sm">Permissions</button></td>
+                    </tr>
+                    <tr>
+                        <td>teacher@livingstone.edu</td>
+                        <td><span class="role-badge teacher">Teacher</span></td>
+                        <td><span style="color:green">● Active</span></td>
+                        <td>Yesterday</td>
+                        <td><button class="btn-sm">Reset Pass</button></td>
+                    </tr>
+                    <tr>
+                        <td>parent@livingstone.edu</td>
+                        <td><span class="role-badge parent">Parent</span></td>
+                        <td><span style="color:red">● Locked</span></td>
+                        <td>2 weeks ago</td>
+                        <td><button class="btn-sm" style="color:green">Unlock</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <h3>🔒 Role Permissions Matrix</h3>
+            <p style="color:#666; font-size:0.9rem;">Define what each user group can view or edit.</p>
+            <table style="margin-top:20px;">
+                <thead><tr><th>Feature</th><th>Admin</th><th>Teacher</th><th>Accountant</th></tr></thead>
+                <tbody>
+                    <tr><td>Delete Records</td><td>✅</td><td>❌</td><td>❌</td></tr>
+                    <tr><td>Edit Fees</td><td>✅</td><td>❌</td><td>✅</td></tr>
+                    <tr><td>Enter Marks</td><td>✅</td><td>✅</td><td>❌</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="api.js"></script>
+</body>
+</html>

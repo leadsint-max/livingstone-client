@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>School Settings - Livingstone Academy</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #27ae60; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 280px; padding: 30px; width: calc(100% - 310px); }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .form-group { display: flex; flex-direction: column; margin-bottom: 15px; }
+        label { font-weight: bold; margin-bottom: 5px; color: #555; }
+        input, select { padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        .btn-save { padding: 12px 30px; background: var(--accent); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
+            <p><a href="system_admin_hub.html" style="color:white; text-decoration:none;">⚙️ Admin Hub</a></p>
+            <p><b>🏫 School Settings</b></p>
+        </nav>
+    </div>
+    <div class="main">
+        <h1>🏫 Global School Configuration</h1>
+        
+        <div class="card">
+            <h3>General Settings</h3>
+            <div class="form-grid">
+                <div class="form-group"><label>School Name</label><input type="text" value="Livingstone Academy"></div>
+                <div class="form-group"><label>School Email</label><input type="email" value="info@livingstone.edu"></div>
+                <div class="form-group"><label>Contact Phone</label><input type="text" value="+233 24 000 0000"></div>
+                <div class="form-group"><label>Address</label><input type="text" value="Greater Accra, Ghana"></div>
+            </div>
+            <button class="btn-save" onclick="api.showNotification('Settings Saved Successfully')">Save Changes</button>
+        </div>
+
+        <div class="card">
+            <h3>📅 Academic Calendar Setup</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Current Academic Year</label>
+                    <select><option>2025/2026</option><option selected>2026/2027</option><option>2027/2028</option></select>
+                </div>
+                <div class="form-group">
+                    <label>Current Term</label>
+                    <select><option>First Term</option><option selected>Second Term</option><option>Third Term</option></select>
+                </div>
+                <div class="form-group"><label>Term Start Date</label><input type="date" value="2026-05-15"></div>
+                <div class="form-group"><label>Term End Date</label><input type="date" value="2026-08-15"></div>
+            </div>
+            <button class="btn-save" style="background:var(--primary)" onclick="api.showNotification('Calendar Updated')">Update Calendar</button>
+        </div>
+    </div>
+    <script src="api.js"></script>
+</body>
+</html>
