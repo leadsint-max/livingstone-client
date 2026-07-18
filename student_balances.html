@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Balances - Livingstone Academy</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 280px; padding: 30px; width: calc(100% - 310px); }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
+        .balance-red { color: #e74c3c; font-weight: bold; }
+        .btn-discount { background: #f39c12; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
+            <p><a href="fees_accounts_hub.html" style="color:white; text-decoration:none;">💳 Fees Hub</a></p>
+            <p><b>⚖️ Balances & Scholarships</b></p>
+        </nav>
+    </div>
+    <div class="main">
+        <h1>⚖️ Outstanding Balances & Scholarships</h1>
+        
+        <div class="card">
+            <h3>Filter Debtors</h3>
+            <div style="display:flex; gap:10px; margin-bottom:20px;">
+                <input type="text" placeholder="Search by name..." style="flex-grow:1; padding:10px; border:1px solid #ddd; border-radius:5px;">
+                <select style="padding:10px;"><option>All Classes</option></select>
+            </div>
+            <table>
+                <thead>
+                    <tr><th>Student Name</th><th>Total Fee</th><th>Paid</th><th>Discounts</th><th>Balance</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Samuel Okon</td>
+                        <td>GH₵ 2,500</td>
+                        <td>GH₵ 1,000</td>
+                        <td>GH₵ 200</td>
+                        <td class="balance-red">GH₵ 1,300</td>
+                        <td><button class="btn-discount" onclick="api.showNotification('Scholarship Applied')">Apply Scholarship</button></td>
+                    </tr>
+                    <tr>
+                        <td>Kofi Mensah</td>
+                        <td>GH₵ 2,500</td>
+                        <td>GH₵ 2,500</td>
+                        <td>GH₵ 0</td>
+                        <td style="color:green">GH₵ 0.00</td>
+                        <td><button class="btn-discount" style="background:#ccc" disabled>Paid</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="api.js"></script>
+</body>
+</html>

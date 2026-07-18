@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Record Payment - Livingstone Academy</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #27ae60; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 280px; padding: 30px; width: calc(100% - 310px); }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px; }
+        input, select { padding: 10px; border: 1px solid #ddd; border-radius: 5px; width: 100%; }
+        .btn { background: var(--accent); color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
+            <p><a href="fees_accounts_hub.html" style="color:white; text-decoration:none;">💳 Fees Hub</a></p>
+            <p><b>💰 Record Payment</b></p>
+        </nav>
+    </div>
+    <div class="main">
+        <h1>💰 Record Student Payment</h1>
+        
+        <div class="card">
+            <h3>Payment Details</h3>
+            <div class="form-row">
+                <div><label>Search Student (Name or ID)</label><input type="text" placeholder="e.g. Samuel Okon"></div>
+                <div><label>Fee Category</label><select><option>Tuition Fee</option><option>Transport</option><option>Uniform</option></select></div>
+            </div>
+            <div class="form-row">
+                <div><label>Amount Paid (GH₵)</label><input type="number" placeholder="0.00"></div>
+                <div><label>Payment Method</label><select><option>Cash</option><option>Mobile Money (MoMo)</option><option>Bank Transfer</option><option>Cheque</option></select></div>
+            </div>
+            <div class="form-row">
+                <div><label>Transaction Reference</label><input type="text" placeholder="e.g. MOMO-123456"></div>
+                <div><label>Date</label><input type="date"></div>
+            </div>
+            <button class="btn" onclick="api.showNotification('Payment Recorded and Receipt Generated!')">✅ Submit & Print Receipt</button>
+        </div>
+
+        <div class="card">
+            <h3>Recent Invoices Generated</h3>
+            <table style="width:100%; border-collapse: collapse;">
+                <thead><tr style="text-align:left;"><th>Invoice #</th><th>Student</th><th>Amount</th><th>Status</th></tr></thead>
+                <tbody>
+                    <tr><td>#INV-10042</td><td>Samuel Okon</td><td>GH₵ 2,500</td><td><span style="color:red">Unpaid</span></td></tr>
+                    <tr><td>#INV-10045</td><td>Kofi Mensah</td><td>GH₵ 1,200</td><td><span style="color:green">Paid</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="api.js"></script>
+</body>
+</html>
