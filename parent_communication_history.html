@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Communication History - Livingstone Academy</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #f1c40f; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 280px; padding: 30px; width: calc(100% - 310px); }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; color: white; }
+        .sms { background: #3498db; }
+        .email { background: #9b59b6; }
+        .call { background: #27ae60; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
+            <p><a href="parents_hub.html" style="color:white; text-decoration:none;">👪 Parent Hub</a></p>
+            <p><b>📜 Comm. History</b></p>
+        </nav>
+    </div>
+    <div class="main">
+        <h1>📜 Parent Communication History</h1>
+        
+        <div class="card">
+            <h3>Recent Interactions</h3>
+            <div style="margin-bottom:20px; display:flex; gap:10px;">
+                <input type="text" placeholder="Filter by parent name..." style="flex-grow:1; padding:10px; border:1px solid #ddd; border-radius:5px;">
+                <select style="padding:10px; border:1px solid #ddd; border-radius:5px;">
+                    <option>All Channels</option>
+                    <option>SMS</option>
+                    <option>Email</option>
+                    <option>Calls/Meetings</option>
+                </select>
+            </div>
+            <table>
+                <thead>
+                    <tr><th>Date</th><th>Parent Name</th><th>Channel</th><th>Subject/Summary</th><th>Staff Member</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>July 16, 14:00</td>
+                        <td>Sarah Okon</td>
+                        <td><span class="badge sms">SMS</span></td>
+                        <td>Fee reminder for Term 2</td>
+                        <td>Admin</td>
+                    </tr>
+                    <tr>
+                        <td>July 15, 09:30</td>
+                        <td>Sarah Okon</td>
+                        <td><span class="badge call">CALL</span></td>
+                        <td>Discussed Samuel's Math performance</td>
+                        <td>Mr. Mensah</td>
+                    </tr>
+                    <tr>
+                        <td>July 12, 11:15</td>
+                        <td>John Doe</td>
+                        <td><span class="badge email">EMAIL</span></td>
+                        <td>Mid-term Newsletter</td>
+                        <td>Admin</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="api.js"></script>
+</body>
+</html>
