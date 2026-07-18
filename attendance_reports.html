@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Attendance Reports - Livingstone Academy</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #f1c40f; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 280px; padding: 30px; width: calc(100% - 310px); }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .chart-box { height: 150px; background: #f9f9f9; display: flex; align-items: center; justify-content: center; color: #999; border: 1px dashed #ccc; border-radius: 8px; margin-top: 15px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
+        .btn-group { display: flex; gap: 10px; }
+        .btn-export { background: #34495e; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
+            <p><a href="reports_hub.html" style="color:white; text-decoration:none;">📈 Reports Hub</a></p>
+            <p><b>📅 Attendance Stats</b></p>
+        </nav>
+    </div>
+    <div class="main">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h1>📅 Attendance Trends & Reports</h1>
+            <div class="btn-group">
+                <button class="btn-export" onclick="window.print()">📥 Export PDF</button>
+                <button class="btn-export" style="background:#27ae60;" onclick="api.showNotification('Excel Export Ready')">📊 Export Excel</button>
+            </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:25px;">
+            <div class="card">
+                <h3>👨‍🎓 Student Attendance (Last 30 Days)</h3>
+                <div class="chart-box">[ Line Chart: % Presence vs Date ]</div>
+                <p style="margin-top:15px; color:#27ae60;"><b>Average: 94.2%</b> (↑ 2% from last month)</p>
+            </div>
+            <div class="card">
+                <h3>👨‍🏫 Staff Punctuality</h3>
+                <div class="chart-box">[ Bar Chart: On-time vs Late ]</div>
+                <p style="margin-top:15px; color:#e67e22;"><b>Late Arrivals: 15</b> (This week)</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>📉 Top Absentee Hotspots (Class-wise)</h3>
+            <table>
+                <thead><tr><th>Class</th><th>Average Attendance</th><th>Chronic Absentees</th><th>Status</th></tr></thead>
+                <tbody>
+                    <tr><td>Grade 9 - B</td><td>82%</td><td>4 Students</td><td><span style="color:red">Needs Attention</span></td></tr>
+                    <tr><td>Grade 12 - S</td><td>98%</td><td>0 Students</td><td><span style="color:green">Excellent</span></td></tr>
+                    <tr><td>Grade 10 - A</td><td>91%</td><td>1 Student</td><td><span style="color:green">Stable</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="api.js"></script>
+</body>
+</html>
