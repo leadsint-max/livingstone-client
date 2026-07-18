@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payroll - Livingstone Academy</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #e74c3c; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 280px; padding: 30px; width: calc(100% - 310px); }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
+        .btn-payslip { background: #3498db; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
+            <p><a href="staff_teacher_hub.html" style="color:white; text-decoration:none;">📂 Staff Hub</a></p>
+            <p><b>💰 Payroll</b></p>
+        </nav>
+    </div>
+    <div class="main">
+        <h1>💰 Payroll & Salary Management (GH₵)</h1>
+        
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3>Monthly Salary Roll - July 2026</h3>
+                <button style="padding:10px 20px; background:#27ae60; color:white; border:none; border-radius:5px; cursor:pointer;">Generate All Payslips</button>
+            </div>
+            <table>
+                <thead>
+                    <tr><th>Staff Name</th><th>Base Salary</th><th>Allowances</th><th>Deductions</th><th>Net Pay</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Eric Mensah</td>
+                        <td>GH₵ 4,500</td>
+                        <td>GH₵ 500</td>
+                        <td>GH₵ 200</td>
+                        <td><b>GH₵ 4,800</b></td>
+                        <td><button class="btn-payslip">📄 View Slip</button></td>
+                    </tr>
+                    <tr>
+                        <td>Akua Owusu</td>
+                        <td>GH₵ 3,800</td>
+                        <td>GH₵ 300</td>
+                        <td>GH₵ 150</td>
+                        <td><b>GH₵ 3,950</b></td>
+                        <td><button class="btn-payslip">📄 View Slip</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="api.js"></script>
+</body>
+</html>

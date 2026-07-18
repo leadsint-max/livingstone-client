@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Staff Attendance - Livingstone Academy</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #f1c40f; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 280px; padding: 30px; width: calc(100% - 310px); }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
+        .status-btn { padding: 5px 10px; border-radius: 4px; cursor: pointer; border: 1px solid #ddd; background: white; }
+        .status-btn.active { background: #27ae60; color: white; border-color: #27ae60; }
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+        .pending { background: #fff3e0; color: #e65100; }
+        .approved { background: #e8f5e9; color: #2e7d32; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
+            <p><a href="staff_teacher_hub.html" style="color:white; text-decoration:none;">📂 Staff Hub</a></p>
+            <p><b>📅 Attendance</b></p>
+        </nav>
+    </div>
+    <div class="main">
+        <h1>📅 Staff Attendance & Leave Management</h1>
+        
+        <div class="grid">
+            <div class="card">
+                <h3>Daily Attendance Log (July 16, 2026)</h3>
+                <table>
+                    <thead>
+                        <tr><th>Staff Name</th><th>Dept</th><th>Status</th><th>Clock In</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Mr. Eric Mensah</td>
+                            <td>Science</td>
+                            <td>
+                                <button class="status-btn active">Present</button>
+                                <button class="status-btn">Absent</button>
+                            </td>
+                            <td>07:45 AM</td>
+                        </tr>
+                        <tr>
+                            <td>Mrs. Akua Owusu</td>
+                            <td>Finance</td>
+                            <td>
+                                <button class="status-btn active">Present</button>
+                                <button class="status-btn">Absent</button>
+                            </td>
+                            <td>08:10 AM</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button style="margin-top:20px; width:100%; padding:12px; background:var(--primary); color:white; border:none; border-radius:5px; cursor:pointer;" onclick="api.showNotification('Attendance Saved')">Save Daily Log</button>
+            </div>
+
+            <div class="card">
+                <h3>📩 Leave Requests</h3>
+                <div style="border-bottom: 1px solid #eee; padding: 10px 0;">
+                    <p><b>John Mensah</b> <span class="badge pending">Pending</span></p>
+                    <p style="font-size: 0.8rem; color: #666;">Sick Leave: 2 Days (Starts tomorrow)</p>
+                    <button style="font-size: 0.7rem; color: green; border: none; background: none; cursor: pointer;">Approve</button>
+                    <button style="font-size: 0.7rem; color: red; border: none; background: none; cursor: pointer; margin-left: 10px;">Reject</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="api.js"></script>
+</body>
+</html>
