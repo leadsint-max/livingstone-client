@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Event Manager - Livingstone Academy</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #27ae60; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 280px; padding: 30px; width: calc(100% - 310px); }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        input, select, textarea { padding: 10px; border: 1px solid #ddd; border-radius: 5px; width: 100%; margin-bottom: 10px; }
+        .btn { background: var(--accent); color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
+        .category-badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; color: white; }
+        .holiday { background: #e74c3c; }
+        .meeting { background: #3498db; }
+        .event { background: #9b59b6; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
+            <p><a href="calendar_hub.html" style="color:white; text-decoration:none;">📅 Calendar Hub</a></p>
+            <p><b>➕ Manage Events</b></p>
+        </nav>
+    </div>
+    <div class="main">
+        <h1>➕ Event & Meeting Manager</h1>
+        
+        <div class="grid">
+            <div class="card">
+                <h3>Create New Entry</h3>
+                <label>Title</label>
+                <input type="text" placeholder="e.g. Staff Strategy Meeting">
+                <label>Category</label>
+                <select id="eventCategory">
+                    <option value="meeting">Meeting</option>
+                    <option value="holiday">Holiday</option>
+                    <option value="event">School Event</option>
+                </select>
+                <div class="form-grid">
+                    <div><label>Start Date</label><input type="date"></div>
+                    <div><label>End Date (Optional)</label><input type="date"></div>
+                </div>
+                <label>Location / Link</label>
+                <input type="text" placeholder="e.g. Conference Room A or Zoom">
+                <label>Description</label>
+                <textarea rows="3" placeholder="Additional details..."></textarea>
+                <button class="btn" onclick="api.showNotification('Event Saved to Calendar')">Publish to Calendar</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Upcoming Schedule</h3>
+            <table>
+                <thead>
+                    <tr><th>Title</th><th>Category</th><th>Date</th><th>Location</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Founders Day</td>
+                        <td><span class="category-badge holiday">Holiday</span></td>
+                        <td>Aug 04, 2026</td>
+                        <td>School Wide</td>
+                        <td><button style="font-size:0.8rem">Edit</button></td>
+                    </tr>
+                    <tr>
+                        <td>PTA General Meeting</td>
+                        <td><span class="category-badge meeting">Meeting</span></td>
+                        <td>July 28, 2026</td>
+                        <td>Main Assembly Hall</td>
+                        <td><button style="font-size:0.8rem">Edit</button></td>
+                    </tr>
+                    <tr>
+                        <td>Inter-House Sports</td>
+                        <td><span class="category-badge event">School Event</span></td>
+                        <td>Aug 12, 2026</td>
+                        <td>School Field</td>
+                        <td><button style="font-size:0.8rem">Edit</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="api.js"></script>
+</body>
+</html>

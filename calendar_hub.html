@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calendar & Events Hub - Livingstone Academy</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #8e44ad; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 280px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 300px; padding: 30px; width: 100%; }
+        .hub-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-top: 20px; }
+        .hub-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 5px solid var(--accent); transition: 0.3s; }
+        .hub-card:hover { transform: translateY(-5px); }
+        .hub-card h2 { color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .feature-list { list-style: none; padding: 0; }
+        .feature-list li { padding: 10px 0; border-bottom: 1px solid #eee; font-size: 0.9rem; color: #555; }
+        .feature-list li:last-child { border: none; }
+        .btn-action { display: block; width: 100%; padding: 12px; background: var(--primary); color: white; text-align: center; text-decoration: none; border-radius: 8px; margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Back to Dashboard</a></p>
+            <hr style="opacity:0.2; margin: 20px 0;">
+            <p><b>📅 Calendar Hub</b></p>
+            <p><a href="events_calendar.html" style="color:white; text-decoration:none;">🗓️ School Calendar</a></p>
+            <p><a href="event_manager.html" style="color:white; text-decoration:none;">➕ Manage Events</a></p>
+        </nav>
+    </div>
+
+    <div class="main">
+        <h1>📅 School Calendar & Events Hub</h1>
+        <p style="color:#666;">Plan academic schedules, holidays, staff meetings, and school events.</p>
+
+        <div class="hub-grid">
+            <!-- School Calendar -->
+            <div class="hub-card">
+                <h2>🗓️ Academic Calendar</h2>
+                <ul class="feature-list">
+                    <li>✅ Term Start & End Dates</li>
+                    <li>✅ Public & School Holidays</li>
+                    <li>✅ Examination Windows</li>
+                    <li>✅ Vacation Periods</li>
+                </ul>
+                <a href="events_calendar.html" class="btn-action">View Full Calendar</a>
+            </div>
+
+            <!-- Events & Meetings -->
+            <div class="hub-card" style="border-top-color: #27ae60;">
+                <h2>🤝 Meetings & Events</h2>
+                <ul class="feature-list">
+                    <li>✅ Parent-Teacher Meetings</li>
+                    <li>✅ Staff Briefings</li>
+                    <li>✅ Sports & Extra-curriculars</li>
+                    <li>✅ Graduation & Prize Giving</li>
+                </ul>
+                <a href="event_manager.html" class="btn-action" style="background:#27ae60;">Manage Events</a>
+            </div>
+        </div>
+    </div>
+    <script src="api.js"></script>
+</body>
+</html>
