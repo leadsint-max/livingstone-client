@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stock Management - Livingstone Academy</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #16a085; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 280px; padding: 30px; width: calc(100% - 310px); }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        input, select { padding: 10px; border: 1px solid #ddd; border-radius: 5px; width: 100%; margin-bottom: 10px; }
+        .btn { background: var(--accent); color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
+        .status-tag { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+        .low-stock { background: #fdedec; color: #e74c3c; }
+        .in-stock { background: #eafaf1; color: #27ae60; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
+            <p><a href="inventory_hub.html" style="color:white; text-decoration:none;">📦 Inventory Hub</a></p>
+            <p><b>✏️ Stationery & Stock</b></p>
+        </nav>
+    </div>
+    <div class="main">
+        <h1>✏️ Stationery & Consumables Stock</h1>
+        
+        <div class="grid">
+            <div class="card">
+                <h3>📦 Receive New Stock</h3>
+                <label>Item Name</label>
+                <input type="text" placeholder="e.g. A4 Paper (Box)">
+                <label>Category</label>
+                <select><option>Stationery</option><option>Cleaning Supplies</option><option>Kitchen</option></select>
+                <label>Quantity Received</label>
+                <input type="number" placeholder="e.g. 50">
+                <button class="btn" onclick="api.showNotification('Stock Updated')">Update Inventory</button>
+            </div>
+
+            <div class="card">
+                <h3>📤 Issue Stock to Staff</h3>
+                <label>Staff Member</label>
+                <select><option>Mr. Eric Mensah</option><option>Mrs. Akua Owusu</option></select>
+                <label>Select Item</label>
+                <select><option>Whiteboard Markers</option><option>A4 Paper</option></select>
+                <label>Quantity Issued</label>
+                <input type="number" placeholder="e.g. 5">
+                <button class="btn" style="background:#3498db" onclick="api.showNotification('Stock Issued Successfully')">Issue Item</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>📊 Current Stock Levels</h3>
+            <table>
+                <thead>
+                    <tr><th>Item Name</th><th>Category</th><th>Current Stock</th><th>Status</th><th>Last Reordered</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Whiteboard Markers</td><td>Stationery</td><td>12</td><td><span class="status-tag low-stock">LOW STOCK</span></td><td>June 10</td></tr>
+                    <tr><td>A4 Paper (Reams)</td><td>Stationery</td><td>85</td><td><span class="status-tag in-stock">IN STOCK</span></td><td>July 01</td></tr>
+                    <tr><td>Liquid Soap</td><td>Cleaning</td><td>20</td><td><span class="status-tag in-stock">IN STOCK</span></td><td>May 15</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="api.js"></script>
+</body>
+</html>

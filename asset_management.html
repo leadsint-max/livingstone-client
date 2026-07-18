@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Asset Management - Livingstone Academy</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #2980b9; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 280px; padding: 30px; width: calc(100% - 310px); }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        input, select { padding: 10px; border: 1px solid #ddd; border-radius: 5px; width: 100%; margin-bottom: 10px; }
+        .btn { background: var(--accent); color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
+        .condition-badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+        .excellent { background: #e8f5e9; color: #2e7d32; }
+        .fair { background: #fff3e0; color: #e65100; }
+        .poor { background: #fdedec; color: #e74c3c; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
+            <p><a href="inventory_hub.html" style="color:white; text-decoration:none;">📦 Inventory Hub</a></p>
+            <p><b>🏢 Asset Management</b></p>
+        </nav>
+    </div>
+    <div class="main">
+        <h1>🏢 Fixed Asset Management</h1>
+        
+        <div class="grid">
+            <div class="card">
+                <h3>➕ Add New Asset</h3>
+                <label>Asset Name</label>
+                <input type="text" placeholder="e.g. Dell Inspiron Laptop">
+                <label>Category</label>
+                <select><option>IT Equipment</option><option>Furniture</option><option>Laboratory</option><option>Sports</option></select>
+                <label>Location</label>
+                <input type="text" placeholder="e.g. Science Lab 1">
+                <label>Date Purchased</label>
+                <input type="date">
+                <button class="btn" onclick="api.showNotification('Asset Added')">Register Asset</button>
+            </div>
+
+            <div class="card">
+                <h3>📊 Asset Summary</h3>
+                <p>Total Assets: <b>520</b></p>
+                <p>IT Equipment: <b>45</b></p>
+                <p>Furniture: <b>420</b></p>
+                <p>Total Estimated Value: <b>GH₵ 85,000</b></p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>🏢 School Property Registry</h3>
+            <table>
+                <thead>
+                    <tr><th>Asset Name</th><th>Category</th><th>Location</th><th>Condition</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Student Desk</td><td>Furniture</td><td>Grade 10A</td><td><span class="condition-badge excellent">Excellent</span></td><td><button style="font-size:0.8rem">Edit</button></td></tr>
+                    <tr><td>Smart Board</td><td>IT Equipment</td><td>Main Hall</td><td><span class="condition-badge fair">Fair</span></td><td><button style="font-size:0.8rem">Edit</button></td></tr>
+                    <tr><td>Lab Microscope</td><td>Laboratory</td><td>Science Lab</td><td><span class="condition-badge poor">Maintenance Required</span></td><td><button style="font-size:0.8rem">Repair</button></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="api.js"></script>
+</body>
+</html>
