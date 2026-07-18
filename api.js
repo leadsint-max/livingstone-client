@@ -37,5 +37,22 @@ const api = {
             headers: { 'Authorization': `Bearer ${api.getToken()}` }
         });
         return response.json();
+    },
+
+    // SECURITY GUARD: Hide unauthorized elements
+    applyPermissions: () => {
+        const role = localStorage.getItem('user_role');
+        if (role === 'accountant') {
+            // Hide Admin-only buttons on shared pages
+            const adminOnly = document.querySelectorAll('.admin-only');
+            adminOnly.forEach(el => el.style.display = 'none');
+            
+            // Disable specific inputs
+            const adminInputs = document.querySelectorAll('.admin-input');
+            adminInputs.forEach(el => el.disabled = true);
+        }
     }
 };
+
+// Run permission check on every page load
+document.addEventListener('DOMContentLoaded', api.applyPermissions);
