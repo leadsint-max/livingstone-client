@@ -4,127 +4,104 @@
     <meta charset="UTF-8">
     <title>Student Admission - Livingstone Academy</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #3498db; --light: #f8f9fa; }
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; margin: 0; display: flex; }
-        .sidebar { width: 280px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 0; display: flex; flex-direction: column; }
-        .main-content { margin-left: 300px; padding: 40px; width: 100%; max-width: 900px; }
-        .form-card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h2 { color: var(--primary); margin-bottom: 25px; border-bottom: 2px solid var(--accent); padding-bottom: 10px; }
+        :root { --primary: #2c3e50; --accent: #3498db; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; display: flex; }
+        .sidebar { width: 280px; height: 100vh; background: var(--primary); color: white; position: fixed; }
+        .main-content { margin-left: 300px; padding: 30px; width: 100%; max-width: 1000px; }
+        .form-card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .form-group { display: flex; flex-direction: column; }
-        label { font-weight: 600; margin-bottom: 5px; color: #555; }
-        input, select, textarea { padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; }
-        .btn-submit { background: var(--accent); color: white; border: none; padding: 15px 30px; border-radius: 4px; cursor: pointer; font-size: 1rem; font-weight: bold; margin-top: 20px; }
-        .section-title { grid-column: span 2; margin-top: 20px; color: var(--accent); font-weight: bold; text-transform: uppercase; font-size: 0.85rem; }
-        
-        /* Camera Styles */
-        #camera-container { width: 160px; height: 160px; background: #000; border-radius: 8px; overflow: hidden; position: relative; }
-        #video { width: 100%; height: 100%; object-fit: cover; }
-        #canvas { display: none; }
-        #photo-preview-img { width: 100%; height: 100%; object-fit: cover; display: none; }
+        .form-group { display: flex; flex-direction: column; margin-bottom: 10px; }
+        label { font-weight: bold; margin-bottom: 5px; color: #555; font-size: 0.9rem; }
+        input, select, textarea { padding: 10px; border: 1px solid #ddd; border-radius: 6px; }
+        .section-title { grid-column: span 2; margin-top: 20px; padding-bottom: 5px; border-bottom: 2px solid #eee; color: var(--accent); font-weight: bold; }
+        #camera-box { grid-column: span 2; display: flex; align-items: center; gap: 20px; background: #f9f9f9; padding: 20px; border-radius: 10px; }
+        #video-preview { width: 150px; height: 150px; background: #000; border-radius: 8px; object-fit: cover; }
+        .btn-capture { background: var(--primary); color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; }
+        .btn-submit { grid-column: span 2; background: #27ae60; color: white; padding: 15px; border: none; border-radius: 8px; font-weight: bold; font-size: 1.1rem; cursor: pointer; margin-top: 20px; }
     </style>
 </head>
 <body>
     <div class="sidebar"></div>
-
     <div class="main-content">
         <div class="form-card">
-            <h2>New Student Admission</h2>
+            <h2 style="margin-top:0;">📝 Full Student Admission Form</h2>
             <form id="admissionForm">
                 <div class="form-grid">
-                    <div class="section-title">Student Photo</div>
-                    <div class="form-group" style="grid-column: span 2; display: flex; align-items: center; gap: 20px; background: #eee; padding: 20px; border-radius: 8px;">
-                        <div id="camera-container">
-                            <video id="video" autoplay playsinline></video>
-                            <img id="photo-preview-img">
-                            <canvas id="canvas" width="320" height="320"></canvas>
-                        </div>
+                    <!-- 1. PHOTO -->
+                    <div id="camera-box">
+                        <video id="video" width="150" height="150" autoplay playsinline style="border-radius:8px; background:#000;"></video>
+                        <canvas id="canvas" width="300" height="300" style="display:none;"></canvas>
+                        <img id="photo-preview" style="display:none; width:150px; height:150px; border-radius:8px; object-fit:cover;">
                         <div>
-                            <button type="button" id="start-camera" style="padding:8px 12px;">🎥 Start Camera</button>
-                            <button type="button" id="capture-photo" style="padding:8px 12px; display:none;">📸 Take Snapshot</button>
-                            <p style="margin: 10px 0 5px; font-size: 0.8rem;">Or upload file:</p>
-                            <input type="file" id="photo-upload" accept="image/*">
-                            <input type="hidden" id="photo-data">
+                            <button type="button" class="btn-capture" id="snap">📸 Capture Photo</button>
+                            <button type="button" class="btn-capture" style="background:#666; margin-left:10px;" onclick="location.reload()">Reset</button>
+                            <p style="font-size:0.7rem; color:#888; margin-top:5px;">Or upload file via folder if preferred.</p>
                         </div>
                     </div>
 
+                    <!-- 2. STUDENT INFO -->
                     <div class="section-title">Personal Information</div>
-                    <div class="form-group">
-                        <label>First Name</label>
-                        <input type="text" id="firstName" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Last Name</label>
-                        <input type="text" id="lastName" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Date of Birth</label>
-                        <input type="date" id="dob" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Admission Number</label>
-                        <input type="text" id="admissionNo" placeholder="LIS-2026-0001" required>
-                    </div>
+                    <div class="form-group"><label>First Name</label><input type="text" id="firstName" required></div>
+                    <div class="form-group"><label>Last Name</label><input type="text" id="lastName" required></div>
+                    <div class="form-group"><label>Date of Birth</label><input type="date" id="dob" required></div>
+                    <div class="form-group"><label>Gender</label><select id="gender"><option>Male</option><option>Female</option></select></div>
+                    <div class="form-group"><label>Admission Number</label><input type="text" id="admissionNo" required></div>
+                    <div class="form-group"><label>Class / Grade</label><select id="classId"><option>Grade 10</option><option>Grade 11</option></select></div>
+
+                    <!-- 3. PARENT INFO -->
+                    <div class="section-title">Parent / Guardian Details</div>
+                    <div class="form-group"><label>Parent Name</label><input type="text" id="parentName" required></div>
+                    <div class="form-group"><label>Parent Phone</label><input type="tel" id="parentPhone" required></div>
+                    <div class="form-group" style="grid-column: span 2;"><label>Residential Address</label><textarea id="address" rows="2"></textarea></div>
+
+                    <button type="submit" class="btn-submit">✅ Register Student & Save to Database</button>
                 </div>
-                
-                <button type="submit" class="btn-submit">Register Student</button>
             </form>
         </div>
     </div>
-
     <script src="api.js"></script>
     <script>
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
-        const photoPreview = document.getElementById('photo-preview-img');
-        const startBtn = document.getElementById('start-camera');
-        const captureBtn = document.getElementById('capture-photo');
+        const snap = document.getElementById('snap');
+        const photoPreview = document.getElementById('photo-preview');
+        let photoData = null;
 
-        // 1. Camera Logic
-        startBtn.addEventListener('click', async () => {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                video.srcObject = stream;
-                startBtn.style.display = 'none';
-                captureBtn.style.display = 'inline-block';
-            } catch (err) {
-                alert("Cannot access camera. Please check permissions.");
-            }
-        });
+        // Start Camera
+        navigator.mediaDevices.getUserMedia({ video: true }).then(stream => { video.srcObject = stream; });
 
-        captureBtn.addEventListener('click', () => {
+        snap.addEventListener('click', () => {
             const context = canvas.getContext('2d');
-            context.drawImage(video, 0, 0, 320, 320);
-            const data = canvas.toDataURL('image/png');
-            document.getElementById('photo-data').value = data;
-            
-            // Show preview
+            context.drawImage(video, 0, 0, 300, 300);
+            photoData = canvas.toDataURL('image/png');
             video.style.display = 'none';
-            photoPreview.src = data;
+            photoPreview.src = photoData;
             photoPreview.style.display = 'block';
             api.showNotification("Photo Captured!");
         });
 
-        // 2. Submission Logic
-        document.getElementById('admissionForm').addEventListener('submit', async function(e) {
+        document.getElementById('admissionForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            const studentData = {
+            const data = {
                 firstName: document.getElementById('firstName').value,
                 lastName: document.getElementById('lastName').value,
                 dob: document.getElementById('dob').value,
                 admissionNo: document.getElementById('admissionNo').value,
-                photo: document.getElementById('photo-data').value
+                gender: document.getElementById('gender').value,
+                parentName: document.getElementById('parentName').value,
+                parentPhone: document.getElementById('parentPhone').value,
+                address: document.getElementById('address').value,
+                photo: photoData
             };
-
-            const response = await api.post('/students/register', studentData);
-            if (response.success) {
-                api.showNotification('Student Registered Successfully!');
+            
+            const res = await api.post('/students/register', data);
+            if (res.success) {
+                api.showNotification("Student Registered Successfully!");
                 setTimeout(() => window.location.href = 'student_list.html', 1500);
             } else {
-                alert('Error: ' + response.error);
+                alert("Error: " + res.error);
             }
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1d75389888d7e1a',t:'MTc4NDQzODk0NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
