@@ -6,59 +6,57 @@
     <style>
         :root { --primary: #2c3e50; --accent: #27ae60; --bg: #f4f7f6; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
-        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
-        .main { margin-left: 280px; padding: 30px; width: 100%; }
+        .sidebar { width: 280px; height: 100vh; background: var(--primary); color: white; position: fixed; }
+        .main { margin-left: 300px; padding: 30px; width: calc(100% - 310px); }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
         .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .controls { display: flex; gap: 15px; margin-bottom: 25px; background: white; padding: 15px; border-radius: 8px; }
-        .btn { background: var(--accent); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; }
-        .badge { background: #e8f5e9; color: #2e7d32; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; }
+        .staff-photo { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; background: #eee; }
+        .role-badge { background: #e8f5e9; color: #2e7d32; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <h2>Livingstone</h2>
-        <nav>
-            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
-            <p><b>👨‍🏫 Staff Directory</b></p>
-            <p><a href="staff_registration.html" style="color:white; text-decoration:none;">➕ Add New Staff</a></p>
-            <p><a href="teaching_assignments.html" style="color:white; text-decoration:none;">📚 Teacher Assignments</a></p>
-        </nav>
-    </div>
+    <div class="sidebar"></div>
     <div class="main">
         <h1>👨‍🏫 Staff & Teacher Directory</h1>
-        <div class="controls">
-            <input type="text" placeholder="Search by name/ID..." style="flex-grow:1; padding:10px; border:1px solid #ddd; border-radius:5px;">
-            <select style="padding:10px; border:1px solid #ddd; border-radius:5px;">
-                <option>All Departments</option>
-                <option>Science</option>
-                <option>Mathematics</option>
-                <option>Administration</option>
-                <option>Finance</option>
-            </select>
-        </div>
-        <div class="grid">
-            <!-- Example Staff Card -->
-            <div class="card">
-                <div style="display:flex; gap:15px; align-items:center;">
-                    <div style="width:60px; height:60px; background:#ddd; border-radius:50%;"></div>
-                    <div>
-                        <h3 style="margin:0;">Mr. Eric Mensah</h3>
-                        <p style="margin:5px 0; font-size:0.85rem; color:#666;">ID: LIS-STAFF-001</p>
-                    </div>
-                </div>
-                <hr style="margin:15px 0; opacity:0.1;">
-                <p><b>Dept:</b> Science</p>
-                <p><b>Role:</b> Senior Teacher</p>
-                <p><b>Joining:</b> Jan 12, 2022</p>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-top:15px;">
-                    <button class="btn" style="background:#3498db;">Edit Profile</button>
-                    <button class="btn">View Records</button>
-                    <button class="btn" style="grid-column: span 2; background:#2c3e50;">Generate Staff ID</button>
-                </div>
-            </div>
-        </div>
+        <div id="loading" style="padding: 20px; color: #666;">Loading school staff...</div>
+        <div class="grid" id="staffContainer"></div>
     </div>
     <script src="api.js"></script>
+    <script>
+        async function loadStaff() {
+            const container = document.getElementById('staffContainer');
+            try {
+                const staff = await api.get('/staff');
+                document.getElementById('loading').style.display = 'none';
+                container.innerHTML = '';
+                
+                if (staff.length === 0) {
+                    container.innerHTML = '<p>No staff registered yet.</p>';
+                } else {
+                    staff.forEach(s => {
+                        const photo = s.photo || 'https://via.placeholder.com/70';
+                        container.innerHTML += `
+                            <div class="card">
+                                <div style="display:flex; gap:15px; align-items:center; margin-bottom:15px;">
+                                    <img src="${photo}" class="staff-photo">
+                                    <div>
+                                        <h3 style="margin:0;">${s.first_name} ${s.last_name}</h3>
+                                        <span class="role-badge">${s.role}</span>
+                                    </div>
+                                </div>
+                                <p style="font-size:0.9rem;"><b>Dept:</b> ${s.department}</p>
+                                <p style="font-size:0.9rem;"><b>ID:</b> ${s.employee_id}</p>
+                                <p style="font-size:0.8rem; color:#666; margin-top:10px;">${s.email}</p>
+                                <button style="width:100%; margin-top:10px; cursor:pointer; padding:8px; border:1px solid #ddd; background:#fff; border-radius:5px;">View Profile</button>
+                            </div>
+                        `;
+                    });
+                }
+            } catch (err) {
+                document.getElementById('loading').textContent = "Failed to load staff data.";
+            }
+        }
+        window.onload = loadStaff;
+    </script>
 </body>
 </html>
