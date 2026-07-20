@@ -4,106 +4,74 @@
     <meta charset="UTF-8">
     <title>Class Management - Livingstone Academy</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
-        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
-        .main { margin-left: 280px; padding: 30px; width: 100%; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
-        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        h3 { border-bottom: 2px solid var(--bg); padding-bottom: 10px; margin-bottom: 20px; color: var(--primary); }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; }
-        .btn { background: var(--accent); color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        :root { --primary: #2c3e50; --accent: #27ae60; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; display: flex; }
+        .sidebar { width: 280px; height: 100vh; background: var(--primary); color: white; position: fixed; }
+        .main { margin-left: 300px; padding: 30px; width: calc(100% - 310px); }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        input, select { padding: 10px; border: 1px solid #ddd; border-radius: 6px; width: 100%; margin-bottom: 15px; }
+        .btn { background: var(--accent); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <h2>Livingstone</h2>
-        <nav>
-            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
-            <p><a href="student_list.html" style="color:white; text-decoration:none;">👨‍🎓 Student Directory</a></p>
-            <p><b>🏫 Class Management</b></p>
-            <p><a href="timetable.html" style="color:white; text-decoration:none;">📅 Timetables</a></p>
-        </nav>
-    </div>
+    <div class="sidebar"></div>
     <div class="main">
         <h1>🏫 Class & Stream Management</h1>
-        <div class="grid">
-            <!-- Create Class Form -->
+        <div style="display:grid; grid-template-columns: 1fr 2fr; gap:20px;">
             <div class="card">
-                <h3>Add New Class / Grade</h3>
-                <div class="form-group">
-                    <label>Class Name</label>
-                    <input type="text" placeholder="e.g. Grade 10">
-                </div>
-                <div class="form-group">
-                    <label>Level (Order)</label>
-                    <input type="number" placeholder="e.g. 10">
-                </div>
-                <button class="btn" onclick="api.showNotification('Class Created!')">Create Class</button>
+                <h3>Add New Stream</h3>
+                <label>Parent Class</label>
+                <select id="classSelect"><option>Loading...</option></select>
+                <label>Stream Name (e.g. A, Science)</label>
+                <input type="text" id="streamName" placeholder="e.g. A">
+                <label>Assign Teacher</label>
+                <select id="teacherSelect"><option>Loading...</option></select>
+                <label>Capacity</label>
+                <input type="number" id="capacity" value="40">
+                <button class="btn" onclick="addStream()">➕ Create Stream</button>
             </div>
-
-            <!-- Create Stream Form -->
+            
             <div class="card">
-                <h3>Create Stream & Assign Teacher</h3>
-                <div class="form-group">
-                    <label>Select Class</label>
-                    <select><option>Grade 10</option><option>Grade 11</option></select>
-                </div>
-                <div class="form-group">
-                    <label>Stream Name</label>
-                    <input type="text" placeholder="e.g. Science A">
-                </div>
-                <div class="form-group">
-                    <label>Assign Class Teacher</label>
-                    <select><option>Mr. Eric Mensah</option><option>Mrs. Akua Owusu</option></select>
-                </div>
-                <div class="form-group">
-                    <label>Capacity</label>
-                    <input type="number" placeholder="e.g. 40">
-                </div>
-                <button class="btn" onclick="api.showNotification('Stream Assigned!')">Save Stream</button>
-            </div>
-
-            <!-- List of Classes -->
-            <div class="card" style="grid-column: span 2;">
-                <h3>Active Classes & Streams</h3>
+                <h3>Current Streams</h3>
                 <table>
-                    <thead>
-                        <tr>
-                            <th>Class</th>
-                            <th>Stream</th>
-                            <th>Teacher</th>
-                            <th>Enrolled</th>
-                            <th>Capacity</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>Grade 10</td><td>Science A</td><td>Mr. Mensah</td><td>38</td><td><input type="number" value="40" style="width:50px;"></td></tr>
-                        <tr><td>Grade 10</td><td>Arts B</td><td>Mrs. Owusu</td><td>35</td><td><input type="number" value="40" style="width:50px;"></td></tr>
-                    </tbody>
+                    <thead><tr><th>Class</th><th>Stream</th><th>Teacher</th><th>Cap.</th></tr></thead>
+                    <tbody id="streamList"></tbody>
                 </table>
-            </div>
-
-            <!-- House Management Section -->
-            <div class="card" style="grid-column: span 2; border-top: 4px solid #f1c40f;">
-                <h3>🏠 School House Management</h3>
-                <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:15px; margin-bottom:20px;">
-                    <input type="text" placeholder="House Name (e.g. Eagle House)">
-                    <input type="color" value="#e74c3c" style="height:40px;">
-                    <button class="btn" style="background:#f1c40f; color:#000;">Add House</button>
-                </div>
-                <div style="display:flex; gap:15px;">
-                    <span class="stock-tag good" style="background:#e74c3c; color:white; padding:10px; border-radius:5px;">Red House (120 Students)</span>
-                    <span class="stock-tag good" style="background:#3498db; color:white; padding:10px; border-radius:5px;">Blue House (115 Students)</span>
-                    <span class="stock-tag good" style="background:#27ae60; color:white; padding:10px; border-radius:5px;">Green House (122 Students)</span>
-                </div>
             </div>
         </div>
     </div>
     <script src="api.js"></script>
+    <script>
+        async function setup() {
+            const classes = await api.get('/classes');
+            document.getElementById('classSelect').innerHTML = classes.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+            
+            const staff = await api.get('/staff');
+            document.getElementById('teacherSelect').innerHTML = staff.map(t => `<option value="${t.id}">${t.first_name} ${t.last_name}</option>`).join('') || '<option>No Teachers Found</option>';
+            
+            loadStreams();
+        }
+
+        async function loadStreams() {
+            const streams = await api.get('/streams');
+            const tbody = document.getElementById('streamList');
+            tbody.innerHTML = streams.map(s => `<tr><td>${s.class_name}</td><td><b>${s.stream_name}</b></td><td>${s.teacher_name || 'Unassigned'}</td><td>${s.capacity}</td></tr>`).join('');
+        }
+
+        async function addStream() {
+            const data = { 
+                classId: document.getElementById('classSelect').value,
+                streamName: document.getElementById('streamName').value,
+                capacity: document.getElementById('capacity').value,
+                teacherId: document.getElementById('teacherSelect').value 
+            };
+            const res = await api.post('/streams/add', data);
+            if (res.success) { api.showNotification("Stream Created!"); loadStreams(); }
+        }
+
+        window.onload = setup;
+    </script>
 </body>
 </html>
