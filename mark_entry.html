@@ -9,116 +9,103 @@
         .sidebar { width: 280px; height: 100vh; background: var(--primary); color: white; position: fixed; }
         .main { margin-left: 300px; padding: 30px; width: calc(100% - 310px); }
         .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .controls { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+        .controls { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 15px; margin-bottom: 25px; }
         select, input { padding: 10px; border: 1px solid #ddd; border-radius: 6px; width: 100%; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
-        .score-input { width: 70px; text-align: center; font-weight: bold; border-color: #3498db; }
-        .remarks-input { border: none; background: #f9f9f9; padding: 8px; width: 100%; border-radius: 4px; }
-        .btn-save { background: var(--accent); color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .btn-save:hover { background: #219150; }
+        .btn-save { background: var(--accent); color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 20px; }
     </style>
 </head>
 <body>
     <div class="sidebar"></div>
     <div class="main">
-        <header style="margin-bottom:20px;">
-            <h1>✍️ Mark Entry Portal</h1>
-            <p style="color:#666;">Enter student scores for continuous assessment and examinations.</p>
-        </header>
-
+        <h1>✍️ Smart Mark Entry Portal</h1>
         <div class="card">
             <div class="controls">
-                <div><label style="font-size:0.8rem; font-weight:bold;">Subject</label>
-                    <select id="subSelect"><option>Loading...</option></select>
+                <div><label>1. Select Class</label>
+                    <select id="classSelect" onchange="filterSubjects()">
+                        <option value="">-- Choose Class --</option>
+                        <option value="Nursery">Nursery</option><option value="K.G.1">K.G.1</option><option value="K.G.2">K.G.2</option>
+                        <option value="Basic 1">Basic 1</option><option value="Basic 2">Basic 2</option><option value="Basic 3">Basic 3</option>
+                        <option value="Basic 4">Basic 4</option><option value="Basic 5">Basic 5</option><option value="Basic 6">Basic 6</option>
+                        <option value="Basic 7">Basic 7</option><option value="Basic 8">Basic 8</option><option value="Basic 9">Basic 9</option>
+                    </select>
                 </div>
-                <div><label style="font-size:0.8rem; font-weight:bold;">Exam Type</label>
-                    <select id="examType"><option>Mid-Term</option><option>Final Exam</option><option>CAT 1</option><option>CAT 2</option></select>
+                <div><label>2. Select Subject</label>
+                    <select id="subSelect"><option>Choose Class First</option></select>
                 </div>
-                <div><label style="font-size:0.8rem; font-weight:bold;">Term</label>
-                    <select id="term"><option>Term 1</option><option>Term 2</option><option>Term 3</option></select>
+                <div><label>3. Exam Type</label>
+                    <select id="examType"><option>Mid-Term</option><option>Final Exam</option></select>
                 </div>
                 <div style="display:flex; align-items:flex-end;">
-                    <button onclick="loadClass()" style="background:#3498db; color:white; border:none; border-radius:6px; cursor:pointer; height:40px; width:100%;">Load Students</button>
+                    <button onclick="loadClassList()" style="background:#3498db; color:white; border:none; border-radius:6px; cursor:pointer; height:40px; width:100%;">Load Students</button>
                 </div>
             </div>
 
             <table id="marksTable" style="display:none;">
-                <thead><tr><th>Student Name</th><th>Admission No.</th><th>Score (0-100)</th><th>Teacher Remarks</th></tr></thead>
+                <thead><tr><th>Student Name</th><th>Admission No.</th><th>Score (0-100)</th><th>Remarks</th></tr></thead>
                 <tbody id="studentRows"></tbody>
             </table>
-            
-            <button id="saveBtn" class="btn-save" style="display:none;" onclick="saveMarks()">💾 Save & Publish Marks</button>
+            <button id="saveBtn" class="btn-save" style="display:none;" onclick="saveMarks()">💾 Save Marks</button>
         </div>
     </div>
-
     <script src="api.js"></script>
     <script>
+        let allSubjects = [];
+
         async function setup() {
-            try {
-                const subs = await api.get('/subjects');
-                const select = document.getElementById('subSelect');
-                if (subs && subs.length > 0) {
-                    select.innerHTML = subs.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
-                } else {
-                    select.innerHTML = '<option>No Subjects Found</option>';
-                }
-            } catch (e) { console.error("Setup failed"); }
+            allSubjects = await api.get('/subjects');
         }
 
-        async function loadClass() {
+        function filterSubjects() {
+            const cls = document.getElementById('classSelect').value;
+            const subDropdown = document.getElementById('subSelect');
+            let level = "";
+            
+            if (cls.includes('Nursery') || cls.includes('K.G.')) level = "Pre-School";
+            else if (['Basic 1','Basic 2','Basic 3','Basic 4','Basic 5','Basic 6'].includes(cls)) level = "Primary";
+            else if (['Basic 7','Basic 8','Basic 9'].includes(cls)) level = "JHS";
+
+            const filtered = allSubjects.filter(s => s.school_level === level);
+            subDropdown.innerHTML = filtered.map(s => `<option value="${s.id}">${s.name}</option>`).join('') || '<option>No subjects for this level</option>';
+        }
+
+        async function loadClassList() {
+            const cls = document.getElementById('classSelect').value;
             const container = document.getElementById('studentRows');
             container.innerHTML = '<tr><td colspan="4">Loading...</td></tr>';
             
-            try {
-                const students = await api.get('/students');
-                container.innerHTML = '';
-                
-                if (!students || students.length === 0) {
-                    container.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px;">No students found. Admit students first!</td></tr>';
-                } else {
-                    students.forEach(s => {
-                        const row = document.createElement('tr');
-                        row.className = 'mark-row';
-                        row.setAttribute('data-id', s.admission_no);
-                        row.innerHTML = `
-                            <td><b>${s.first_name} ${s.last_name}</b></td>
-                            <td>${s.admission_no}</td>
-                            <td><input type="number" class="score-input" value="0" min="0" max="100"></td>
-                            <td><input type="text" class="remarks-input" placeholder="Enter remarks..."></td>
-                        `;
-                        container.appendChild(row);
-                    });
-                    document.getElementById('marksTable').style.display = 'table';
-                    document.getElementById('saveBtn').style.display = 'block';
-                }
-            } catch (err) {
-                container.innerHTML = '<tr><td colspan="4" style="color:red;">Failed to connect to server.</td></tr>';
+            const students = await api.get(`/students/class/${cls}`);
+            container.innerHTML = '';
+            
+            if (students.length === 0) {
+                container.innerHTML = '<tr><td colspan="4">No students found in ' + cls + '</td></tr>';
+            } else {
+                students.forEach(s => {
+                    const row = document.createElement('tr');
+                    row.className = 'mark-row';
+                    row.setAttribute('data-id', s.admission_no);
+                    row.innerHTML = `<td><b>${s.first_name} ${s.last_name}</b></td><td>${s.admission_no}</td><td><input type="number" class="score-input" value="0"></td><td><input type="text" class="remarks-input" placeholder="Remarks"></td>`;
+                    container.appendChild(row);
+                });
+                document.getElementById('marksTable').style.display = 'table';
+                document.getElementById('saveBtn').style.display = 'block';
             }
         }
 
         async function saveMarks() {
             const rows = document.querySelectorAll('.mark-row');
-            
-            const marksData = Array.from(rows).map(r => {
-                const scoreVal = r.querySelector('.score-input').value;
-                return {
-                    studentId: r.getAttribute('data-id'),
-                    subjectId: document.getElementById('subSelect').value,
-                    examType: document.getElementById('examType').value,
-                    term: document.getElementById('term').value,
-                    score: scoreVal === "" ? 0 : parseFloat(scoreVal),
-                    remarks: r.querySelector('.remarks-input').value || "No remarks"
-                };
-            });
+            const marksData = Array.from(rows).map(r => ({
+                studentId: r.getAttribute('data-id'),
+                subjectId: document.getElementById('subSelect').value,
+                examType: document.getElementById('examType').value,
+                term: "Term 1", // Simplified
+                score: parseFloat(r.querySelector('.score-input').value) || 0,
+                remarks: r.querySelector('.remarks-input').value || "No remarks"
+            }));
 
             const res = await api.post('/marks/save', { marksList: marksData });
-            if (res.success) {
-                api.showNotification("Success! Marks have been saved.");
-                setTimeout(() => window.location.href='academic_overview.html', 1500);
-            } else {
-                alert("Save Failed: " + (res.error || "Please verify the scores."));
-            }
+            if (res.success) { api.showNotification("Marks Saved!"); location.reload(); }
         }
 
         window.onload = setup;
