@@ -4,51 +4,58 @@
     <meta charset="UTF-8">
     <title>Academic Hub - Livingstone Academy</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        :root { --primary: #2c3e50; --accent: #8e44ad; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; display: flex; }
         .sidebar { width: 280px; height: 100vh; background: var(--primary); color: white; position: fixed; }
         .main { margin-left: 300px; padding: 30px; width: calc(100% - 310px); }
-        .hub-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-top: 20px; }
-        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-top: 5px solid var(--accent); }
-        .btn-hub { display: block; width: 100%; padding: 15px; background: var(--primary); color: white; text-align: center; text-decoration: none; border-radius: 8px; margin-top: 20px; font-weight: bold; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
+        .btn-print { background: #27ae60; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; }
     </style>
 </head>
 <body>
     <div class="sidebar"></div>
     <div class="main">
-        <h1>📊 Academic & Examination Hub</h1>
-        <p style="color:#666;">Manage curriculum, grading, and student performance reports.</p>
-
-        <div class="hub-grid">
-            <!-- Mark Entry -->
-            <div class="card" style="border-top-color: #27ae60;">
-                <h2>✍️ Results Entry</h2>
-                <p>Enter and publish marks for Mid-term tests, CATs, and Final Examinations.</p>
-                <a href="mark_entry.html" class="btn-hub" style="background:#27ae60;">Enter Student Scores</a>
+        <h1>📊 Academic Merit & Report Center</h1>
+        
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3>Class Merit List & Positions</h3>
+                <select id="classFilter" onchange="loadRankings()" style="padding:10px; border-radius:5px;">
+                    <option value="">-- Select Class --</option>
+                    <option>Basic 1</option><option>Basic 2</option><option>Basic 3</option>
+                </select>
             </div>
-
-            <!-- Subjects -->
-            <div class="card">
-                <h2>📚 Subject Management</h2>
-                <p>Define the school curriculum and manage academic departments.</p>
-                <a href="subject_management.html" class="btn-hub">Manage Subjects</a>
-            </div>
-
-            <!-- Report Cards -->
-            <div class="card" style="border-top-color: #e67e22;">
-                <h2>🖨️ Report Center</h2>
-                <p>Generate and print student report cards and class merit lists.</p>
-                <a href="academic_overview.html" class="btn-hub" style="background:#e67e22;">Generate Reports</a>
-            </div>
-
-            <!-- Setup -->
-            <div class="card" style="border-top-color: #8e44ad;">
-                <h2>📝 Exam Setup</h2>
-                <p>Configure weightings, grading scales, and term intervals.</p>
-                <a href="exam_setup.html" class="btn-hub" style="background:#8e44ad;">Setup Exam Cycles</a>
-            </div>
+            <table>
+                <thead>
+                    <tr><th>Position</th><th>Student Name</th><th>Total Score</th><th>Action</th></tr>
+                </thead>
+                <tbody id="rankingsTable"></tbody>
+            </table>
         </div>
     </div>
     <script src="api.js"></script>
+    <script>
+        async function loadRankings() {
+            const cls = document.getElementById('classFilter').value;
+            const container = document.getElementById('rankingsTable');
+            const data = await api.get(`/academic/rankings/${cls}`);
+            
+            container.innerHTML = data.map(r => `
+                <tr>
+                    <td><b>${r.position}</b></td>
+                    <td>${r.first_name} ${r.last_name}</td>
+                    <td>${r.total_score || 0}</td>
+                    <td><button class="btn-print" onclick="viewReport('${r.admission_no}')">🖨️ View Report</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function viewReport(id) {
+            localStorage.setItem('target_student_id', id);
+            window.location.href = 'report_card_template.html';
+        }
+    </script>
 </body>
 </html>
