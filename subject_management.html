@@ -4,53 +4,35 @@
     <meta charset="UTF-8">
     <title>Subject Management - Livingstone Academy</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #27ae60; --bg: #f4f7f6; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
-        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
-        .main { margin-left: 280px; padding: 30px; width: 100%; }
-        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
-        .grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
-        input, select { padding: 10px; border: 1px solid #ddd; border-radius: 5px; width: 100%; margin-bottom: 15px; }
-        .btn { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; width: 100%; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
+        :root { --primary: #2c3e50; --accent: #3498db; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; display: flex; }
+        .sidebar { width: 280px; height: 100vh; background: var(--primary); color: white; position: fixed; }
+        .main { margin-left: 300px; padding: 30px; width: 100%; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        input, select { padding: 10px; width: 100%; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 15px; }
+        .btn { background: var(--accent); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <h2>Livingstone</h2>
-        <nav>
-            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
-            <p><a href="academic_overview.html" style="color:white; text-decoration:none;">📊 Academics</a></p>
-            <p><b>📚 Subject Management</b></p>
-        </nav>
-    </div>
+    <div class="sidebar"></div>
     <div class="main">
-        <h1>📚 Subject & Curriculum Management</h1>
-        <div class="grid">
-            <div class="card">
-                <h3>Add New Subject</h3>
-                <label>Subject Name</label>
-                <input type="text" placeholder="e.g. Further Mathematics">
-                <label>Subject Code</label>
-                <input type="text" placeholder="e.g. MATH-101">
-                <label>Department</label>
-                <select><option>Science</option><option>Arts</option><option>Mathematics</option></select>
-                <button class="btn" onclick="api.showNotification('Subject Added')">Register Subject</button>
-            </div>
-            <div class="card">
-                <h3>Active School Subjects</h3>
-                <table>
-                    <thead><tr><th>Subject Name</th><th>Code</th><th>Dept.</th><th>Actions</th></tr></thead>
-                    <tbody>
-                        <tr><td>English Language</td><td>ENG-101</td><td>Languages</td><td><button>Edit</button></td></tr>
-                        <tr><td>Integrated Science</td><td>SCI-101</td><td>Science</td><td><button>Edit</button></td></tr>
-                        <tr><td>Mathematics</td><td>MATH-101</td><td>Mathematics</td><td><button>Edit</button></td></tr>
-                    </tbody>
-                </table>
-            </div>
+        <h1>📚 Subject Management</h1>
+        <div class="card" style="max-width:500px;">
+            <h3>Add New Subject</h3>
+            <label>Name</label><input type="text" id="subName" placeholder="e.g. Mathematics">
+            <label>Code</label><input type="text" id="subCode" placeholder="e.g. MATH-101">
+            <label>Department</label><select id="subDept"><option>Mathematics</option><option>Science</option><option>Languages</option></select>
+            <button class="btn" onclick="addSubject()">➕ Save Subject</button>
         </div>
     </div>
     <script src="api.js"></script>
+    <script>
+        async function addSubject() {
+            const data = { name: document.getElementById('subName').value, code: document.getElementById('subCode').value, department: document.getElementById('subDept').value };
+            const res = await api.post('/subjects/add', data);
+            if (res.success) { api.showNotification("Subject Added!"); location.reload(); }
+            else { alert("Error: " + res.error); }
+        }
+    </script>
 </body>
 </html>
