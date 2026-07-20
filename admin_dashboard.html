@@ -10,33 +10,73 @@
         .sidebar { width: var(--sidebar-width); height: 100vh; background: var(--primary); color: white; display: flex; flex-direction: column; }
         .main-content { flex-grow: 1; overflow-y: auto; padding: 30px; }
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
-        .stat-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-bottom: 4px solid var(--accent); }
-        .stat-card .label { color: #7f8c8d; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; display: block; }
-        .stat-card .value { font-size: 1.8rem; font-weight: bold; }
+        .stat-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-bottom: 4px solid var(--accent); }
+        .stat-card .label { color: #7f8c8d; font-size: 0.85rem; font-weight: 600; margin-bottom: 10px; display: block; }
+        .stat-card .value { font-size: 2rem; font-weight: bold; color: var(--primary); }
+        .stat-card.financial .value { color: #e74c3c; }
     </style>
 </head>
 <body>
+    <!-- The sidebar will be automatically drawn here by api.js -->
     <div class="sidebar"></div>
+
     <div class="main-content">
-        <h1>Welcome, Administrator</h1>
+        <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+            <h1>Livingstone Academy Dashboard</h1>
+            <div id="connectionStatus" style="font-size:0.8rem; color:green;">● System Online</div>
+        </header>
+
+        <!-- Stats Grid with correct IDs -->
         <div class="stats-grid">
-            <div class="stat-card"><span class="label">Total Students</span><div class="value" id="countStudents">...</div></div>
-            <div class="stat-card"><span class="label">Total Staff</span><div class="value" id="countStaff">...</div></div>
-            <div class="stat-card"><span class="label">Total Teachers</span><div class="value" id="countTeachers">...</div></div>
-            <div class="stat-card" style="border-color:#e74c3c;"><span class="label">Pending Fees</span><div class="value" id="countFees" style="color:#e74c3c">GH₵ 0.00</div></div>
+            <div class="stat-card">
+                <span class="label">TOTAL STUDENTS</span>
+                <div class="value" id="countStudents">...</div>
+            </div>
+            <div class="stat-card">
+                <span class="label">TOTAL STAFF</span>
+                <div class="value" id="countStaff">...</div>
+            </div>
+            <div class="stat-card">
+                <span class="label">TOTAL TEACHERS</span>
+                <div class="value" id="countTeachers">...</div>
+            </div>
+            <div class="stat-card financial">
+                <span class="label">PENDING FEES</span>
+                <div class="value" id="countFees">GH₵ 0.00</div>
+            </div>
+        </div>
+
+        <div style="margin-top:40px; background:white; padding:30px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+            <h3>System Quick Links</h3>
+            <p style="color:#666; margin-top:10px;">Select an option from the sidebar to manage school operations.</p>
         </div>
     </div>
+
     <script src="api.js"></script>
     <script>
         async function loadStats() {
             try {
+                // TALK TO THE BRAIN
                 const data = await api.get('/stats');
+                
+                // PUT NUMBERS IN THE BOXES
                 document.getElementById('countStudents').textContent = data.totalStudents || 0;
                 document.getElementById('countStaff').textContent = data.totalStaff || 0;
                 document.getElementById('countTeachers').textContent = data.totalTeachers || 0;
                 document.getElementById('countFees').textContent = "GH₵ " + (data.pendingFees || "0.00");
-            } catch (err) { console.error("Stats failed"); }
+                
+                document.getElementById('connectionStatus').textContent = "● System Online";
+                document.getElementById('connectionStatus').style.color = "green";
+            } catch (err) {
+                console.error("Dashboard failed to load stats.");
+                document.getElementById('connectionStatus').textContent = "● Connecting to Server...";
+                document.getElementById('connectionStatus').style.color = "orange";
+                // Try to reconnect every 5 seconds
+                setTimeout(loadStats, 5000);
+            }
         }
+
+        // Run this when the page opens
         window.onload = loadStats;
     </script>
 </body>
