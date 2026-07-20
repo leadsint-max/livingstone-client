@@ -2,72 +2,89 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Mark Entry - Livingstone Academy</title>
+    <title>Enter Scores - Livingstone Academy</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #3498db; }
+        :root { --primary: #2c3e50; --accent: #27ae60; }
         body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; display: flex; }
         .sidebar { width: 280px; height: 100vh; background: var(--primary); color: white; position: fixed; }
         .main { margin-left: 300px; padding: 30px; width: calc(100% - 310px); }
         .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .controls { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+        select, input { padding: 10px; border: 1px solid #ddd; border-radius: 6px; width: 100%; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
-        input { padding: 8px; width: 60px; border: 1px solid #ddd; border-radius: 4px; }
-        .btn-save { background: #27ae60; color: white; border: none; padding: 15px 30px; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 20px; font-weight: bold; }
+        .score-input { width: 70px; text-align: center; font-weight: bold; }
+        .btn-save { background: var(--accent); color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 20px; }
     </style>
 </head>
 <body>
     <div class="sidebar"></div>
     <div class="main">
-        <h1>✍️ Record Academic Marks</h1>
+        <h1>✍️ Mark Entry Portal</h1>
         <div class="card">
-            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:15px; margin-bottom:20px;">
-                <select id="subjectSelect"><option>Loading Subjects...</option></select>
+            <div class="controls">
+                <select id="subSelect"><option>Loading Subjects...</option></select>
                 <select id="examType"><option>Mid-Term</option><option>Final Exam</option></select>
-                <button onclick="loadStudents()" style="background:var(--accent); color:white; border:none; border-radius:4px; cursor:pointer;">Load Class List</button>
+                <select id="term"><option>Term 1</option><option>Term 2</option><option>Term 3</option></select>
+                <button onclick="loadClass()" style="background:#3498db; color:white; border:none; border-radius:6px; cursor:pointer;">Load Students</button>
             </div>
 
-            <table id="marksTable">
-                <thead><tr><th>Student Name</th><th>Admission No.</th><th>Score</th><th>Max</th><th>Remarks</th></tr></thead>
-                <tbody id="studentList"></tbody>
+            <table id="marksTable" style="display:none;">
+                <thead><tr><th>Student Name</th><th>Admission No.</th><th>Score (0-100)</th><th>Teacher Remarks</th></tr></thead>
+                <tbody id="studentRows"></tbody>
             </table>
-            <button class="btn-save" onclick="saveAllMarks()">💾 Save & Publish All Marks</button>
+            
+            <button id="saveBtn" class="btn-save" style="display:none;" onclick="saveMarks()">💾 Save & Publish Marks</button>
         </div>
     </div>
     <script src="api.js"></script>
     <script>
         async function setup() {
             const subs = await api.get('/subjects');
-            const select = document.getElementById('subjectSelect');
+            const select = document.getElementById('subSelect');
             select.innerHTML = subs.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
         }
 
-        async function loadStudents() {
+        async function loadClass() {
             const students = await api.get('/students');
-            const tbody = document.getElementById('studentList');
-            tbody.innerHTML = students.map(s => `
-                <tr class="mark-row" data-id="${s.admission_no}">
-                    <td>${s.first_name} ${s.last_name}</td>
+            const tbody = document.getElementById('studentRows');
+            tbody.innerHTML = '';
+            
+            students.forEach(s => {
+                const row = document.createElement('tr');
+                row.className = 'mark-row';
+                row.setAttribute('data-id', s.admission_no);
+                row.innerHTML = `
+                    <td><b>${s.first_name} ${s.last_name}</b></td>
                     <td>${s.admission_no}</td>
-                    <td><input type="number" class="score-input" value="0"></td>
-                    <td>100</td>
-                    <td><input type="text" class="remarks-input" placeholder="Good" style="width:150px;"></td>
-                </tr>
-            `).join('');
+                    <td><input type="number" class="score-input" placeholder="0"></td>
+                    <td><input type="text" class="remarks-input" placeholder="Excellent work"></td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            document.getElementById('marksTable').style.display = 'table';
+            document.getElementById('saveBtn').style.display = 'block';
         }
 
-        async function saveAllMarks() {
+        async function saveMarks() {
             const rows = document.querySelectorAll('.mark-row');
-            const marksList = Array.from(rows).map(row => ({
-                studentId: row.getAttribute('data-id'),
-                subjectId: document.getElementById('subjectSelect').value,
+            const marksData = Array.from(rows).map(r => ({
+                studentId: r.getAttribute('data-id'),
+                subjectId: document.getElementById('subSelect').value,
                 examType: document.getElementById('examType').value,
-                score: row.querySelector('.score-input').value,
-                maxScore: 100,
-                remarks: row.querySelector('.remarks-input').value
+                term: document.getElementById('term').value,
+                score: r.querySelector('.score-input').value,
+                remarks: r.querySelector('.remarks-input').value
             }));
 
-            const res = await api.post('/marks/save', { marksList });
-            if (res.success) api.showNotification("Marks Saved Successfully!");
+            const res = await api.post('/marks/save', { marksList: marksData });
+            if (res.success) {
+                api.showNotification("Marks Saved Successfully!");
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                alert("Save Failed: " + res.error);
+            }
         }
 
         window.onload = setup;
