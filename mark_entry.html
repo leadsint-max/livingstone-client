@@ -13,20 +13,34 @@
         select, input { padding: 10px; border: 1px solid #ddd; border-radius: 6px; width: 100%; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
-        .score-input { width: 70px; text-align: center; font-weight: bold; }
-        .btn-save { background: var(--accent); color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 20px; }
+        .score-input { width: 70px; text-align: center; font-weight: bold; border-color: #3498db; }
+        .remarks-input { border: none; background: #f9f9f9; padding: 8px; width: 100%; border-radius: 4px; }
+        .btn-save { background: var(--accent); color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .btn-save:hover { background: #219150; }
     </style>
 </head>
 <body>
     <div class="sidebar"></div>
     <div class="main">
-        <h1>✍️ Mark Entry Portal</h1>
+        <header style="margin-bottom:20px;">
+            <h1>✍️ Mark Entry Portal</h1>
+            <p style="color:#666;">Enter student scores for continuous assessment and examinations.</p>
+        </header>
+
         <div class="card">
             <div class="controls">
-                <select id="subSelect"><option>Loading Subjects...</option></select>
-                <select id="examType"><option>Mid-Term</option><option>Final Exam</option></select>
-                <select id="term"><option>Term 1</option><option>Term 2</option><option>Term 3</option></select>
-                <button onclick="loadClass()" style="background:#3498db; color:white; border:none; border-radius:6px; cursor:pointer;">Load Students</button>
+                <div><label style="font-size:0.8rem; font-weight:bold;">Subject</label>
+                    <select id="subSelect"><option>Loading...</option></select>
+                </div>
+                <div><label style="font-size:0.8rem; font-weight:bold;">Exam Type</label>
+                    <select id="examType"><option>Mid-Term</option><option>Final Exam</option><option>CAT 1</option><option>CAT 2</option></select>
+                </div>
+                <div><label style="font-size:0.8rem; font-weight:bold;">Term</label>
+                    <select id="term"><option>Term 1</option><option>Term 2</option><option>Term 3</option></select>
+                </div>
+                <div style="display:flex; align-items:flex-end;">
+                    <button onclick="loadClass()" style="background:#3498db; color:white; border:none; border-radius:6px; cursor:pointer; height:40px; width:100%;">Load Students</button>
+                </div>
             </div>
 
             <table id="marksTable" style="display:none;">
@@ -37,53 +51,73 @@
             <button id="saveBtn" class="btn-save" style="display:none;" onclick="saveMarks()">💾 Save & Publish Marks</button>
         </div>
     </div>
+
     <script src="api.js"></script>
     <script>
         async function setup() {
-            const subs = await api.get('/subjects');
-            const select = document.getElementById('subSelect');
-            select.innerHTML = subs.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+            try {
+                const subs = await api.get('/subjects');
+                const select = document.getElementById('subSelect');
+                if (subs && subs.length > 0) {
+                    select.innerHTML = subs.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+                } else {
+                    select.innerHTML = '<option>No Subjects Found</option>';
+                }
+            } catch (e) { console.error("Setup failed"); }
         }
 
         async function loadClass() {
-            const students = await api.get('/students');
-            const tbody = document.getElementById('studentRows');
-            tbody.innerHTML = '';
+            const container = document.getElementById('studentRows');
+            container.innerHTML = '<tr><td colspan="4">Loading...</td></tr>';
             
-            students.forEach(s => {
-                const row = document.createElement('tr');
-                row.className = 'mark-row';
-                row.setAttribute('data-id', s.admission_no);
-                row.innerHTML = `
-                    <td><b>${s.first_name} ${s.last_name}</b></td>
-                    <td>${s.admission_no}</td>
-                    <td><input type="number" class="score-input" placeholder="0"></td>
-                    <td><input type="text" class="remarks-input" placeholder="Excellent work"></td>
-                `;
-                tbody.appendChild(row);
-            });
-
-            document.getElementById('marksTable').style.display = 'table';
-            document.getElementById('saveBtn').style.display = 'block';
+            try {
+                const students = await api.get('/students');
+                container.innerHTML = '';
+                
+                if (!students || students.length === 0) {
+                    container.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px;">No students found. Admit students first!</td></tr>';
+                } else {
+                    students.forEach(s => {
+                        const row = document.createElement('tr');
+                        row.className = 'mark-row';
+                        row.setAttribute('data-id', s.admission_no);
+                        row.innerHTML = `
+                            <td><b>${s.first_name} ${s.last_name}</b></td>
+                            <td>${s.admission_no}</td>
+                            <td><input type="number" class="score-input" value="0" min="0" max="100"></td>
+                            <td><input type="text" class="remarks-input" placeholder="Enter remarks..."></td>
+                        `;
+                        container.appendChild(row);
+                    });
+                    document.getElementById('marksTable').style.display = 'table';
+                    document.getElementById('saveBtn').style.display = 'block';
+                }
+            } catch (err) {
+                container.innerHTML = '<tr><td colspan="4" style="color:red;">Failed to connect to server.</td></tr>';
+            }
         }
 
         async function saveMarks() {
             const rows = document.querySelectorAll('.mark-row');
-            const marksData = Array.from(rows).map(r => ({
-                studentId: r.getAttribute('data-id'),
-                subjectId: document.getElementById('subSelect').value,
-                examType: document.getElementById('examType').value,
-                term: document.getElementById('term').value,
-                score: r.querySelector('.score-input').value,
-                remarks: r.querySelector('.remarks-input').value
-            }));
+            
+            const marksData = Array.from(rows).map(r => {
+                const scoreVal = r.querySelector('.score-input').value;
+                return {
+                    studentId: r.getAttribute('data-id'),
+                    subjectId: document.getElementById('subSelect').value,
+                    examType: document.getElementById('examType').value,
+                    term: document.getElementById('term').value,
+                    score: scoreVal === "" ? 0 : parseFloat(scoreVal),
+                    remarks: r.querySelector('.remarks-input').value || "No remarks"
+                };
+            });
 
             const res = await api.post('/marks/save', { marksList: marksData });
             if (res.success) {
-                api.showNotification("Marks Saved Successfully!");
-                setTimeout(() => location.reload(), 1500);
+                api.showNotification("Success! Marks have been saved.");
+                setTimeout(() => window.location.href='academic_overview.html', 1500);
             } else {
-                alert("Save Failed: " + res.error);
+                alert("Save Failed: " + (res.error || "Please verify the scores."));
             }
         }
 
