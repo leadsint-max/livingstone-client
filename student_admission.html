@@ -13,50 +13,57 @@
         .form-group { display: flex; flex-direction: column; margin-bottom: 10px; }
         label { font-weight: bold; margin-bottom: 5px; color: #555; font-size: 0.9rem; }
         input, select, textarea { padding: 10px; border: 1px solid #ddd; border-radius: 6px; }
-        .section-title { grid-column: span 2; margin-top: 20px; padding-bottom: 5px; border-bottom: 2px solid #eee; color: var(--accent); font-weight: bold; }
-        #photo-section { grid-column: span 2; display: flex; align-items: center; gap: 20px; background: #f9f9f9; padding: 20px; border-radius: 10px; }
-        #preview-box { width: 150px; height: 150px; background: #000; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        #video, #photo-preview { width: 100%; height: 100%; object-fit: cover; }
-        .btn-action { background: var(--primary); color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; margin-top: 5px; }
-        .btn-submit { grid-column: span 2; background: #27ae60; color: white; padding: 15px; border: none; border-radius: 8px; font-weight: bold; font-size: 1.1rem; cursor: pointer; margin-top: 20px; }
+        .section-title { grid-column: span 2; margin-top: 20px; border-bottom: 2px solid #eee; color: var(--accent); font-weight: bold; }
+        .btn-submit { grid-column: span 2; background: #27ae60; color: white; padding: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        #photo-box { grid-column: span 2; display: flex; align-items: center; gap: 20px; background: #f9f9f9; padding: 15px; border-radius: 10px; }
     </style>
 </head>
 <body>
     <div class="sidebar"></div>
     <div class="main-content">
         <div class="form-card">
-            <h2>📝 Full Student Admission Form</h2>
+            <h2>📝 New Student Admission</h2>
             <form id="admissionForm">
                 <div class="form-grid">
-                    <div id="photo-section">
-                        <div id="preview-box">
-                            <video id="video" autoplay playsinline></video>
-                            <img id="photo-preview" style="display:none;">
-                        </div>
-                        <div>
-                            <button type="button" class="btn-action" id="start-cam">🎥 Start Camera</button>
-                            <button type="button" class="btn-action" id="snap" style="display:none; background:#27ae60;">📸 Take Snapshot</button>
-                            <div style="margin-top:15px;">
-                                <label style="font-size:0.75rem;">Or Upload from Computer:</label><br>
-                                <input type="file" id="file-upload" accept="image/*">
-                            </div>
-                        </div>
+                    <div id="photo-box">
+                        <video id="video" width="120" height="120" autoplay playsinline style="border-radius:8px; background:#000;"></video>
+                        <img id="photo-preview" style="display:none; width:120px; height:120px; border-radius:8px; object-fit:cover;">
+                        <button type="button" id="snap" style="padding:10px;">📸 Snap Photo</button>
+                        <input type="file" id="file-upload" accept="image/*">
                     </div>
 
-                    <div class="section-title">Personal Information</div>
+                    <div class="section-title">Academic Placement</div>
+                    <div class="form-group">
+                        <label>Class / Grade</label>
+                        <select id="className" required>
+                            <option value="">-- Select Class --</option>
+                            <option>Nursery</option>
+                            <option>K.G.1</option>
+                            <option>K.G.2</option>
+                            <option>Basic 1</option>
+                            <option>Basic 2</option>
+                            <option>Basic 3</option>
+                            <option>Basic 4</option>
+                            <option>Basic 5</option>
+                            <option>Basic 6</option>
+                            <option>Basic 7</option>
+                            <option>Basic 8</option>
+                            <option>Basic 9</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Admission Number</label><input type="text" id="admissionNo" required></div>
+
+                    <div class="section-title">Personal Details</div>
                     <div class="form-group"><label>First Name</label><input type="text" id="firstName" required></div>
                     <div class="form-group"><label>Last Name</label><input type="text" id="lastName" required></div>
                     <div class="form-group"><label>Date of Birth</label><input type="date" id="dob" required></div>
                     <div class="form-group"><label>Gender</label><select id="gender"><option>Male</option><option>Female</option></select></div>
-                    <div class="form-group"><label>Admission Number</label><input type="text" id="admissionNo" required></div>
-                    <div class="form-group"><label>Class</label><select id="classId"><option>Grade 10</option><option>Grade 11</option></select></div>
 
-                    <div class="section-title">Parent / Guardian Details</div>
-                    <div class="form-group"><label>Parent Name</label><input type="text" id="parentName" required></div>
-                    <div class="form-group"><label>Parent Phone</label><input type="tel" id="parentPhone" required></div>
-                    <div class="form-group" style="grid-column: span 2;"><label>Residential Address</label><textarea id="address" rows="2"></textarea></div>
+                    <div class="section-title">Guardian Info</div>
+                    <div class="form-group"><label>Parent Name</label><input type="text" id="parentName"></div>
+                    <div class="form-group"><label>Parent Phone</label><input type="tel" id="parentPhone"></div>
 
-                    <button type="submit" class="btn-submit">✅ Register Student & Save</button>
+                    <button type="submit" class="btn-submit">✅ Register Student</button>
                 </div>
             </form>
         </div>
@@ -65,61 +72,43 @@
     <script>
         const video = document.getElementById('video');
         const snap = document.getElementById('snap');
-        const startCam = document.getElementById('start-cam');
         const photoPreview = document.getElementById('photo-preview');
         const fileUpload = document.getElementById('file-upload');
         let photoData = null;
 
-        // Camera Logic
-        startCam.addEventListener('click', async () => {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            video.srcObject = stream;
-            startCam.style.display = 'none';
-            snap.style.display = 'inline-block';
-        });
-
-        snap.addEventListener('click', () => {
+        navigator.mediaDevices.getUserMedia({ video: true }).then(s => video.srcObject = s);
+        
+        snap.onclick = () => {
             const canvas = document.createElement('canvas');
             canvas.width = 300; canvas.height = 300;
             canvas.getContext('2d').drawImage(video, 0, 0, 300, 300);
             photoData = canvas.toDataURL('image/png');
-            video.style.display = 'none';
-            photoPreview.src = photoData;
-            photoPreview.style.display = 'block';
-        });
+            video.style.display = 'none'; photoPreview.src = photoData; photoPreview.style.display = 'block';
+        };
 
-        // File Upload Logic
-        fileUpload.addEventListener('change', (e) => {
+        fileUpload.onchange = (e) => {
             const reader = new FileReader();
-            reader.onload = () => {
-                photoData = reader.result;
-                video.style.display = 'none';
-                photoPreview.src = photoData;
-                photoPreview.style.display = 'block';
-                api.showNotification("Photo Uploaded!");
-            };
+            reader.onload = () => { photoData = reader.result; video.style.display = 'none'; photoPreview.src = photoData; photoPreview.style.display = 'block'; };
             reader.readAsDataURL(e.target.files[0]);
-        });
+        };
 
-        document.getElementById('admissionForm').addEventListener('submit', async (e) => {
+        document.getElementById('admissionForm').onsubmit = async (e) => {
             e.preventDefault();
             const data = {
                 firstName: document.getElementById('firstName').value,
                 lastName: document.getElementById('lastName').value,
                 dob: document.getElementById('dob').value,
                 admissionNo: document.getElementById('admissionNo').value,
+                className: document.getElementById('className').value,
                 gender: document.getElementById('gender').value,
                 parentName: document.getElementById('parentName').value,
                 parentPhone: document.getElementById('parentPhone').value,
-                address: document.getElementById('address').value,
                 photo: photoData
             };
             const res = await api.post('/students/register', data);
-            if (res.success) {
-                api.showNotification("Success! Student Registered.");
-                setTimeout(() => window.location.href = 'student_list.html', 1500);
-            } else { alert("Error: " + res.error); }
-        });
+            if (res.success) { api.showNotification("Success!"); window.location.href='student_list.html'; }
+            else { alert("Error: " + res.error); }
+        };
     </script>
 </body>
 </html>
