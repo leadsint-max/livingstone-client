@@ -13,7 +13,7 @@
         .btn { background: var(--accent); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
-        .btn-delete { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+        .level-tag { font-size: 0.75rem; padding: 2px 6px; border-radius: 4px; color: white; }
     </style>
 </head>
 <body>
@@ -23,16 +23,24 @@
         <div style="display:grid; grid-template-columns: 1fr 2fr; gap:20px;">
             <div class="card">
                 <h3>Add New Subject</h3>
-                <label>Name</label><input type="text" id="subName" placeholder="e.g. Mathematics">
-                <label>Code</label><input type="text" id="subCode" placeholder="e.g. MATH-101">
-                <label>Department</label><select id="subDept"><option>Mathematics</option><option>Science</option><option>Languages</option><option>Humanities</option></select>
+                <label>Subject Name</label><input type="text" id="subName" placeholder="e.g. Literacy">
+                <label>Code</label><input type="text" id="subCode" placeholder="e.g. NUR-01">
+                
+                <label>School Level</label>
+                <select id="subLevel">
+                    <option value="Pre-School">Pre-School (Nursery/KG)</option>
+                    <option value="Primary">Primary (Basic 1-6)</option>
+                    <option value="JHS">JHS (Basic 7-9)</option>
+                </select>
+                
+                <label>Department</label><select id="subDept"><option>Core</option><option>Elective</option></select>
                 <button class="btn" onclick="addSubject()">➕ Save Subject</button>
             </div>
             
             <div class="card">
                 <h3>Current Subjects</h3>
                 <table>
-                    <thead><tr><th>Name</th><th>Code</th><th>Dept.</th><th>Action</th></tr></thead>
+                    <thead><tr><th>Name</th><th>Level</th><th>Action</th></tr></thead>
                     <tbody id="subjectList"></tbody>
                 </table>
             </div>
@@ -43,28 +51,27 @@
         async function loadSubjects() {
             const list = await api.get('/subjects');
             const tbody = document.getElementById('subjectList');
-            tbody.innerHTML = list.map(s => `
+            tbody.innerHTML = list.map(s => {
+                let color = s.school_level === 'Pre-School' ? '#e67e22' : (s.school_level === 'Primary' ? '#27ae60' : '#8e44ad');
+                return `
                 <tr>
-                    <td><b>${s.name}</b></td>
-                    <td>${s.code}</td>
-                    <td>${s.department}</td>
-                    <td><button class="btn-delete" onclick="deleteSubject('${s.id}')">Delete</button></td>
+                    <td><b>${s.name}</b><br><small style="color:#888">${s.code}</small></td>
+                    <td><span class="level-tag" style="background:${color}">${s.school_level}</span></td>
+                    <td><button style="background:#e74c3c; color:white; border:none; padding:5px; border-radius:4px; cursor:pointer;" onclick="deleteSubject('${s.id}')">Delete</button></td>
                 </tr>
-            `).join('');
+                `;
+            }).join('');
         }
-
         async function addSubject() {
-            const data = { name: document.getElementById('subName').value, code: document.getElementById('subCode').value, department: document.getElementById('subDept').value };
+            const data = { name: document.getElementById('subName').value, code: document.getElementById('subCode').value, level: document.getElementById('subLevel').value, department: document.getElementById('subDept').value };
             const res = await api.post('/subjects/add', data);
             if (res.success) { api.showNotification("Subject Added!"); loadSubjects(); }
             else { alert("Error: " + res.error); }
         }
-
         async function deleteSubject(id) {
-            if (confirm("Are you sure you want to delete this subject?")) {
+            if (confirm("Delete this subject?")) {
                 const res = await api.post('/subjects/delete', { id });
-                if (res.success) { api.showNotification("Subject Deleted"); loadSubjects(); }
-                else { alert(res.error); }
+                if (res.success) { api.showNotification("Deleted"); loadSubjects(); }
             }
         }
         window.onload = loadSubjects;
