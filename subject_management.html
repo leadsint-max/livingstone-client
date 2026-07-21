@@ -4,77 +4,53 @@
     <meta charset="UTF-8">
     <title>Subject Management - Livingstone Academy</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #3498db; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; display: flex; }
-        .sidebar { width: 280px; height: 100vh; background: var(--primary); color: white; position: fixed; }
-        .main { margin-left: 300px; padding: 30px; width: calc(100% - 310px); }
+        :root { --primary: #2c3e50; --accent: #27ae60; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 280px; padding: 30px; width: 100%; }
         .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
-        input, select { padding: 10px; width: 100%; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 15px; }
-        .btn { background: var(--accent); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
+        input, select { padding: 10px; border: 1px solid #ddd; border-radius: 5px; width: 100%; margin-bottom: 15px; }
+        .btn { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; width: 100%; }
+        table { width: 100%; border-collapse: collapse; }
         th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
-        .level-tag { font-size: 0.75rem; padding: 2px 6px; border-radius: 4px; color: white; }
     </style>
 </head>
 <body>
-    <div class="sidebar"></div>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
+            <p><a href="academic_overview.html" style="color:white; text-decoration:none;">📊 Academics</a></p>
+            <p><b>📚 Subject Management</b></p>
+        </nav>
+    </div>
     <div class="main">
-        <h1>📚 Subject Management</h1>
-        <div style="display:grid; grid-template-columns: 1fr 2fr; gap:20px;">
+        <h1>📚 Subject & Curriculum Management</h1>
+        <div class="grid">
             <div class="card">
                 <h3>Add New Subject</h3>
-                <label>Subject Name</label><input type="text" id="subName" placeholder="e.g. Literacy">
-                <label>Code</label><input type="text" id="subCode" placeholder="e.g. NUR-01">
-                
-                <label>School Level</label>
-                <select id="subLevel">
-                    <option value="Pre-School">Pre-School (Nursery/KG)</option>
-                    <option value="Primary">Primary (Basic 1-6)</option>
-                    <option value="JHS">JHS (Basic 7-9)</option>
-                </select>
-                
-                <label>Department</label><select id="subDept"><option>Core</option><option>Elective</option></select>
-                <button class="btn" onclick="addSubject()">➕ Save Subject</button>
+                <label>Subject Name</label>
+                <input type="text" placeholder="e.g. Further Mathematics">
+                <label>Subject Code</label>
+                <input type="text" placeholder="e.g. MATH-101">
+                <label>Department</label>
+                <select><option>Science</option><option>Arts</option><option>Mathematics</option></select>
+                <button class="btn" onclick="api.showNotification('Subject Added')">Register Subject</button>
             </div>
-            
             <div class="card">
-                <h3>Current Subjects</h3>
+                <h3>Active School Subjects</h3>
                 <table>
-                    <thead><tr><th>Name</th><th>Level</th><th>Action</th></tr></thead>
-                    <tbody id="subjectList"></tbody>
+                    <thead><tr><th>Subject Name</th><th>Code</th><th>Dept.</th><th>Actions</th></tr></thead>
+                    <tbody>
+                        <tr><td>English Language</td><td>ENG-101</td><td>Languages</td><td><button>Edit</button></td></tr>
+                        <tr><td>Integrated Science</td><td>SCI-101</td><td>Science</td><td><button>Edit</button></td></tr>
+                        <tr><td>Mathematics</td><td>MATH-101</td><td>Mathematics</td><td><button>Edit</button></td></tr>
+                    </tbody>
                 </table>
             </div>
         </div>
     </div>
     <script src="api.js"></script>
-    <script>
-        async function loadSubjects() {
-            const list = await api.get('/subjects');
-            const tbody = document.getElementById('subjectList');
-            tbody.innerHTML = list.map(s => {
-                let color = s.school_level === 'Pre-School' ? '#e67e22' : (s.school_level === 'Primary' ? '#27ae60' : '#8e44ad');
-                return `
-                <tr>
-                    <td><b>${s.name}</b><br><small style="color:#888">${s.code}</small></td>
-                    <td><span class="level-tag" style="background:${color}">${s.school_level}</span></td>
-                    <td><button style="background:#e74c3c; color:white; border:none; padding:5px; border-radius:4px; cursor:pointer;" onclick="deleteSubject('${s.id}')">Delete</button></td>
-                </tr>
-                `;
-            }).join('');
-        }
-        async function addSubject() {
-            const data = { name: document.getElementById('subName').value, code: document.getElementById('subCode').value, level: document.getElementById('subLevel').value, department: document.getElementById('subDept').value };
-            const res = await api.post('/subjects/add', data);
-            if (res.success) { api.showNotification("Subject Added!"); loadSubjects(); }
-            else { alert("Error: " + res.error); }
-        }
-        async function deleteSubject(id) {
-            if (confirm("Delete this subject?")) {
-                const res = await api.post('/subjects/delete', { id });
-                if (res.success) { api.showNotification("Deleted"); loadSubjects(); }
-            }
-        }
-        window.onload = loadSubjects;
-    </script>
 </body>
 </html>

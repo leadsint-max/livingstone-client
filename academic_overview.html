@@ -2,56 +2,99 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Academics - Livingstone Academy</title>
+    <title>Academic Hub - Livingstone Academy</title>
     <style>
         :root { --primary: #2c3e50; --accent: #8e44ad; --bg: #f4f7f6; }
-        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
-        body { display: flex; background: var(--bg); height: 100vh; overflow: hidden; }
-        .sidebar { width: 240px; }
-        .main { margin-left: 240px; flex: 1; padding: 25px; overflow-y: auto; }
-        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-top: 4px solid var(--accent); }
-        .btn-link { display: block; width: 100%; padding: 10px; background: var(--primary); color: white; text-align: center; text-decoration: none; border-radius: 6px; margin-top: 15px; font-size: 0.85rem; font-weight: bold; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
-        th, td { text-align: left; padding: 8px; border-bottom: 1px solid #eee; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 280px; padding: 30px; width: calc(100% - 310px); }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
+        .btn-print { background: #27ae60; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
+        .btn-setup { background: var(--primary); color: white; text-decoration: none; padding: 10px 15px; border-radius: 6px; font-size: 0.9rem; }
     </style>
 </head>
 <body>
-    <div class="sidebar"></div>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
+            <p><a href="subject_management.html" style="color:white; text-decoration:none;">📚 Subjects</a></p>
+            <p><a href="exam_setup.html" style="color:white; text-decoration:none;">📝 Exam Setup</a></p>
+            <p><a href="mark_entry.html" style="color:white; text-decoration:none;">✍️ Mark Entry</a></p>
+            <p><b>📊 Academic Hub</b></p>
+        </nav>
+    </div>
     <div class="main">
-        <h3 style="margin-bottom:20px;">Academics & Examination Hub</h3>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h1>📊 Academic Hub & Report Center</h1>
+            <div>
+                <a href="subject_management.html" class="btn-setup">Manage Subjects</a>
+                <a href="exam_setup.html" class="btn-setup" style="margin-left:10px;">Setup Exams</a>
+            </div>
+        </div>
+
         <div class="grid">
-            <div class="card" style="border-color:#27ae60;">
-                <h4>✍️ Results Entry</h4>
-                <p style="font-size:0.8rem; color:#666; margin-top:5px;">Enter student scores for terms and exams.</p>
-                <a href="mark_entry.html" class="btn-link" style="background:#27ae60;">Go to Mark Entry</a>
-            </div>
+            <!-- Report Generation Section -->
             <div class="card">
-                <h4>📚 Subject Management</h4>
-                <p style="font-size:0.8rem; color:#666; margin-top:5px;">Define curriculum and assign levels.</p>
-                <a href="subject_management.html" class="btn-link">Manage Subjects</a>
-            </div>
-            <div class="card" style="grid-column: span 2;">
-                <h4>🏆 Merit List & Report Cards</h4>
-                <select id="classFilter" onchange="loadRankings()" style="padding:5px; margin-top:10px;"><option value="">-- Select Class --</option><option>Basic 1</option><option>Basic 2</option></select>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h3>🖨️ Generate Student Report Cards</h3>
+                    <select style="padding:8px; border-radius:5px;"><option>Grade 10 - Science A</option></select>
+                </div>
                 <table>
-                    <thead><tr><th>Pos.</th><th>Student Name</th><th>Total Score</th><th>Action</th></tr></thead>
-                    <tbody id="rankingsTable"></tbody>
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Avg %</th>
+                            <th>Position</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>David Adeleke</td>
+                            <td>94.7%</td>
+                            <td>1st</td>
+                            <td><span style="color:green">Marks Ready</span></td>
+                            <td><button class="btn-print" onclick="window.open('report_card_template.html', '_blank')">🖨️ Generate Report</button></td>
+                        </tr>
+                        <tr>
+                            <td>Samuel Okon</td>
+                            <td>88.2%</td>
+                            <td>2nd</td>
+                            <td><span style="color:green">Marks Ready</span></td>
+                            <td><button class="btn-print" onclick="window.open('report_card_template.html', '_blank')">🖨️ Generate Report</button></td>
+                        </tr>
+                        <tr>
+                            <td>Jane Doe</td>
+                            <td>45.0%</td>
+                            <td>38th</td>
+                            <td><span style="color:orange">Pending Exam</span></td>
+                            <td><button class="btn-print" style="background:#ccc;" disabled>🖨️ Generate Report</button></td>
+                        </tr>
+                    </tbody>
                 </table>
+                <button style="width:100%; margin-top:20px; padding:15px; background:var(--accent); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">Print Bulk Report Cards (Whole Class)</button>
+            </div>
+
+            <!-- Rankings & AI Side -->
+            <div class="side-column">
+                <div class="card">
+                    <h3>🏆 Top Performers</h3>
+                    <p>1. David Adeleke (94.7%)</p>
+                    <p>2. Samuel Okon (88.2%)</p>
+                    <p>3. Kwame Mensah (85.0%)</p>
+                </div>
+                <div class="card" style="border-left: 5px solid #e74c3c;">
+                    <h3>🧠 AI Risk Alerts</h3>
+                    <p style="color:#c0392b;"><b>Jane Doe</b> is at high risk of failing Mathematics. Recommend parent meeting.</p>
+                </div>
             </div>
         </div>
     </div>
     <script src="api.js"></script>
-    <script>
-        async function loadRankings() {
-            const cls = document.getElementById('classFilter').value;
-            const data = await api.get(`/academic/rankings/${cls}`);
-            document.getElementById('rankingsTable').innerHTML = data.map(r => `
-                <tr><td><b>${r.position}</b></td><td>${r.first_name} ${r.last_name}</td><td>${r.total_score || 0}</td>
-                <td><button onclick="viewReport('${r.admission_no}')" style="font-size:0.7rem; padding:4px 8px; cursor:pointer;">🖨️ Report</button></td></tr>
-            `).join('');
-        }
-        function viewReport(id) { localStorage.setItem('target_student_id', id); window.location.href = 'report_card_template.html'; }
-    </script>
 </body>
 </html>

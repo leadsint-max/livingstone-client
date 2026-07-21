@@ -4,50 +4,111 @@
     <meta charset="UTF-8">
     <title>Student Directory - Livingstone Academy</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #3498db; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; display: flex; }
-        .sidebar { width: 280px; height: 100vh; background: var(--primary); color: white; position: fixed; }
-        .main { margin-left: 300px; padding: 30px; width: calc(100% - 310px); }
-        .student-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .student-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; }
-        .student-photo { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 3px solid #eee; }
-        .student-card h3 { margin: 0; color: var(--primary); }
-        .badge { background: #e1f5fe; color: #0288d1; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; margin-top: 5px; display: inline-block; }
+        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 240px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
+        .main { margin-left: 280px; padding: 30px; width: calc(100% - 310px); }
+        .controls { display: flex; gap: 15px; margin-bottom: 25px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        input, select { padding: 10px; border: 1px solid #ddd; border-radius: 4px; flex-grow: 1; }
+        .student-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .student-card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-top: 4px solid var(--accent); }
+        .student-card h3 { margin: 0 0 10px 0; color: var(--primary); }
+        .student-card p { margin: 5px 0; color: #666; font-size: 0.9rem; }
+        .badge { background: #e1f5fe; color: #0288d1; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+        .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 15px; }
+        .actions button { padding: 8px; cursor: pointer; border: 1px solid #ddd; background: #fff; border-radius: 4px; font-size: 0.8rem; }
     </style>
 </head>
 <body>
-    <div class="sidebar"></div>
+    <div class="sidebar">
+        <h2>Livingstone</h2>
+        <nav>
+            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
+            <p><a href="student_class_hub.html" style="color:white; text-decoration:none;">🏫 Student/Class Hub</a></p>
+            <p><b>👨‍🎓 Student Directory</b></p>
+            <p><a href="#" onclick="api.logout()" style="color: #e74c3c; text-decoration:none;">🚪 Logout</a></p>
+        </nav>
+    </div>
     <div class="main">
-        <h1>👨‍🎓 Real Student Directory</h1>
+        <h1>👨‍🎓 Student Directory</h1>
+        <div class="controls">
+            <input type="text" id="searchInput" placeholder="Search by name or ID..." onkeyup="filterStudents()">
+            <select id="classFilter" onchange="filterStudents()">
+                <option value="">All Classes</option>
+                <!-- Classes will be loaded dynamically -->
+            </select>
+            <button onclick="loadStudents()" style="background:var(--accent); color:white; border:none; padding:10px 20px; border-radius:4px; cursor:pointer;">🔄 Refresh</button>
+        </div>
+        
+        <div id="loadingMessage" style="text-align:center; padding:50px; color:#666;">Loading Students...</div>
+        
         <div class="student-grid" id="studentContainer">
-            <p>Loading real-time student data...</p>
+            <!-- Student cards will be injected here -->
         </div>
     </div>
+
     <script src="api.js"></script>
     <script>
         async function loadStudents() {
             const container = document.getElementById('studentContainer');
+            const loader = document.getElementById('loadingMessage');
+            
             try {
-                const students = await api.get('/students');
+                loader.style.display = 'block';
                 container.innerHTML = '';
+                
+                const students = await api.get('/students');
+                
                 if (students.length === 0) {
-                    container.innerHTML = '<p>No students found. Register your first student!</p>';
+                    container.innerHTML = '<p style="grid-column: span 3; text-align:center; padding:50px;">No students found in the database. Go to Admissions to add one!</p>';
                 } else {
-                    students.forEach(s => {
-                        const photo = s.photo || 'https://via.placeholder.com/100';
-                        container.innerHTML += `
-                            <div class="student-card">
-                                <img src="${photo}" class="student-photo">
-                                <h3>${s.first_name} ${s.last_name}</h3>
-                                <span class="badge">${s.class_name || 'No Class'}</span>
-                                <p style="font-size:0.85rem; color:#666; margin-top:10px;">ID: ${s.admission_no}</p>
-                                <p style="font-size:0.85rem; color:#666;">Parent: ${s.parent_phone || 'N/A'}</p>
+                    students.forEach(student => {
+                        const card = document.createElement('div');
+                        card.className = 'student-card';
+                        card.setAttribute('data-name', `${student.first_name} ${student.last_name}`);
+                        card.setAttribute('data-class', student.class_name || 'Unassigned');
+                        
+                        card.innerHTML = `
+                            <div style="display:flex; justify-content:space-between;">
+                                <h3>${student.first_name} ${student.last_name}</h3>
+                                <span class="badge">ACTIVE</span>
+                            </div>
+                            <p><b>ID:</b> ${student.admission_no}</p>
+                            <p><b>Class:</b> ${student.class_name || 'Not Assigned'}</p>
+                            
+                            <div class="actions">
+                                <button onclick="api.showNotification('Editing ${student.first_name}...')">✏️ Edit</button>
+                                <button onclick="api.showNotification('Promoting Student...')">📈 Promote</button>
+                                <button onclick="window.open('report_card_template.html', '_blank')">🖨️ ID Card</button>
+                                <button onclick="api.showNotification('Student Suspended', 'error')" style="color:red">🚫 Suspend</button>
                             </div>
                         `;
+                        container.appendChild(card);
                     });
                 }
-            } catch (err) { container.innerHTML = '<p style="color:red">Failed to load data.</p>'; }
+            } catch (err) {
+                container.innerHTML = '<p style="color:red; text-align:center;">Failed to load data from server.</p>';
+            } finally {
+                loader.style.display = 'none';
+            }
         }
+
+        function filterStudents() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const classVal = document.getElementById('classFilter').value;
+            const cards = document.querySelectorAll('.student-card');
+            
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name').toLowerCase();
+                const sClass = card.getAttribute('data-class');
+                const matchesSearch = name.includes(search);
+                const matchesClass = classVal === "" || sClass === classVal;
+                
+                card.style.display = (matchesSearch && matchesClass) ? "block" : "none";
+            });
+        }
+
+        // Load students on page startup
         window.onload = loadStudents;
     </script>
 </body>
