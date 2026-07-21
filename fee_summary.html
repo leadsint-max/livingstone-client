@@ -6,37 +6,40 @@
     <style>
         :root { --primary: #2c3e50; --accent: #27ae60; --bg: #f4f7f6; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
-        .sidebar { width: 280px; height: 100vh; background: var(--primary); color: white; position: fixed; }
-        .main { margin-left: 300px; padding: 30px; width: calc(100% - 310px); }
+        .sidebar { width: 260px; height: 100vh; background: var(--primary); position: fixed; }
+        .main { margin-left: 260px; flex: 1; padding: 30px; }
         .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th, td { text-align: left; padding: 15px; border-bottom: 1px solid #eee; }
-        .total-row { background: #e8f5e9; font-weight: bold; color: #2e7d32; }
+        .total-badge { background: #e8f5e9; color: #2e7d32; padding: 8px 15px; border-radius: 20px; font-weight: bold; font-size: 1rem; }
+        .item-tag { font-size: 0.75rem; background: #eee; padding: 3px 8px; border-radius: 4px; margin-right: 5px; color: #666; display: inline-block; margin-top: 5px; }
     </style>
 </head>
 <body>
     <div class="sidebar"></div>
     <div class="main">
-        <h1>🏫 Class-wise Total Billing Summary</h1>
+        <h1>🏫 Class-wise Fee Totals</h1>
+        <p style="color:#666; margin-bottom:25px;">This page automatically calculates the total billable amount for each class based on your itemized setup.</p>
+        
         <div class="card">
-            <h3>Summary of Total Fees per Class (GH₵)</h3>
+            <h3>Calculated Totals (July 2026 Term)</h3>
             <table>
                 <thead>
-                    <tr><th>Class / Grade</th><th>Items Included</th><th>Total Term Fee</th></tr>
+                    <tr><th>Class / Grade</th><th>Included Items</th><th>Total Term Amount</th></tr>
                 </thead>
                 <tbody id="summaryList">
-                    <tr><td colspan="3">Calculating totals...</td></tr>
+                    <tr><td colspan="3">Calculating class totals...</td></tr>
                 </tbody>
             </table>
         </div>
     </div>
     <script src="api.js"></script>
     <script>
-        async function loadSummary() {
+        async function loadClassSummary() {
             const list = await api.get('/fees/structure');
             const summary = {};
             
-            // LOGIC: Group by class and sum up
+            // MATH LOGIC: Group items by class and add up the amounts
             list.forEach(item => {
                 if (!summary[item.class_name]) {
                     summary[item.class_name] = { total: 0, items: [] };
@@ -46,15 +49,22 @@
             });
 
             const tbody = document.getElementById('summaryList');
-            tbody.innerHTML = Object.keys(summary).map(cls => `
-                <tr class="total-row">
-                    <td>${cls}</td>
-                    <td style="font-size:0.8rem; font-weight:normal; color:#666;">${summary[cls].items.join(', ')}</td>
-                    <td>GH₵ ${summary[cls].total.toFixed(2)}</td>
+            const sortedClasses = Object.keys(summary).sort();
+
+            if (sortedClasses.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:30px;">No fee items found. Please use <b>Setup Tuition & Fees</b> first.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = sortedClasses.map(cls => `
+                <tr>
+                    <td style="font-weight:bold;">${cls}</td>
+                    <td>${summary[cls].items.map(i => `<span class="item-tag">${i}</span>`).join('')}</td>
+                    <td><span class="total-badge">GH₵ ${summary[cls].total.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></td>
                 </tr>
-            `).join('') || '<tr><td colspan="3">No fees set yet. Go to Setup.</td></tr>';
+            `).join('');
         }
-        window.onload = loadSummary;
+        window.onload = loadClassSummary;
     </script>
 </body>
 </html>
