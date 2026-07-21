@@ -20,10 +20,7 @@ const api = {
                 body: JSON.stringify(data)
             });
             return await response.json();
-        } catch (err) {
-            console.error("Fetch Error:", err);
-            return { success: false, error: "Server connection failed." };
-        }
+        } catch (err) { return { success: false, error: "Connection failed" }; }
     },
 
     get: async (endpoint) => {
@@ -43,19 +40,52 @@ const api = {
         const isStudentSection = path.includes('student') || path.includes('class') || path.includes('timetable') || path.includes('admission');
         const isStaffSection = path.includes('staff') || path.includes('payroll') || path.includes('teaching');
         const isAcademicSection = path.includes('academic') || path.includes('mark') || path.includes('exam') || path.includes('subject');
-        
-        // ADDED FINANCE DETECTION
-        const isFinanceSection = path.includes('fee') || path.includes('payment') || path.includes('balance') || path.includes('account');
+        const isFinanceSection = path.includes('fee') || path.includes('payment') || path.includes('balance') || path.includes('account') || path.includes('financial');
 
         let menuHtml = '';
 
-        if (isStudentSection) {
+        if (isFinanceSection) {
+            menuHtml = `
+                <li style="padding:15px 20px; background:#34495e; border-bottom:1px solid #455a64;">
+                    <a href="admin_dashboard.html" style="color:#3498db; text-decoration:none; font-weight:bold;">⬅ Back to Dashboard</a>
+                </li>
+                <div style="padding: 20px 20px; overflow-y: auto; flex-grow: 1;">
+                    <p style="color:#e67e22; font-size:0.75rem; font-weight:bold; text-transform:uppercase; margin-bottom:10px;">📋 Fee Structure</p>
+                    <ul style="list-style:none; padding:0; font-size:0.85rem; color:#bdc3c7; margin-bottom:20px;">
+                        <li style="margin-bottom:8px;"><a href="fee_structure.html" style="color:inherit; text-decoration:none;">✅ Setup Tuition & Fees</a></li>
+                        <li style="margin-bottom:8px;"><a href="fee_structure.html" style="color:inherit; text-decoration:none;">✅ Class-wise Settings</a></li>
+                        <li><a href="fee_structure.html" style="color:inherit; text-decoration:none;">🔒 Admin Configuration</a></li>
+                    </ul>
+
+                    <p style="color:#27ae60; font-size:0.75rem; font-weight:bold; text-transform:uppercase; margin-bottom:10px;">💰 Payments & Invoicing</p>
+                    <ul style="list-style:none; padding:0; font-size:0.85rem; color:#bdc3c7; margin-bottom:20px;">
+                        <li style="margin-bottom:8px;"><a href="record_payment.html" style="color:inherit; text-decoration:none;">✅ Record New Payment</a></li>
+                        <li style="margin-bottom:8px;"><a href="record_payment.html" style="color:inherit; text-decoration:none;">✅ Generate Invoices</a></li>
+                        <li><a href="record_payment.html" style="color:inherit; text-decoration:none;">✅ Print Receipts</a></li>
+                    </ul>
+
+                    <p style="color:#3498db; font-size:0.75rem; font-weight:bold; text-transform:uppercase; margin-bottom:10px;">⚖️ Balances & Discounts</p>
+                    <ul style="list-style:none; padding:0; font-size:0.85rem; color:#bdc3c7; margin-bottom:20px;">
+                        <li style="margin-bottom:8px;"><a href="student_balances.html" style="color:inherit; text-decoration:none;">✅ Track Debtors</a></li>
+                        <li style="margin-bottom:8px;"><a href="student_balances.html" style="color:inherit; text-decoration:none;">✅ Manage Scholarships</a></li>
+                        <li><a href="student_balances.html" style="color:inherit; text-decoration:none;">✅ Apply Waivers</a></li>
+                    </ul>
+
+                    <p style="color:#9b59b6; font-size:0.75rem; font-weight:bold; text-transform:uppercase; margin-bottom:10px;">📊 Financial Reporting</p>
+                    <ul style="list-style:none; padding:0; font-size:0.85rem; color:#bdc3c7;">
+                        <li style="margin-bottom:8px;"><a href="financial_reports.html" style="color:inherit; text-decoration:none;">✅ Daily Collections</a></li>
+                        <li style="margin-bottom:8px;"><a href="financial_reports.html" style="color:inherit; text-decoration:none;">✅ Revenue Analytics</a></li>
+                        <li><a href="financial_reports.html" style="color:inherit; text-decoration:none;">✅ Audit Trails</a></li>
+                    </ul>
+                </div>
+            `;
+        } else if (isStudentSection) {
             menuHtml = `
                 <li style="padding:15px 20px; background:#34495e; border-bottom:1px solid #455a64;">
                     <a href="admin_dashboard.html" style="color:#3498db; text-decoration:none; font-weight:bold;">⬅ Back to Dashboard</a>
                 </li>
                 <div style="padding: 20px 25px;">
-                    <p style="color:#3498db; font-size:0.7rem; font-weight:bold; text-transform:uppercase; margin-bottom:15px;">Student Hub</p>
+                    <p style="color:#3498db; font-size:0.7rem; font-weight:bold; text-transform:uppercase; margin-bottom:15px;">Student Management</p>
                     <ul style="list-style:none; padding:0; font-size:0.9rem;">
                         <li style="margin-bottom:12px;"><a href="student_admission.html" style="color:white; text-decoration:none;">➕ Add Student</a></li>
                         <li style="margin-bottom:12px;"><a href="student_list.html" style="color:white; text-decoration:none;">📂 Directory</a></li>
@@ -70,7 +100,7 @@ const api = {
                     <a href="admin_dashboard.html" style="color:#3498db; text-decoration:none; font-weight:bold;">⬅ Back to Dashboard</a>
                 </li>
                 <div style="padding: 20px 25px;">
-                    <p style="color:#3498db; font-size:0.7rem; font-weight:bold; text-transform:uppercase; margin-bottom:15px;">HR & Payroll</p>
+                    <p style="color:#3498db; font-size:0.7rem; font-weight:bold; text-transform:uppercase; margin-bottom:15px;">Staff & HR</p>
                     <ul style="list-style:none; padding:0; font-size:0.9rem;">
                         <li style="margin-bottom:12px;"><a href="staff_registration.html" style="color:white; text-decoration:none;">➕ Register Staff</a></li>
                         <li style="margin-bottom:12px;"><a href="staff_directory.html" style="color:white; text-decoration:none;">📂 Directory</a></li>
@@ -84,38 +114,21 @@ const api = {
                     <a href="admin_dashboard.html" style="color:#3498db; text-decoration:none; font-weight:bold;">⬅ Back to Dashboard</a>
                 </li>
                 <div style="padding: 20px 25px;">
-                    <p style="color:#3498db; font-size:0.7rem; font-weight:bold; text-transform:uppercase; margin-bottom:15px;">Academic Center</p>
+                    <p style="color:#3498db; font-size:0.7rem; font-weight:bold; text-transform:uppercase; margin-bottom:15px;">Academics</p>
                     <ul style="list-style:none; padding:0; font-size:0.9rem;">
                         <li style="margin-bottom:12px;"><a href="mark_entry.html" style="color:white; text-decoration:none;">✍️ Enter Scores</a></li>
                         <li style="margin-bottom:12px;"><a href="subject_management.html" style="color:white; text-decoration:none;">📚 Manage Subjects</a></li>
-                        <li style="margin-bottom:12px;"><a href="exam_setup.html" style="color:white; text-decoration:none;">📝 Exam Setup</a></li>
-                        <li><a href="academic_overview.html" style="color:white; text-decoration:none;">📊 Report Center</a></li>
-                    </ul>
-                </div>
-            `;
-        } else if (isFinanceSection) {
-            // NEW FINANCE SIDEBAR
-            menuHtml = `
-                <li style="padding:15px 20px; background:#34495e; border-bottom:1px solid #455a64;">
-                    <a href="admin_dashboard.html" style="color:#3498db; text-decoration:none; font-weight:bold;">⬅ Back to Dashboard</a>
-                </li>
-                <div style="padding: 20px 25px;">
-                    <p style="color:#27ae60; font-size:0.7rem; font-weight:bold; text-transform:uppercase; margin-bottom:15px;">Finance Center</p>
-                    <ul style="list-style:none; padding:0; font-size:0.9rem;">
-                        <li style="margin-bottom:12px;"><a href="fees_accounts_hub.html" style="color:white; text-decoration:none;">💳 Accounts Hub</a></li>
-                        <li style="margin-bottom:12px;"><a href="record_payment.html" style="color:white; text-decoration:none;">💰 Record Payment</a></li>
-                        <li style="margin-bottom:12px;"><a href="student_balances.html" style="color:white; text-decoration:none;">⚖️ Student Balances</a></li>
-                        <li><a href="financial_reports.html" style="color:white; text-decoration:none;">📈 Financial Reports</a></li>
+                        <li><a href="academic_overview.html" style="color:white; text-decoration:none;">📊 Hub</a></li>
                     </ul>
                 </div>
             `;
         } else {
-            // Main Dashboard View
+            // Dashboard View
             menuHtml = `
                 <div style="padding: 25px; border-bottom: 1px solid rgba(255,255,255,0.1);">
                     <h2 style="color:#3498db; margin:0; font-size: 1.2rem;">Livingstone Academy</h2>
                 </div>
-                <ul style="list-style:none; padding:0; margin-top:10px;">
+                <ul style="list-style:none; padding:0; margin-top:10px; flex-grow: 1;">
                     <li style="padding:12px 25px;"><a href="admin_dashboard.html" style="color:white; text-decoration:none;">📊 Dashboard</a></li>
                     <li style="padding:12px 25px;"><a href="student_class_hub.html" style="color:white; text-decoration:none;">👨‍🎓 Students & Classes</a></li>
                     <li style="padding:12px 25px;"><a href="staff_teacher_hub.html" style="color:white; text-decoration:none;">👨‍🏫 Staff & Teachers</a></li>
@@ -125,10 +138,6 @@ const api = {
                     <li style="padding:12px 25px;"><a href="library_hub.html" style="color:white; text-decoration:none;">📚 Library</a></li>
                     <li style="padding:12px 25px;"><a href="transport_hostel_hub.html" style="color:white; text-decoration:none;">🚌 Logistics</a></li>
                     <li style="padding:12px 25px;"><a href="inventory_hub.html" style="color:white; text-decoration:none;">📦 Inventory</a></li>
-                    <li style="padding:12px 25px;"><a href="communication_hub.html" style="color:white; text-decoration:none;">💬 Communication</a></li>
-                    <li style="padding:12px 25px;"><a href="calendar_hub.html" style="color:white; text-decoration:none;">📅 Calendar</a></li>
-                    <li style="padding:12px 25px;"><a href="reports_hub.html" style="color:white; text-decoration:none;">📈 Reports</a></li>
-                    <li style="padding:12px 25px;"><a href="system_admin_hub.html" style="color:white; text-decoration:none;">⚙️ System Admin</a></li>
                 </ul>
             `;
         }
