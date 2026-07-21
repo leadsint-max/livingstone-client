@@ -2,49 +2,61 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard - Livingstone Academy</title>
+    <title>Admin Dashboard - Livingstone Academy</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; }
+        :root { --primary: #2c3e50; --secondary: #34495e; --accent: #3498db; --bg: #f4f7f6; --sidebar-width: 280px; }
         * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
         body { display: flex; background-color: var(--bg); height: 100vh; overflow: hidden; }
-        .sidebar { width: 240px; height: 100vh; background: var(--primary); position: fixed; }
-        .main { margin-left: 240px; flex: 1; padding: 25px; overflow-y: auto; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
-        .stat-card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-left: 4px solid var(--accent); }
-        .stat-card p { color: #7f8c8d; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; }
-        .stat-card .value { font-size: 1.5rem; font-weight: bold; color: var(--primary); }
-        .welcome-box { margin-top: 30px; background: white; padding: 20px; border-radius: 10px; border: 1px solid #eee; }
+        .sidebar { width: var(--sidebar-width); height: 100vh; background: var(--primary); color: white; display: flex; flex-direction: column; }
+        .sidebar-header { padding: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .nav-links { flex-grow: 1; overflow-y: auto; list-style: none; }
+        .nav-item { padding: 12px 25px; transition: 0.3s; }
+        .nav-item:hover, .nav-item.active { background: var(--secondary); border-left: 4px solid var(--accent); }
+        .nav-item a { color: white; text-decoration: none; width: 100%; display: block; font-size: 0.9rem; }
+        .main-content { flex-grow: 1; overflow-y: auto; padding: 30px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .stat-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-bottom: 4px solid var(--accent); }
+        .value { font-size: 1.8rem; font-weight: bold; margin-top: 5px; }
     </style>
 </head>
 <body>
-    <div class="sidebar"></div>
-    <div class="main">
-        <header style="display:flex; justify-content:space-between; align-items:center;">
-            <h3>School Overview</h3>
-            <span style="font-size:0.75rem; color:#27ae60; font-weight:bold;">● LIVE SYSTEM</span>
-        </header>
-        <div class="stats-grid">
+    <div class="sidebar">
+        <div class="sidebar-header"><h2>Livingstone</h2><p style="font-size:0.7rem; opacity:0.6;">Admin Portal</p></div>
+        <ul class="nav-links">
+            <li class="nav-item"><a href="index.html">📊 Dashboard</a></li>
+            <li class="nav-item"><a href="student_class_hub.html">👨‍🎓 Students & Classes</a></li>
+            <li class="nav-item"><a href="staff_teacher_hub.html">👨‍🏫 Staff & Teachers</a></li>
+            <li class="nav-item"><a href="fees_accounts_hub.html">💳 Fees & Accounts</a></li>
+            <li class="nav-item"><a href="academic_overview.html">📝 Academics</a></li>
+            <li class="nav-item"><a href="parents_hub.html">👪 Parents</a></li>
+            <li class="nav-item"><a href="library_hub.html">📚 Library</a></li>
+            <li class="nav-item"><a href="transport_hostel_hub.html">🚌 Logistics</a></li>
+            <li class="nav-item"><a href="inventory_hub.html">📦 Inventory</a></li>
+            <li class="nav-item"><a href="communication_hub.html">💬 Communication</a></li>
+            <li class="nav-item"><a href="calendar_hub.html">📅 Calendar</a></li>
+            <li class="nav-item"><a href="reports_hub.html">📈 Reports</a></li>
+            <li class="nav-item"><a href="system_admin_hub.html">⚙️ System Admin</a></li>
+            <li class="nav-item" style="margin-top:20px; background:#c0392b;"><a href="#" onclick="api.logout()">🚪 Logout</a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <h1>Welcome, Administrator</h1>
+        <div class="stats-grid" id="statsGrid">
             <div class="stat-card"><p>Total Students</p><div class="value" id="countStudents">...</div></div>
-            <div class="stat-card"><p>School Staff</p><div class="value" id="countStaff">...</div></div>
+            <div class="stat-card"><p>Total Staff</p><div class="value" id="countStaff">...</div></div>
             <div class="stat-card"><p>Teachers</p><div class="value" id="countTeachers">...</div></div>
-            <div class="stat-card" style="border-color:#27ae60;"><p>Total Revenue</p><div class="value" id="countFees" style="color:#27ae60">GH₵ 0</div></div>
-        </div>
-        <div class="welcome-box">
-            <p style="font-size:0.9rem; color:#555;">Welcome to <b>Livingstone Academy</b>. Use the sidebar to manage all school departments.</p>
+            <div class="stat-card"><p>Pending Fees</p><div class="value" style="color:#e74c3c">GH₵ 12,400</div></div>
         </div>
     </div>
     <script src="api.js"></script>
     <script>
-        async function load() {
-            try {
-                const d = await api.get('/stats');
-                document.getElementById('countStudents').textContent = d.totalStudents || 0;
-                document.getElementById('countStaff').textContent = d.totalStaff || 0;
-                document.getElementById('countTeachers').textContent = d.totalTeachers || 0;
-                document.getElementById('countFees').textContent = "GH₵ " + (parseFloat(d.pendingFees) || 0).toLocaleString();
-            } catch(e) {}
+        async function loadStats() {
+            const data = await api.get('/stats');
+            document.getElementById('countStudents').textContent = data.totalStudents || 0;
+            document.getElementById('countStaff').textContent = data.totalStaff || 0;
+            document.getElementById('countTeachers').textContent = data.totalTeachers || 0;
         }
-        window.onload = load;
+        window.onload = loadStats;
     </script>
 </body>
 </html>
