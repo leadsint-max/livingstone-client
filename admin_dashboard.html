@@ -4,59 +4,97 @@
     <meta charset="UTF-8">
     <title>Admin Dashboard - Livingstone Academy</title>
     <style>
-        :root { --primary: #2c3e50; --secondary: #34495e; --accent: #3498db; --bg: #f4f7f6; --sidebar-width: 280px; }
-        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
+        :root { --primary: #2c3e50; --secondary: #34495e; --accent: #3498db; --bg: #f4f7f6; --sidebar-width: 220px; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding: 0; }
         body { display: flex; background-color: var(--bg); height: 100vh; overflow: hidden; }
-        .sidebar { width: var(--sidebar-width); height: 100vh; background: var(--primary); color: white; display: flex; flex-direction: column; }
-        .sidebar-header { padding: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .nav-links { flex-grow: 1; overflow-y: auto; list-style: none; }
-        .nav-item { padding: 12px 25px; transition: 0.3s; }
-        .nav-item:hover, .nav-item.active { background: var(--secondary); border-left: 4px solid var(--accent); }
-        .nav-item a { color: white; text-decoration: none; width: 100%; display: block; font-size: 0.9rem; }
-        .main-content { flex-grow: 1; overflow-y: auto; padding: 30px; }
+        
+        /* Fixed Sidebar Space */
+        .sidebar { width: var(--sidebar-width); height: 100vh; position: fixed; left: 0; top: 0; background: var(--primary); }
+        
+        /* Responsive Main Content */
+        .main { 
+            margin-left: var(--sidebar-width); 
+            flex: 1; 
+            padding: 35px; 
+            overflow-y: auto; 
+            height: 100vh;
+        }
+
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        header h1 { color: var(--primary); font-size: 1.6rem; }
+
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-        .stat-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-bottom: 4px solid var(--accent); }
-        .value { font-size: 1.8rem; font-weight: bold; margin-top: 5px; }
+        .stat-card { 
+            background: white; 
+            padding: 25px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+            border-left: 6px solid var(--accent);
+            transition: 0.3s;
+        }
+        .stat-card .label { color: #7f8c8d; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; margin-bottom: 8px; display: block; }
+        .stat-card .value { font-size: 1.8rem; font-weight: bold; color: var(--primary); }
+        
+        .info-box { 
+            margin-top: 40px; 
+            background: white; 
+            padding: 25px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            line-height: 1.6;
+            border: 1px solid #eee;
+        }
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <div class="sidebar-header"><h2>Livingstone</h2><p style="font-size:0.7rem; opacity:0.6;">Admin Portal</p></div>
-        <ul class="nav-links">
-            <li class="nav-item"><a href="index.html">📊 Dashboard</a></li>
-            <li class="nav-item"><a href="student_class_hub.html">👨‍🎓 Students & Classes</a></li>
-            <li class="nav-item"><a href="staff_teacher_hub.html">👨‍🏫 Staff & Teachers</a></li>
-            <li class="nav-item"><a href="fees_accounts_hub.html">💳 Fees & Accounts</a></li>
-            <li class="nav-item"><a href="academic_overview.html">📝 Academics</a></li>
-            <li class="nav-item"><a href="parents_hub.html">👪 Parents</a></li>
-            <li class="nav-item"><a href="library_hub.html">📚 Library</a></li>
-            <li class="nav-item"><a href="transport_hostel_hub.html">🚌 Logistics</a></li>
-            <li class="nav-item"><a href="inventory_hub.html">📦 Inventory</a></li>
-            <li class="nav-item"><a href="communication_hub.html">💬 Communication</a></li>
-            <li class="nav-item"><a href="calendar_hub.html">📅 Calendar</a></li>
-            <li class="nav-item"><a href="reports_hub.html">📈 Reports</a></li>
-            <li class="nav-item"><a href="system_admin_hub.html">⚙️ System Admin</a></li>
-            <li class="nav-item" style="margin-top:20px; background:#c0392b;"><a href="#" onclick="api.logout()">🚪 Logout</a></li>
-        </ul>
-    </div>
-    <div class="main-content">
-        <h1>Welcome, Administrator</h1>
-        <div class="stats-grid" id="statsGrid">
-            <div class="stat-card"><p>Total Students</p><div class="value" id="countStudents">...</div></div>
-            <div class="stat-card"><p>Total Staff</p><div class="value" id="countStaff">...</div></div>
-            <div class="stat-card"><p>Teachers</p><div class="value" id="countTeachers">...</div></div>
-            <div class="stat-card"><p>Pending Fees</p><div class="value" style="color:#e74c3c">GH₵ 12,400</div></div>
+    <div class="sidebar"></div>
+    <div class="main">
+        <header>
+            <h1>School Overview</h1>
+            <div style="background: #e8f5e9; color: #2e7d32; padding: 6px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem;">
+                ● System Live
+            </div>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="label">Total Students</span>
+                <div class="value" id="countStudents">...</div>
+            </div>
+            <div class="stat-card">
+                <span class="label">Total Staff</span>
+                <div class="value" id="countStaff">...</div>
+            </div>
+            <div class="stat-card">
+                <span class="label">Teachers</span>
+                <div class="value" id="countTeachers">...</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #27ae60;">
+                <span class="label">Total Revenue</span>
+                <div class="value" id="countFees" style="color: #27ae60;">GH₵ 0.00</div>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h4 style="color: var(--primary); margin-bottom: 8px;">Livingstone Academy Portal</h4>
+            <p style="color: #666; font-size: 0.9rem;">
+                This dashboard provides real-time statistics of your school's data. 
+                Use the sidebar to manage students, staff, academics, and finances.
+            </p>
         </div>
     </div>
     <script src="api.js"></script>
     <script>
-        async function loadStats() {
-            const data = await api.get('/stats');
-            document.getElementById('countStudents').textContent = data.totalStudents || 0;
-            document.getElementById('countStaff').textContent = data.totalStaff || 0;
-            document.getElementById('countTeachers').textContent = data.totalTeachers || 0;
+        async function load() {
+            try {
+                const d = await api.get('/stats');
+                document.getElementById('countStudents').textContent = d.totalStudents || 0;
+                document.getElementById('countStaff').textContent = d.totalStaff || 0;
+                document.getElementById('countTeachers').textContent = d.totalTeachers || 0;
+                document.getElementById('countFees').textContent = "GH₵ " + (parseFloat(d.pendingFees) || 0).toLocaleString();
+            } catch(e) { console.error("Stats error"); }
         }
-        window.onload = loadStats;
+        window.onload = load;
     </script>
 </body>
 </html>
