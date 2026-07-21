@@ -7,10 +7,20 @@
         :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; }
         * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
         body { display: flex; background: var(--bg); height: 100vh; overflow: hidden; }
-        .sidebar { width: 240px; }
-        .main { flex: 1; padding: 20px; overflow-y: auto; }
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
-        .stat-card { background: white; padding: 12px; border-radius: 8px; box-shadow: 0 1px 5px rgba(0,0,0,0.05); border-left: 5px solid var(--accent); }
+        
+        .sidebar { width: 240px; height: 100vh; position: fixed; left: 0; top: 0; }
+        
+        /* THE FIX: Added margin-left: 240px so content is not hidden by sidebar */
+        .main { 
+            margin-left: 240px; 
+            flex: 1; 
+            padding: 25px; 
+            overflow-y: auto; 
+            height: 100vh;
+        }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 1px 5px rgba(0,0,0,0.05); border-left: 5px solid var(--accent); }
         .stat-card p { font-size: 0.65rem; color: #7f8c8d; font-weight: bold; text-transform: uppercase; margin-bottom: 3px; }
         .stat-card .value { font-size: 1.2rem; font-weight: bold; color: var(--primary); }
     </style>
@@ -18,15 +28,22 @@
 <body>
     <div class="sidebar"></div>
     <div class="main">
-        <h3 style="margin-bottom:15px;">Livingstone Academy Dashboard</h3>
+        <h3 style="margin-bottom:15px; color:var(--primary);">Livingstone Academy Dashboard</h3>
+        
         <div class="stats-grid">
             <div class="stat-card"><p>Students</p><div class="value" id="countStudents">...</div></div>
             <div class="stat-card"><p>Staff</p><div class="value" id="countStaff">...</div></div>
             <div class="stat-card"><p>Teachers</p><div class="value" id="countTeachers">...</div></div>
             <div class="stat-card" style="border-color:#27ae60;"><p>Total Revenue</p><div class="value" id="countFees" style="color:#27ae60">GH₵ 0</div></div>
         </div>
-        <div style="margin-top:20px; background:white; padding:20px; border-radius:8px; font-size:0.85rem; color:#444;">
-            <b>System Overview:</b> Access all academic, financial, and logistical modules from the sidebar.
+
+        <div style="background:white; padding:20px; border-radius:8px; box-shadow: 0 1px 5px rgba(0,0,0,0.05);">
+            <h4 style="margin-bottom:10px;">System Status</h4>
+            <p style="font-size:0.85rem; color:#444; line-height: 1.5;">
+                Welcome to the <b>Livingstone Academy</b> administration portal. 
+                Everything is configured and running live. You can manage academic, 
+                financial, and logistical modules from the left-hand sidebar.
+            </p>
         </div>
     </div>
     <script src="api.js"></script>
