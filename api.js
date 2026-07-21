@@ -53,7 +53,7 @@ const api = {
                     <p style="color:#e67e22; font-size:0.75rem; font-weight:bold; text-transform:uppercase; margin-bottom:10px;">📋 Fee Structure</p>
                     <ul style="list-style:none; padding:0; font-size:0.85rem; color:#bdc3c7; margin-bottom:20px;">
                         <li style="margin-bottom:8px;"><a href="fee_structure.html" style="color:inherit; text-decoration:none;">✅ Setup Tuition & Fees</a></li>
-                        <li style="margin-bottom:8px;"><a href="fee_structure.html" style="color:inherit; text-decoration:none;">✅ Class-wise Settings</a></li>
+                        <li><a href="fee_summary.html" style="color:inherit; text-decoration:none;">✅ Class-wise Settings</a></li>
                         <li><a href="fee_structure.html" style="color:inherit; text-decoration:none;">🔒 Admin Configuration</a></li>
                     </ul>
 
