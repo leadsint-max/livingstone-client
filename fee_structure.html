@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Fee Structure - Livingstone Academy</title>
+    <title>Fee Setup - Livingstone Academy</title>
     <style>
         :root { --primary: #2c3e50; --accent: #e67e22; --bg: #f4f7f6; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
@@ -18,27 +18,31 @@
 <body>
     <div class="sidebar"></div>
     <div class="main">
-        <h1>📋 Set School Fee Structure</h1>
+        <h1>📋 Set Itemized Fees</h1>
         <div style="display:grid; grid-template-columns: 1fr 2fr; gap:20px;">
             <div class="card">
-                <h3>Add/Update Fee</h3>
+                <h3>Add Fee Item</h3>
                 <label>Target Class</label>
                 <select id="className">
                     <option>Nursery</option><option>K.G.1</option><option>K.G.2</option>
                     <option>Basic 1</option><option>Basic 2</option><option>Basic 3</option>
                     <option>Basic 4</option><option>Basic 5</option><option>Basic 6</option>
+                    <option>Basic 7</option><option>Basic 8</option><option>Basic 9</option>
                 </select>
                 <label>Fee Type</label>
-                <select id="feeType"><option>Tuition Fee</option><option>Bus Fee</option><option>Uniform</option></select>
+                <select id="feeType">
+                    <option>Tuition Fee</option><option>Bus Fee</option><option>Uniform</option>
+                    <option>Canteen</option><option>Books & Stationery</option>
+                </select>
                 <label>Amount (GH₵)</label>
-                <input type="number" id="amount" placeholder="2500">
-                <button class="btn" onclick="saveStructure()">💾 Save Structure</button>
+                <input type="number" id="amount" placeholder="0.00">
+                <button class="btn" onclick="saveStructure()">➕ Add to Billing</button>
             </div>
             
             <div class="card">
-                <h3>Current Billing Table</h3>
-                <table>
-                    <thead><tr><th>Class</th><th>Fee Type</th><th>Amount</th></tr></thead>
+                <h3>Individual Billing Items</h3>
+                <table id="itemTable">
+                    <thead><tr><th>Class</th><th>Item</th><th>Amount</th></tr></thead>
                     <tbody id="structureList"></tbody>
                 </table>
             </div>
@@ -51,14 +55,9 @@
             document.getElementById('structureList').innerHTML = list.map(s => `<tr><td>${s.class_name}</td><td>${s.fee_type}</td><td><b>GH₵ ${s.amount}</b></td></tr>`).join('');
         }
         async function saveStructure() {
-            const data = { 
-                className: document.getElementById('className').value, 
-                feeType: document.getElementById('feeType').value, 
-                amount: document.getElementById('amount').value,
-                term: "Term 1"
-            };
+            const data = { className: document.getElementById('className').value, feeType: document.getElementById('feeType').value, amount: document.getElementById('amount').value, term: "Term 1" };
             const res = await api.post('/fees/structure', data);
-            if (res.success) { api.showNotification("Fee Structure Updated!"); loadStructure(); }
+            if (res.success) { api.showNotification("Item Added"); loadStructure(); }
         }
         window.onload = loadStructure;
     </script>
