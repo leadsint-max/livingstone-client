@@ -6,10 +6,24 @@ const api = {
 
     showNotification: (message, type = 'success') => {
         const note = document.createElement('div');
-        note.style.cssText = `position: fixed; top: 20px; right: 20px; padding: 15px 25px; background: ${type === 'success' ? '#27ae60' : '#e74c3c'}; color: white; border-radius: 8px; z-index: 10000; font-weight: bold;`;
+        note.style.cssText = `position: fixed; top: 20px; right: 20px; padding: 15px 25px; background: ${type === 'success' ? '#27ae60' : '#e74c3c'}; color: white; border-radius: 8px; z-index: 10000; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.1);`;
         note.textContent = message;
         document.body.appendChild(note);
         setTimeout(() => note.remove(), 3000);
+    },
+
+    post: async (endpoint, data) => {
+        try {
+            const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${api.getToken()}` },
+                body: JSON.stringify(data)
+            });
+            return await response.json();
+        } catch (err) {
+            console.error("Fetch Error:", err);
+            return { success: false, error: "Server connection failed." };
+        }
     },
 
     get: async (endpoint) => {
@@ -21,22 +35,13 @@ const api = {
         } catch (err) { return { error: "Failed to load data" }; }
     },
 
-    post: async (endpoint, data) => {
-        try {
-            const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${api.getToken()}` },
-                body: JSON.stringify(data)
-            });
-            return await response.json();
-        } catch (err) { return { success: false, error: "Connection failed" }; }
-    },
-
     renderSidebar: () => {
         const sidebar = document.querySelector('.sidebar');
         if (!sidebar) return;
 
         const path = window.location.pathname;
+        
+        // Detection Logic for Focus Modes
         const isStudentSection = path.includes('student') || path.includes('class') || path.includes('timetable') || path.includes('admission');
         const isStaffSection = path.includes('staff') || path.includes('payroll') || path.includes('teaching');
         const isAcademicSection = path.includes('academic') || path.includes('mark') || path.includes('exam') || path.includes('subject');
@@ -44,6 +49,7 @@ const api = {
         let menuHtml = '';
 
         if (isStudentSection) {
+            // FOCUS: Students & Classes
             menuHtml = `
                 <li style="padding:15px 20px; background:#34495e; border-bottom:1px solid #455a64;">
                     <a href="admin_dashboard.html" style="color:#3498db; text-decoration:none; font-weight:bold;">⬅ Back to Dashboard</a>
@@ -59,6 +65,7 @@ const api = {
                 </div>
             `;
         } else if (isStaffSection) {
+            // FOCUS: Staff & Teachers
             menuHtml = `
                 <li style="padding:15px 20px; background:#34495e; border-bottom:1px solid #455a64;">
                     <a href="admin_dashboard.html" style="color:#3498db; text-decoration:none; font-weight:bold;">⬅ Back to Dashboard</a>
@@ -73,12 +80,13 @@ const api = {
                 </div>
             `;
         } else if (isAcademicSection) {
+            // FOCUS: Academics
             menuHtml = `
                 <li style="padding:15px 20px; background:#34495e; border-bottom:1px solid #455a64;">
                     <a href="admin_dashboard.html" style="color:#3498db; text-decoration:none; font-weight:bold;">⬅ Back to Dashboard</a>
                 </li>
                 <div style="padding: 20px 25px;">
-                    <p style="color:#3498db; font-size:0.7rem; font-weight:bold; text-transform:uppercase; margin-bottom:15px;">Academic Management</p>
+                    <p style="color:#3498db; font-size:0.7rem; font-weight:bold; text-transform:uppercase; margin-bottom:15px;">Academic Center</p>
                     <ul style="list-style:none; padding:0; font-size:0.9rem;">
                         <li style="margin-bottom:12px;"><a href="mark_entry.html" style="color:white; text-decoration:none;">✍️ Enter Scores</a></li>
                         <li style="margin-bottom:12px;"><a href="subject_management.html" style="color:white; text-decoration:none;">📚 Manage Subjects</a></li>
@@ -88,23 +96,36 @@ const api = {
                 </div>
             `;
         } else {
-            // Main Dashboard Sidebar
+            // FULL SYSTEM SIDEBAR (Main Dashboard View)
             menuHtml = `
                 <div style="padding: 25px; border-bottom: 1px solid rgba(255,255,255,0.1);">
                     <h2 style="color:#3498db; margin:0; font-size: 1.2rem;">Livingstone Academy</h2>
+                    <p style="font-size:0.6rem; opacity:0.6; margin:0; text-transform:uppercase; letter-spacing:1px;">School Management</p>
                 </div>
                 <ul style="list-style:none; padding:0; margin-top:10px;">
-                    <li style="padding:12px 25px;"><a href="admin_dashboard.html" style="color:white; text-decoration:none;">📊 Dashboard</a></li>
-                    <li style="padding:12px 25px;"><a href="student_class_hub.html" style="color:white; text-decoration:none;">👨‍🎓 Students & Classes</a></li>
-                    <li style="padding:12px 25px;"><a href="staff_teacher_hub.html" style="color:white; text-decoration:none;">👨‍🏫 Staff & Teachers</a></li>
-                    <li style="padding:12px 25px;"><a href="fees_accounts_hub.html" style="color:white; text-decoration:none;">💳 Fees & Accounts</a></li>
-                    <li style="padding:12px 25px;"><a href="academic_overview.html" style="color:white; text-decoration:none;">📝 Academics</a></li>
-                    <li style="padding:12px 25px;"><a href="parents_hub.html" style="color:white; text-decoration:none;">👪 Parents</a></li>
+                    <li style="padding:10px 25px;"><a href="admin_dashboard.html" style="color:white; text-decoration:none;">📊 Dashboard</a></li>
+                    <li style="padding:10px 25px;"><a href="student_class_hub.html" style="color:white; text-decoration:none;">👨‍🎓 Students & Classes</a></li>
+                    <li style="padding:10px 25px;"><a href="staff_teacher_hub.html" style="color:white; text-decoration:none;">👨‍🏫 Staff & Teachers</a></li>
+                    <li style="padding:10px 25px;"><a href="fees_accounts_hub.html" style="color:white; text-decoration:none;">💳 Fees & Accounts</a></li>
+                    <li style="padding:10px 25px;"><a href="academic_overview.html" style="color:white; text-decoration:none;">📝 Academics</a></li>
+                    <li style="padding:10px 25px;"><a href="parents_hub.html" style="color:white; text-decoration:none;">👪 Parents</a></li>
+                    <li style="padding:10px 25px;"><a href="library_hub.html" style="color:white; text-decoration:none;">📚 Library</a></li>
+                    <li style="padding:10px 25px;"><a href="transport_hostel_hub.html" style="color:white; text-decoration:none;">🚌 Logistics</a></li>
+                    <li style="padding:10px 25px;"><a href="inventory_hub.html" style="color:white; text-decoration:none;">📦 Inventory</a></li>
+                    <li style="padding:10px 25px;"><a href="communication_hub.html" style="color:white; text-decoration:none;">💬 Communication</a></li>
+                    <li style="padding:10px 25px;"><a href="calendar_hub.html" style="color:white; text-decoration:none;">📅 Calendar</a></li>
+                    <li style="padding:10px 25px;"><a href="reports_hub.html" style="color:white; text-decoration:none;">📈 Reports</a></li>
+                    <li style="padding:10px 25px;"><a href="system_admin_hub.html" style="color:white; text-decoration:none;">⚙️ System Admin</a></li>
                 </ul>
             `;
         }
 
-        sidebar.innerHTML = `${menuHtml} <div style="margin-top:auto; padding:15px; background:#c0392b; cursor:pointer; text-align:center; font-weight:bold; color:white;" onclick="api.logout()">Logout 🚪</div>`;
+        sidebar.innerHTML = `
+            <div style="display:flex; flex-direction:column; height:100%;">
+                ${menuHtml}
+                <div style="margin-top:auto; padding:15px; background:#c0392b; cursor:pointer; text-align:center; font-weight:bold; color:white; font-size:0.9rem;" onclick="api.logout()">Logout 🚪</div>
+            </div>
+        `;
     }
 };
 
