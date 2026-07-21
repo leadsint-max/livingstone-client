@@ -6,64 +6,61 @@
     <style>
         :root { --primary: #2c3e50; --accent: #e67e22; --bg: #f4f7f6; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
-        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
-        .main { margin-left: 280px; padding: 30px; width: calc(100% - 310px); }
+        .sidebar { width: 280px; height: 100vh; background: var(--primary); color: white; position: fixed; }
+        .main { margin-left: 300px; padding: 30px; width: calc(100% - 310px); }
         .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        input, select { padding: 10px; border: 1px solid #ddd; border-radius: 5px; width: 100%; margin-bottom: 15px; }
-        .btn { background: var(--accent); color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; }
+        input, select { padding: 10px; width: 100%; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 15px; }
+        .btn { background: var(--accent); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <h2>Livingstone</h2>
-        <nav>
-            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
-            <p><a href="fees_accounts_hub.html" style="color:white; text-decoration:none;">💳 Fees Hub</a></p>
-            <p><b>📋 Fee Structure</b></p>
-        </nav>
-    </div>
+    <div class="sidebar"></div>
     <div class="main">
-        <h1 style="color:var(--accent)">📋 Fee Structure (Admin Only)</h1>
-        
-        <div class="grid">
+        <h1>📋 Set School Fee Structure</h1>
+        <div style="display:grid; grid-template-columns: 1fr 2fr; gap:20px;">
             <div class="card">
-                <h3>Add New Fee Type</h3>
-                <label>Fee Name</label>
-                <input type="text" placeholder="e.g. Tuition Fee">
-                <label>Description</label>
-                <input type="text" placeholder="Standard academic charge">
-                <button class="btn" onclick="api.showNotification('New Fee Type Created')">Save Fee Type</button>
-            </div>
-
-            <div class="card">
-                <h3>Set Amount by Class</h3>
-                <label>Select Fee Type</label>
-                <select><option>Tuition Fee</option><option>Transport Fee</option></select>
-                <label>Select Class</label>
-                <select><option>Grade 10</option><option>Grade 11</option></select>
+                <h3>Add/Update Fee</h3>
+                <label>Target Class</label>
+                <select id="className">
+                    <option>Nursery</option><option>K.G.1</option><option>K.G.2</option>
+                    <option>Basic 1</option><option>Basic 2</option><option>Basic 3</option>
+                    <option>Basic 4</option><option>Basic 5</option><option>Basic 6</option>
+                </select>
+                <label>Fee Type</label>
+                <select id="feeType"><option>Tuition Fee</option><option>Bus Fee</option><option>Uniform</option></select>
                 <label>Amount (GH₵)</label>
-                <input type="number" placeholder="2500">
-                <button class="btn" style="background:var(--primary)" onclick="api.showNotification('Amount Set Successfully')">Set Class Fee</button>
+                <input type="number" id="amount" placeholder="2500">
+                <button class="btn" onclick="saveStructure()">💾 Save Structure</button>
             </div>
-
-            <div class="card" style="grid-column: span 2;">
-                <h3>Current Term Fee Schedule (2026/27)</h3>
+            
+            <div class="card">
+                <h3>Current Billing Table</h3>
                 <table>
-                    <thead>
-                        <tr><th>Fee Type</th><th>Class</th><th>Amount</th><th>Status</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>Tuition Fee</td><td>Grade 10</td><td>GH₵ 2,500</td><td>Active</td></tr>
-                        <tr><td>Transport (Route 1)</td><td>All</td><td>GH₵ 800</td><td>Active</td></tr>
-                        <tr><td>Lab Fee</td><td>Science Dept</td><td>GH₵ 400</td><td>Active</td></tr>
-                    </tbody>
+                    <thead><tr><th>Class</th><th>Fee Type</th><th>Amount</th></tr></thead>
+                    <tbody id="structureList"></tbody>
                 </table>
             </div>
         </div>
     </div>
     <script src="api.js"></script>
+    <script>
+        async function loadStructure() {
+            const list = await api.get('/fees/structure');
+            document.getElementById('structureList').innerHTML = list.map(s => `<tr><td>${s.class_name}</td><td>${s.fee_type}</td><td><b>GH₵ ${s.amount}</b></td></tr>`).join('');
+        }
+        async function saveStructure() {
+            const data = { 
+                className: document.getElementById('className').value, 
+                feeType: document.getElementById('feeType').value, 
+                amount: document.getElementById('amount').value,
+                term: "Term 1"
+            };
+            const res = await api.post('/fees/structure', data);
+            if (res.success) { api.showNotification("Fee Structure Updated!"); loadStructure(); }
+        }
+        window.onload = loadStructure;
+    </script>
 </body>
 </html>
