@@ -6,63 +6,74 @@
     <style>
         :root { --primary: #2c3e50; --accent: #27ae60; --bg: #f4f7f6; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
-        .sidebar { width: 260px; height: 100vh; background: var(--primary); position: fixed; }
+        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; }
         .main { margin-left: 260px; flex: 1; padding: 30px; }
         .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th, td { text-align: left; padding: 15px; border-bottom: 1px solid #eee; }
         .total-badge { background: #e8f5e9; color: #2e7d32; padding: 8px 15px; border-radius: 20px; font-weight: bold; font-size: 1rem; }
-        .item-tag { font-size: 0.75rem; background: #eee; padding: 3px 8px; border-radius: 4px; margin-right: 5px; color: #666; display: inline-block; margin-top: 5px; }
+        .item-tag { font-size: 0.75rem; background: #eee; padding: 3px 8px; border-radius: 4px; margin-right: 5px; color: #666; display: inline-block; margin-top: 5px; border: 1px solid #ddd; }
     </style>
 </head>
 <body>
     <div class="sidebar"></div>
     <div class="main">
-        <h1>🏫 Class-wise Fee Totals</h1>
-        <p style="color:#666; margin-bottom:25px;">This page automatically calculates the total billable amount for each class based on your itemized setup.</p>
+        <h1>🏫 Class-wise Total Billing</h1>
+        <p style="color:#666; margin-bottom:25px;">This table summarizes the total amount each class is expected to pay by adding up all tuition, uniform, and optional fees.</p>
         
         <div class="card">
-            <h3>Calculated Totals (July 2026 Term)</h3>
+            <h3>Summary by Class (GH₵)</h3>
             <table>
                 <thead>
-                    <tr><th>Class / Grade</th><th>Included Items</th><th>Total Term Amount</th></tr>
+                    <tr>
+                        <th style="width: 25%;">Class / Grade</th>
+                        <th style="width: 50%;">Breakdown of Items</th>
+                        <th style="width: 25%;">Total Term Fee</th>
+                    </tr>
                 </thead>
                 <tbody id="summaryList">
-                    <tr><td colspan="3">Calculating class totals...</td></tr>
+                    <tr><td colspan="3" style="text-align:center; padding:30px;">Calculating totals...</td></tr>
                 </tbody>
             </table>
+            <div style="margin-top:20px; text-align:right;">
+                <button onclick="window.print()" style="padding:10px 20px; cursor:pointer; background:var(--primary); color:white; border:none; border-radius:5px;">🖨️ Print Billing Summary</button>
+            </div>
         </div>
     </div>
     <script src="api.js"></script>
     <script>
         async function loadClassSummary() {
-            const list = await api.get('/fees/structure');
-            const summary = {};
-            
-            // MATH LOGIC: Group items by class and add up the amounts
-            list.forEach(item => {
-                if (!summary[item.class_name]) {
-                    summary[item.class_name] = { total: 0, items: [] };
+            try {
+                const list = await api.get('/fees/structure');
+                const summary = {};
+                
+                // Group items by class and calculate sums
+                list.forEach(item => {
+                    if (!summary[item.class_name]) {
+                        summary[item.class_name] = { total: 0, items: [] };
+                    }
+                    summary[item.class_name].total += parseFloat(item.amount);
+                    summary[item.class_name].items.push(item.fee_type + " (GH₵ " + item.amount + ")");
+                });
+
+                const tbody = document.getElementById('summaryList');
+                const sortedClasses = Object.keys(summary).sort();
+
+                if (sortedClasses.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:30px;">No fees found. Go to <b>Setup Tuition & Fees</b> to add items.</td></tr>';
+                    return;
                 }
-                summary[item.class_name].total += parseFloat(item.amount);
-                summary[item.class_name].items.push(item.fee_type);
-            });
 
-            const tbody = document.getElementById('summaryList');
-            const sortedClasses = Object.keys(summary).sort();
-
-            if (sortedClasses.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:30px;">No fee items found. Please use <b>Setup Tuition & Fees</b> first.</td></tr>';
-                return;
+                tbody.innerHTML = sortedClasses.map(cls => `
+                    <tr>
+                        <td style="font-weight:bold; font-size:1.1rem;">${cls}</td>
+                        <td>${summary[cls].items.map(i => `<span class="item-tag">${i}</span>`).join('')}</td>
+                        <td><span class="total-badge">GH₵ ${summary[cls].total.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></td>
+                    </tr>
+                `).join('');
+            } catch (err) {
+                document.getElementById('summaryList').innerHTML = '<tr><td colspan="3" style="color:red; text-align:center;">Failed to load data.</td></tr>';
             }
-
-            tbody.innerHTML = sortedClasses.map(cls => `
-                <tr>
-                    <td style="font-weight:bold;">${cls}</td>
-                    <td>${summary[cls].items.map(i => `<span class="item-tag">${i}</span>`).join('')}</td>
-                    <td><span class="total-badge">GH₵ ${summary[cls].total.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></td>
-                </tr>
-            `).join('');
         }
         window.onload = loadClassSummary;
     </script>
