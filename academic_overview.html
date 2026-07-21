@@ -2,60 +2,56 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Academic Hub - Livingstone Academy</title>
+    <title>Academics - Livingstone Academy</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #8e44ad; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; display: flex; }
-        .sidebar { width: 280px; height: 100vh; background: var(--primary); color: white; position: fixed; }
-        .main { margin-left: 300px; padding: 30px; width: calc(100% - 310px); }
-        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
-        .btn-print { background: #27ae60; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; }
+        :root { --primary: #2c3e50; --accent: #8e44ad; --bg: #f4f7f6; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
+        body { display: flex; background: var(--bg); height: 100vh; overflow: hidden; }
+        .sidebar { width: 240px; }
+        .main { margin-left: 240px; flex: 1; padding: 25px; overflow-y: auto; }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-top: 4px solid var(--accent); }
+        .btn-link { display: block; width: 100%; padding: 10px; background: var(--primary); color: white; text-align: center; text-decoration: none; border-radius: 6px; margin-top: 15px; font-size: 0.85rem; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
+        th, td { text-align: left; padding: 8px; border-bottom: 1px solid #eee; }
     </style>
 </head>
 <body>
     <div class="sidebar"></div>
     <div class="main">
-        <h1>📊 Academic Merit & Report Center</h1>
-        
-        <div class="card">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h3>Class Merit List & Positions</h3>
-                <select id="classFilter" onchange="loadRankings()" style="padding:10px; border-radius:5px;">
-                    <option value="">-- Select Class --</option>
-                    <option>Basic 1</option><option>Basic 2</option><option>Basic 3</option>
-                </select>
+        <h3 style="margin-bottom:20px;">Academics & Examination Hub</h3>
+        <div class="grid">
+            <div class="card" style="border-color:#27ae60;">
+                <h4>✍️ Results Entry</h4>
+                <p style="font-size:0.8rem; color:#666; margin-top:5px;">Enter student scores for terms and exams.</p>
+                <a href="mark_entry.html" class="btn-link" style="background:#27ae60;">Go to Mark Entry</a>
             </div>
-            <table>
-                <thead>
-                    <tr><th>Position</th><th>Student Name</th><th>Total Score</th><th>Action</th></tr>
-                </thead>
-                <tbody id="rankingsTable"></tbody>
-            </table>
+            <div class="card">
+                <h4>📚 Subject Management</h4>
+                <p style="font-size:0.8rem; color:#666; margin-top:5px;">Define curriculum and assign levels.</p>
+                <a href="subject_management.html" class="btn-link">Manage Subjects</a>
+            </div>
+            <div class="card" style="grid-column: span 2;">
+                <h4>🏆 Merit List & Report Cards</h4>
+                <select id="classFilter" onchange="loadRankings()" style="padding:5px; margin-top:10px;"><option value="">-- Select Class --</option><option>Basic 1</option><option>Basic 2</option></select>
+                <table>
+                    <thead><tr><th>Pos.</th><th>Student Name</th><th>Total Score</th><th>Action</th></tr></thead>
+                    <tbody id="rankingsTable"></tbody>
+                </table>
+            </div>
         </div>
     </div>
     <script src="api.js"></script>
     <script>
         async function loadRankings() {
             const cls = document.getElementById('classFilter').value;
-            const container = document.getElementById('rankingsTable');
             const data = await api.get(`/academic/rankings/${cls}`);
-            
-            container.innerHTML = data.map(r => `
-                <tr>
-                    <td><b>${r.position}</b></td>
-                    <td>${r.first_name} ${r.last_name}</td>
-                    <td>${r.total_score || 0}</td>
-                    <td><button class="btn-print" onclick="viewReport('${r.admission_no}')">🖨️ View Report</button></td>
-                </tr>
+            document.getElementById('rankingsTable').innerHTML = data.map(r => `
+                <tr><td><b>${r.position}</b></td><td>${r.first_name} ${r.last_name}</td><td>${r.total_score || 0}</td>
+                <td><button onclick="viewReport('${r.admission_no}')" style="font-size:0.7rem; padding:4px 8px; cursor:pointer;">🖨️ Report</button></td></tr>
             `).join('');
         }
-
-        function viewReport(id) {
-            localStorage.setItem('target_student_id', id);
-            window.location.href = 'report_card_template.html';
-        }
+        function viewReport(id) { localStorage.setItem('target_student_id', id); window.location.href = 'report_card_template.html'; }
     </script>
 </body>
 </html>
