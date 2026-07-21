@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Class Fee Summary - Livingstone Academy</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #27ae60; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 280px; height: 100vh; background: var(--primary); color: white; position: fixed; }
+        .main { margin-left: 300px; padding: 30px; width: calc(100% - 310px); }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { text-align: left; padding: 15px; border-bottom: 1px solid #eee; }
+        .total-row { background: #e8f5e9; font-weight: bold; color: #2e7d32; }
+    </style>
+</head>
+<body>
+    <div class="sidebar"></div>
+    <div class="main">
+        <h1>🏫 Class-wise Total Billing Summary</h1>
+        <div class="card">
+            <h3>Summary of Total Fees per Class (GH₵)</h3>
+            <table>
+                <thead>
+                    <tr><th>Class / Grade</th><th>Items Included</th><th>Total Term Fee</th></tr>
+                </thead>
+                <tbody id="summaryList">
+                    <tr><td colspan="3">Calculating totals...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="api.js"></script>
+    <script>
+        async function loadSummary() {
+            const list = await api.get('/fees/structure');
+            const summary = {};
+            
+            // LOGIC: Group by class and sum up
+            list.forEach(item => {
+                if (!summary[item.class_name]) {
+                    summary[item.class_name] = { total: 0, items: [] };
+                }
+                summary[item.class_name].total += parseFloat(item.amount);
+                summary[item.class_name].items.push(item.fee_type);
+            });
+
+            const tbody = document.getElementById('summaryList');
+            tbody.innerHTML = Object.keys(summary).map(cls => `
+                <tr class="total-row">
+                    <td>${cls}</td>
+                    <td style="font-size:0.8rem; font-weight:normal; color:#666;">${summary[cls].items.join(', ')}</td>
+                    <td>GH₵ ${summary[cls].total.toFixed(2)}</td>
+                </tr>
+            `).join('') || '<tr><td colspan="3">No fees set yet. Go to Setup.</td></tr>';
+        }
+        window.onload = loadSummary;
+    </script>
+</body>
+</html>
