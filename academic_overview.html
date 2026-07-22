@@ -2,46 +2,61 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Academic Hub - Livingstone Academy</title>
+    <title>Merit Lists - Livingstone Academy</title>
     <style>
         :root { --primary: #2c3e50; --accent: #8e44ad; --bg: #f4f7f6; }
         body { display: flex; font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; }
         .sidebar { width: 220px; height: 100vh; background: var(--primary); position: fixed; }
         .main { margin-left: 220px; flex: 1; padding: 30px; }
-        .hub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-top: 5px solid var(--accent); }
-        .btn-link { display: block; width: 100%; padding: 12px; background: var(--primary); color: white; text-align: center; text-decoration: none; border-radius: 8px; margin-top: 15px; font-weight: bold; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
+        .pos-badge { background: #3498db; color: white; padding: 3px 8px; border-radius: 4px; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="sidebar"></div>
     <div class="main">
-        <h1>📊 Academic & Examination Hub</h1>
-        <p style="color:#666; margin-bottom:25px;">Manage curriculum, grading, and student progress reports.</p>
-        
-        <div class="hub-grid">
-            <div class="card" style="border-color:#27ae60;">
-                <h3>✍️ Mark Entry</h3>
-                <p style="font-size:0.9rem; color:#555;">Select a class and subject to enter Mid-term or Final exam scores.</p>
-                <a href="mark_entry.html" class="btn-link" style="background:#27ae60;">Go to Entry</a>
+        <h1>🏆 Class Merit Lists & Rankings</h1>
+        <div class="card">
+            <div style="display:flex; gap:15px; align-items:center;">
+                <label>Select Class:</label>
+                <select id="cls" style="padding:10px; border-radius:8px; width:200px;">
+                    <option value="">-- Class --</option>
+                    <option>Nursery</option><option>K.G.1</option><option>K.G.2</option>
+                    <option>Basic 1</option><option>Basic 2</option><option>Basic 3</option>
+                    <option>Basic 4</option><option>Basic 5</option><option>Basic 6</option>
+                    <option>Basic 7</option><option>Basic 8</option><option>Basic 9</option>
+                </select>
+                <button onclick="load()" style="padding:10px 20px; background:#27ae60; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">🔍 Generate Merit List</button>
             </div>
-            <div class="card" style="border-color:#3498db;">
-                <h3>📚 Curriculum</h3>
-                <p style="font-size:0.9rem; color:#555;">Manage school subjects for Pre-School, Primary, and JHS levels.</p>
-                <a href="subject_management.html" class="btn-link" style="background:#3498db;">Manage Subjects</a>
-            </div>
-            <div class="card" style="border-color:#e67e22;">
-                <h3>🏆 Merit Lists</h3>
-                <p style="font-size:0.9rem; color:#555;">View class rankings and automated student positions.</p>
-                <a href="#" class="btn-link" style="background:#e67e22;">View Rankings</a>
-            </div>
-            <div class="card" style="border-color:#8e44ad;">
-                <h3>🖨️ Report Cards</h3>
-                <p style="font-size:0.9rem; color:#555;">Generate and print official term performance reports.</p>
-                <a href="report_card_template.html" class="btn-link" style="background:#8e44ad;">Generate Reports</a>
-            </div>
+
+            <table id="table" style="display:none;">
+                <thead><tr><th>Position</th><th>Student Name</th><th>Total Score</th><th>Average</th><th>Action</th></tr></thead>
+                <tbody id="list"></tbody>
+            </table>
         </div>
     </div>
     <script src="api.js"></script>
+    <script>
+        async function load() {
+            const cls = document.getElementById('cls').value;
+            const data = await api.get('/academic/rankings/' + cls);
+            const tbody = document.getElementById('list');
+            tbody.innerHTML = data.map(r => `
+                <tr>
+                    <td><span class="pos-badge">${r.position}</span></td>
+                    <td><b>${r.first_name} ${r.last_name}</b></td>
+                    <td>${r.total_score}</td>
+                    <td>${parseFloat(r.average_score).toFixed(1)}%</td>
+                    <td><button onclick="viewReport('${r.admission_no}')" style="font-size:0.75rem; cursor:pointer;">🖨️ View Report</button></td>
+                </tr>`).join('') || '<tr><td colspan="5">No marks found for this class.</td></tr>';
+            document.getElementById('table').style.display = 'table';
+        }
+        function viewReport(id) {
+            localStorage.setItem('target_student_id', id);
+            window.location.href = 'report_card_template.html';
+        }
+    </script>
 </body>
 </html>
