@@ -8,49 +8,49 @@
         body { display: flex; font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; }
         .sidebar { width: 220px; height: 100vh; background: var(--primary); position: fixed; }
         .main { margin-left: 220px; flex: 1; padding: 30px; }
-        .profile-header { background: white; padding: 30px; border-radius: 15px; display: flex; align-items: center; gap: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .photo { width: 150px; height: 150px; border-radius: 15px; object-fit: cover; border: 4px solid #eee; }
-        .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; margin-top: 30px; }
+        .profile-header { background: white; padding: 30px; border-radius: 15px; display: flex; align-items: center; gap: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-left: 8px solid var(--accent); }
+        .photo { width: 140px; height: 140px; border-radius: 12px; object-fit: cover; border: 3px solid #eee; }
+        .grid { display: grid; grid-template-columns: 1.8fr 1.2fr; gap: 25px; margin-top: 30px; }
         .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9rem; }
         th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
-        .badge { background: #e1f5fe; color: #0288d1; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
+        .badge { background: #e1f5fe; color: #0288d1; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
+        .payment-item { padding: 12px 0; border-bottom: 1px solid #f9f9f9; }
+        .payment-item:last-child { border: none; }
     </style>
 </head>
 <body>
     <div class="sidebar"></div>
     <div class="main">
         <div class="profile-header">
-            <img id="pPhoto" src="https://via.placeholder.com/150" class="photo">
+            <img id="pPhoto" src="https://via.placeholder.com/140" class="photo">
             <div>
-                <h1 id="pName" style="margin:0; color:var(--primary);">Loading Name...</h1>
-                <p id="pID" style="color:#666; margin:5px 0;">ID: ...</p>
+                <h1 id="pName" style="margin:0; color:var(--primary);">...</h1>
+                <p id="pID" style="color:#666; margin:8px 0; font-weight: bold;">ID: ...</p>
                 <span id="pClass" class="badge">...</span>
             </div>
         </div>
 
         <div class="grid">
-            <div class="left">
+            <div class="left-col">
                 <div class="card">
-                    <h3>📚 Academic Records</h3>
-                    <table>
+                    <h3 style="margin-top:0; color:var(--primary); border-bottom:2px solid #f4f7f6; padding-bottom:10px;">📊 Academic Performance</h3>
+                    <table id="marksTable">
                         <thead><tr><th>Subject</th><th>Type</th><th>Score</th><th>Remarks</th></tr></thead>
                         <tbody id="pMarks"></tbody>
                     </table>
                 </div>
                 <div class="card">
-                    <h3>🏡 Personal & Contact Info</h3>
-                    <p><b>Gender:</b> <span id="pGender">...</span></p>
-                    <p><b>Date of Birth:</b> <span id="pDOB">...</span></p>
-                    <p><b>Parent/Guardian:</b> <span id="pParent">...</span></p>
-                    <p><b>Contact Phone:</b> <span id="pPhone">...</span></p>
-                    <p><b>Residential Address:</b> <span id="pAddress">...</span></p>
+                    <h3 style="margin-top:0; color:var(--primary); border-bottom:2px solid #f4f7f6; padding-bottom:10px;">🏡 Contact & Address</h3>
+                    <p><b>Parent:</b> <span id="pParent">...</span></p>
+                    <p><b>Phone:</b> <span id="pPhone">...</span></p>
+                    <p><b>Address:</b> <span id="pAddress">...</span></p>
                 </div>
             </div>
-            <div class="right">
+            <div class="right-col">
                 <div class="card" style="border-top: 5px solid #27ae60;">
-                    <h3>💰 Payment History</h3>
-                    <div id="pPayments" style="font-size: 0.85rem;"></div>
+                    <h3 style="margin-top:0; color:#27ae60;">💰 Financial History</h3>
+                    <div id="pPayments"></div>
                 </div>
             </div>
         </div>
@@ -58,29 +58,52 @@
     <script src="api.js"></script>
     <script>
         async function loadProfile() {
-            const adm = localStorage.getItem('view_student_id');
-            const data = await api.get('/students/profile/' + adm);
-            
-            document.getElementById('pPhoto').src = data.profile.photo || 'https://via.placeholder.com/150';
-            document.getElementById('pName').textContent = data.profile.first_name + " " + data.profile.last_name;
-            document.getElementById('pID').textContent = "ID: " + data.profile.admission_no;
-            document.getElementById('pClass').textContent = data.profile.class_name;
-            document.getElementById('pGender').textContent = data.profile.gender;
-            document.getElementById('pDOB').textContent = data.profile.date_of_birth;
-            document.getElementById('pParent').textContent = data.profile.parent_name;
-            document.getElementById('pPhone').textContent = data.profile.parent_phone;
-            document.getElementById('pAddress').textContent = data.profile.address;
+            try {
+                const adm = localStorage.getItem('view_student_id');
+                const data = await api.get('/students/profile/' + adm);
+                
+                // Set Header Info
+                document.getElementById('pPhoto').src = data.profile.photo || 'https://via.placeholder.com/140';
+                document.getElementById('pName').textContent = data.profile.first_name + " " + data.profile.last_name;
+                document.getElementById('pID').textContent = "ADMISSION NO: " + data.profile.admission_no;
+                document.getElementById('pClass').textContent = data.profile.class_name || "Unassigned";
+                
+                // Set Contact Info
+                document.getElementById('pParent').textContent = data.profile.parent_name || "N/A";
+                document.getElementById('pPhone').textContent = data.profile.parent_phone || "N/A";
+                document.getElementById('pAddress').textContent = data.profile.address || "N/A";
 
-            document.getElementById('pMarks').innerHTML = data.marks.map(m => `
-                <tr><td>${m.subject_name}</td><td>${m.exam_type}</td><td><b>${m.score}</b></td><td>${m.remarks}</td></tr>
-            `).join('');
+                // Load Marks
+                const marksBody = document.getElementById('pMarks');
+                if (data.marks.length === 0) {
+                    marksBody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:#999;">No results recorded yet.</td></tr>';
+                } else {
+                    marksBody.innerHTML = data.marks.map(m => `
+                        <tr>
+                            <td><b>${m.subject_name}</b></td>
+                            <td>${m.exam_type}</td>
+                            <td><span style="font-weight:bold; color:${m.score >= 50 ? '#27ae60' : '#e74c3c'}">${m.score}</span></td>
+                            <td>${m.remarks}</td>
+                        </tr>
+                    `).join('');
+                }
 
-            document.getElementById('pPayments').innerHTML = data.payments.map(pay => `
-                <div style="padding:10px 0; border-bottom:1px solid #eee;">
-                    <b>GH₵ ${pay.amount}</b> - ${pay.fee_type}<br>
-                    <small style="color:#888;">${new Date(pay.created_at).toLocaleDateString()} | ${pay.payment_method}</small>
-                </div>
-            `).join('') || '<p>No payment records found.</p>';
+                // Load Payments
+                const payDiv = document.getElementById('pPayments');
+                if (data.payments.length === 0) {
+                    payDiv.innerHTML = '<p style="color:#999;">No payment history found.</p>';
+                } else {
+                    payDiv.innerHTML = data.payments.map(pay => `
+                        <div class="payment-item">
+                            <span style="float:right; font-weight:bold; color:#27ae60;">+ GH₵ ${pay.amount}</span>
+                            <div style="font-weight:bold;">${pay.fee_type}</div>
+                            <div style="font-size:0.75rem; color:#888;">${new Date(pay.created_at).toLocaleDateString()} | Ref: ${pay.reference || 'N/A'}</div>
+                        </div>
+                    `).join('');
+                }
+            } catch (err) {
+                console.error("Profile load error:", err);
+            }
         }
         window.onload = loadProfile;
     </script>
