@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Profile - Livingstone Academy</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; }
+        body { display: flex; font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; }
+        .sidebar { width: 220px; height: 100vh; background: var(--primary); position: fixed; }
+        .main { margin-left: 220px; flex: 1; padding: 30px; }
+        .profile-header { background: white; padding: 30px; border-radius: 15px; display: flex; align-items: center; gap: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .photo { width: 150px; height: 150px; border-radius: 15px; object-fit: cover; border: 4px solid #eee; }
+        .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; margin-top: 30px; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9rem; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
+        .badge { background: #e1f5fe; color: #0288d1; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="sidebar"></div>
+    <div class="main">
+        <div class="profile-header">
+            <img id="pPhoto" src="https://via.placeholder.com/150" class="photo">
+            <div>
+                <h1 id="pName" style="margin:0; color:var(--primary);">Loading Name...</h1>
+                <p id="pID" style="color:#666; margin:5px 0;">ID: ...</p>
+                <span id="pClass" class="badge">...</span>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="left">
+                <div class="card">
+                    <h3>📚 Academic Records</h3>
+                    <table>
+                        <thead><tr><th>Subject</th><th>Type</th><th>Score</th><th>Remarks</th></tr></thead>
+                        <tbody id="pMarks"></tbody>
+                    </table>
+                </div>
+                <div class="card">
+                    <h3>🏡 Personal & Contact Info</h3>
+                    <p><b>Gender:</b> <span id="pGender">...</span></p>
+                    <p><b>Date of Birth:</b> <span id="pDOB">...</span></p>
+                    <p><b>Parent/Guardian:</b> <span id="pParent">...</span></p>
+                    <p><b>Contact Phone:</b> <span id="pPhone">...</span></p>
+                    <p><b>Residential Address:</b> <span id="pAddress">...</span></p>
+                </div>
+            </div>
+            <div class="right">
+                <div class="card" style="border-top: 5px solid #27ae60;">
+                    <h3>💰 Payment History</h3>
+                    <div id="pPayments" style="font-size: 0.85rem;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="api.js"></script>
+    <script>
+        async function loadProfile() {
+            const adm = localStorage.getItem('view_student_id');
+            const data = await api.get('/students/profile/' + adm);
+            
+            document.getElementById('pPhoto').src = data.profile.photo || 'https://via.placeholder.com/150';
+            document.getElementById('pName').textContent = data.profile.first_name + " " + data.profile.last_name;
+            document.getElementById('pID').textContent = "ID: " + data.profile.admission_no;
+            document.getElementById('pClass').textContent = data.profile.class_name;
+            document.getElementById('pGender').textContent = data.profile.gender;
+            document.getElementById('pDOB').textContent = data.profile.date_of_birth;
+            document.getElementById('pParent').textContent = data.profile.parent_name;
+            document.getElementById('pPhone').textContent = data.profile.parent_phone;
+            document.getElementById('pAddress').textContent = data.profile.address;
+
+            document.getElementById('pMarks').innerHTML = data.marks.map(m => `
+                <tr><td>${m.subject_name}</td><td>${m.exam_type}</td><td><b>${m.score}</b></td><td>${m.remarks}</td></tr>
+            `).join('');
+
+            document.getElementById('pPayments').innerHTML = data.payments.map(pay => `
+                <div style="padding:10px 0; border-bottom:1px solid #eee;">
+                    <b>GH₵ ${pay.amount}</b> - ${pay.fee_type}<br>
+                    <small style="color:#888;">${new Date(pay.created_at).toLocaleDateString()} | ${pay.payment_method}</small>
+                </div>
+            `).join('') || '<p>No payment records found.</p>';
+        }
+        window.onload = loadProfile;
+    </script>
+</body>
+</html>
