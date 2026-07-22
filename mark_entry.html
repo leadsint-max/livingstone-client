@@ -9,11 +9,11 @@
         .sidebar { width: 220px; height: 100vh; background: var(--primary); position: fixed; }
         .main { margin-left: 220px; flex: 1; padding: 30px; }
         .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .controls { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+        .controls { display: grid; grid-template-columns: 1.5fr 1fr 1fr 0.8fr; gap: 15px; margin-bottom: 25px; }
         select, input { padding: 10px; border: 1px solid #ddd; border-radius: 8px; width: 100%; }
         table { width: 100%; border-collapse: collapse; }
         th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
-        .btn-save { background: var(--accent); color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 20px; }
+        .btn { background: #3498db; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -22,25 +22,31 @@
         <h1>✍️ Enter Examination Marks</h1>
         <div class="card">
             <div class="controls">
-                <select id="cls"><option value="">-- Class --</option><option>Nursery</option><option>Basic 1</option><option>Basic 2</option></select>
-                <select id="sub"><option>-- Subject --</option></select>
+                <select id="cls">
+                    <option value="">-- Class --</option>
+                    <option>Nursery</option><option>K.G.1</option><option>K.G.2</option>
+                    <option>Basic 1</option><option>Basic 2</option><option>Basic 3</option>
+                    <option>Basic 4</option><option>Basic 5</option><option>Basic 6</option>
+                    <option>Basic 7</option><option>Basic 8</option><option>Basic 9</option>
+                </select>
+                <select id="sub"><option value="">-- Subject --</option></select>
                 <select id="type"><option>Mid-Term</option><option>Final Exam</option></select>
-                <button onclick="loadList()" style="background:#3498db; color:white; border:none; border-radius:8px; cursor:pointer;">Load Students</button>
+                <button onclick="loadStudents()" class="btn">Load List</button>
             </div>
             <table id="table" style="display:none;">
                 <thead><tr><th>Student</th><th>ID</th><th>Score</th><th>Remarks</th></tr></thead>
                 <tbody id="list"></tbody>
             </table>
-            <button id="save" class="btn-save" style="display:none;" onclick="save()">💾 Save All Marks</button>
+            <button id="save" class="btn" style="display:none; background:var(--accent); width:100%; margin-top:20px;" onclick="save()">💾 Save All Marks</button>
         </div>
     </div>
     <script src="api.js"></script>
     <script>
         async function setup() {
             const subs = await api.get('/subjects');
-            document.getElementById('sub').innerHTML += subs.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+            document.getElementById('sub').innerHTML += subs.map(s => `<option value="${s.id}">${s.name} (${s.school_level})</option>`).join('');
         }
-        async function loadList() {
+        async function loadStudents() {
             const cls = document.getElementById('cls').value;
             const students = await api.get('/students/class/' + cls);
             const tbody = document.getElementById('list');
@@ -50,7 +56,7 @@
                     <td>${s.admission_no}</td>
                     <td><input type="number" class="score" value="0"></td>
                     <td><input type="text" class="remarks" placeholder="Remarks"></td>
-                </tr>`).join('') || '<tr><td colspan="4">No students found in this class.</td></tr>';
+                </tr>`).join('') || '<tr><td colspan="4">No students in ' + cls + '</td></tr>';
             document.getElementById('table').style.display = 'table';
             document.getElementById('save').style.display = 'block';
         }
