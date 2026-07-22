@@ -5,93 +5,40 @@
     <title>Academic Hub - Livingstone Academy</title>
     <style>
         :root { --primary: #2c3e50; --accent: #8e44ad; --bg: #f4f7f6; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
-        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
-        .main { margin-left: 280px; padding: 30px; width: calc(100% - 310px); }
-        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
-        .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
-        .btn-print { background: #27ae60; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
-        .btn-setup { background: var(--primary); color: white; text-decoration: none; padding: 10px 15px; border-radius: 6px; font-size: 0.9rem; }
+        body { display: flex; font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; }
+        .sidebar { width: 220px; height: 100vh; background: var(--primary); position: fixed; }
+        .main { margin-left: 220px; flex: 1; padding: 30px; }
+        .hub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-top: 5px solid var(--accent); }
+        .btn-link { display: block; width: 100%; padding: 12px; background: var(--primary); color: white; text-align: center; text-decoration: none; border-radius: 8px; margin-top: 15px; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <h2>Livingstone</h2>
-        <nav>
-            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
-            <p><a href="subject_management.html" style="color:white; text-decoration:none;">📚 Subjects</a></p>
-            <p><a href="exam_setup.html" style="color:white; text-decoration:none;">📝 Exam Setup</a></p>
-            <p><a href="mark_entry.html" style="color:white; text-decoration:none;">✍️ Mark Entry</a></p>
-            <p><b>📊 Academic Hub</b></p>
-        </nav>
-    </div>
+    <div class="sidebar"></div>
     <div class="main">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h1>📊 Academic Hub & Report Center</h1>
-            <div>
-                <a href="subject_management.html" class="btn-setup">Manage Subjects</a>
-                <a href="exam_setup.html" class="btn-setup" style="margin-left:10px;">Setup Exams</a>
+        <h1>📊 Academic & Examination Hub</h1>
+        <p style="color:#666; margin-bottom:25px;">Manage curriculum, grading, and student progress reports.</p>
+        
+        <div class="hub-grid">
+            <div class="card" style="border-color:#27ae60;">
+                <h3>✍️ Mark Entry</h3>
+                <p style="font-size:0.9rem; color:#555;">Select a class and subject to enter Mid-term or Final exam scores.</p>
+                <a href="mark_entry.html" class="btn-link" style="background:#27ae60;">Go to Entry</a>
             </div>
-        </div>
-
-        <div class="grid">
-            <!-- Report Generation Section -->
-            <div class="card">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <h3>🖨️ Generate Student Report Cards</h3>
-                    <select style="padding:8px; border-radius:5px;"><option>Grade 10 - Science A</option></select>
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Student Name</th>
-                            <th>Avg %</th>
-                            <th>Position</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>David Adeleke</td>
-                            <td>94.7%</td>
-                            <td>1st</td>
-                            <td><span style="color:green">Marks Ready</span></td>
-                            <td><button class="btn-print" onclick="window.open('report_card_template.html', '_blank')">🖨️ Generate Report</button></td>
-                        </tr>
-                        <tr>
-                            <td>Samuel Okon</td>
-                            <td>88.2%</td>
-                            <td>2nd</td>
-                            <td><span style="color:green">Marks Ready</span></td>
-                            <td><button class="btn-print" onclick="window.open('report_card_template.html', '_blank')">🖨️ Generate Report</button></td>
-                        </tr>
-                        <tr>
-                            <td>Jane Doe</td>
-                            <td>45.0%</td>
-                            <td>38th</td>
-                            <td><span style="color:orange">Pending Exam</span></td>
-                            <td><button class="btn-print" style="background:#ccc;" disabled>🖨️ Generate Report</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <button style="width:100%; margin-top:20px; padding:15px; background:var(--accent); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">Print Bulk Report Cards (Whole Class)</button>
+            <div class="card" style="border-color:#3498db;">
+                <h3>📚 Curriculum</h3>
+                <p style="font-size:0.9rem; color:#555;">Manage school subjects for Pre-School, Primary, and JHS levels.</p>
+                <a href="subject_management.html" class="btn-link" style="background:#3498db;">Manage Subjects</a>
             </div>
-
-            <!-- Rankings & AI Side -->
-            <div class="side-column">
-                <div class="card">
-                    <h3>🏆 Top Performers</h3>
-                    <p>1. David Adeleke (94.7%)</p>
-                    <p>2. Samuel Okon (88.2%)</p>
-                    <p>3. Kwame Mensah (85.0%)</p>
-                </div>
-                <div class="card" style="border-left: 5px solid #e74c3c;">
-                    <h3>🧠 AI Risk Alerts</h3>
-                    <p style="color:#c0392b;"><b>Jane Doe</b> is at high risk of failing Mathematics. Recommend parent meeting.</p>
-                </div>
+            <div class="card" style="border-color:#e67e22;">
+                <h3>🏆 Merit Lists</h3>
+                <p style="font-size:0.9rem; color:#555;">View class rankings and automated student positions.</p>
+                <a href="#" class="btn-link" style="background:#e67e22;">View Rankings</a>
+            </div>
+            <div class="card" style="border-color:#8e44ad;">
+                <h3>🖨️ Report Cards</h3>
+                <p style="font-size:0.9rem; color:#555;">Generate and print official term performance reports.</p>
+                <a href="report_card_template.html" class="btn-link" style="background:#8e44ad;">Generate Reports</a>
             </div>
         </div>
     </div>
