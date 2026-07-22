@@ -5,7 +5,7 @@ const api = {
     logout: () => { localStorage.clear(); window.location.href = 'index.html'; },
     showNotification: (msg, type='success') => {
         const n = document.createElement('div');
-        n.style.cssText = `position:fixed; top:20px; right:20px; padding:15px 25px; background:${type==='success'?'#27ae60':'#e74c3c'}; color:white; border-radius:8px; z-index:10000; font-weight:bold; font-size:0.85rem; box-shadow:0 4px 15px rgba(0,0,0,0.2);`;
+        n.style.cssText = `position:fixed; top:20px; right:20px; padding:12px 20px; background:${type==='success'?'#27ae60':'#e74c3c'}; color:white; border-radius:8px; z-index:10000; font-weight:bold; font-size:0.85rem; box-shadow:0 4px 15px rgba(0,0,0,0.1);`;
         n.textContent = msg; document.body.appendChild(n); setTimeout(()=>n.remove(), 3000);
     },
     post: async (e, d) => {
@@ -26,42 +26,48 @@ const api = {
 
         sb.style.cssText = "width:220px; height:100vh; background:#2c3e50; color:white; position:fixed; left:0; top:0; display:flex; flex-direction:column; overflow:hidden; z-index:1000;";
         const p = window.location.pathname;
-        const isStd = p.includes('student') || p.includes('class') || p.includes('admission') || p.includes('timetable');
+        
+        const isStd = p.includes('student') || p.includes('class') || p.includes('admission') || p.includes('timetable') || p.includes('analytics');
         const isStf = p.includes('staff') || p.includes('payroll') || p.includes('teaching');
-        const isFin = p.includes('fee') || p.includes('payment') || p.includes('balance');
+        const isFin = p.includes('fee') || p.includes('payment') || p.includes('balance') || p.includes('financial');
         const isAcd = p.includes('academic') || p.includes('mark') || p.includes('exam') || p.includes('subject');
+        const isRep = p.includes('report') || p.includes('attendance');
+        const isSys = p.includes('admin_hub') || p.includes('settings') || p.includes('user');
 
         let menuHtml = '';
-        if (isAcd) {
+
+        if (isStd || isStf || isFin || isAcd || isRep || isSys) {
+            // FOCUS SUB-MENUS
+            let title = isStd ? "Students" : isStf ? "Staff/HR" : isFin ? "Finance" : isAcd ? "Academics" : isRep ? "Reports" : "System Admin";
+            let links = "";
+            if(isStd) links = `<li><a href="student_admission.html">➕ Add Student</a></li><li><a href="student_list.html">📂 Directory</a></li><li><a href="class_management.html">🏫 Classes</a></li><li><a href="timetable.html">📅 Timetables</a></li>`;
+            if(isStf) links = `<li><a href="staff_registration.html">➕ Hire Staff</a></li><li><a href="staff_directory.html">📂 Directory</a></li><li><a href="payroll.html">💰 Payroll</a></li>`;
+            if(isFin) links = `<li><a href="fee_structure.html">📋 Fee Setup</a></li><li><a href="fee_summary.html">📊 Summary</a></li><li><a href="record_payment.html">💰 New Payment</a></li><li><a href="student_balances.html">⚖️ Debtors</a></li>`;
+            if(isAcd) links = `<li><a href="mark_entry.html">✍️ Enter Scores</a></li><li><a href="subject_management.html">📚 Subjects</a></li><li><a href="academic_overview.html">🏆 Merit Lists</a></li>`;
+            if(isRep) links = `<li><a href="financial_reports.html">💰 Financials</a></li><li><a href="attendance_reports.html">📅 Attendance</a></li><li><a href="student_analytics.html">📊 Enrollment</a></li>`;
+            if(isSys) links = `<li><a href="user_management.html">👥 Users</a></li><li><a href="school_settings.html">🏫 Settings</a></li><li><a href="system_admin.html">💾 Audit/Backup</a></li>`;
+
             menuHtml = `
-                <div style="padding:15px; background:#34495e; text-align:center;"><a href="admin_dashboard.html" style="font-weight:bold; color:#3498db; text-decoration:none; font-size:0.8rem;">⬅ BACK HOME</a></div>
-                <div style="padding:20px; flex-grow:1; overflow-y:auto;">
-                    <p style="color:#f1c40f; font-size:0.7rem; font-weight:bold; text-transform:uppercase; margin-bottom:10px;">Academic Center</p>
-                    <ul style="list-style:none; padding:0; font-size:0.85rem; line-height:2.5;">
-                        <li><a href="mark_entry.html" style="color:white; text-decoration:none;">✍️ Enter Scores</a></li>
-                        <li><a href="subject_management.html" style="color:white; text-decoration:none;">📚 Subjects</a></li>
-                        <li><a href="academic_overview.html" style="color:white; text-decoration:none;">🏆 Merit Lists</a></li>
-                        <li><a href="report_card_template.html" style="color:white; text-decoration:none;">🖨️ Report Cards</a></li>
-                    </ul>
+                <div style="padding:15px; background:#34495e; text-align:center;"><a href="admin_dashboard.html" style="font-weight:bold; color:#3498db; text-decoration:none; font-size: 0.8rem;">⬅ BACK HOME</a></div>
+                <div style="padding:20px; overflow-y:auto; flex-grow:1;">
+                    <p style="color:#3498db; font-size:0.7rem; font-weight:bold; text-transform:uppercase; margin-bottom:10px;">${title}</p>
+                    <ul style="list-style:none; padding:0; font-size:0.85rem; line-height:2.2;">${links.replace(/<a /g, '<a style="color:white; text-decoration:none;" ')}</ul>
                 </div>`;
-        } else if (isStd) {
-            menuHtml = `<div style="padding:15px; background:#34495e; text-align:center;"><a href="admin_dashboard.html" style="color:#3498db; text-decoration:none; font-weight:bold; font-size:0.8rem;">⬅ BACK HOME</a></div>
-            <div style="padding:20px; overflow-y:auto; flex-grow:1;"><p style="color:#3498db; font-size:0.7rem; font-weight:bold;">Students</p>
-            <ul style="list-style:none; padding:0; font-size:0.85rem; line-height:2.2;"><li><a href="student_admission.html" style="color:white; text-decoration:none;">➕ Add Student</a></li><li><a href="student_list.html" style="color:white; text-decoration:none;">📂 Directory</a></li><li><a href="class_management.html" style="color:white; text-decoration:none;">🏫 Classes</a></li><li><a href="timetable.html" style="color:white; text-decoration:none;">📅 Timetable</a></li></ul></div>`;
-        } else if (isFin) {
-            menuHtml = `<div style="padding:15px; background:#34495e; text-align:center;"><a href="admin_dashboard.html" style="color:#3498db; text-decoration:none; font-weight:bold; font-size:0.8rem;">⬅ BACK HOME</a></div>
-            <div style="padding:20px; overflow-y:auto; flex-grow:1;"><p style="color:#27ae60; font-size:0.7rem; font-weight:bold;">Finance</p>
-            <ul style="list-style:none; padding:0; font-size:0.85rem; line-height:2.2;"><li><a href="fee_structure.html" style="color:white; text-decoration:none;">📋 Fee Setup</a></li><li><a href="fee_summary.html" style="color:white; text-decoration:none;">📊 Summary</a></li><li><a href="record_payment.html" style="color:white; text-decoration:none;">💰 New Payment</a></li><li><a href="student_balances.html" style="color:white; text-decoration:none;">⚖️ Debtors</a></li></ul></div>`;
         } else {
-            menuHtml = `<div style="padding:20px; border-bottom:1px solid rgba(255,255,255,0.1); text-align:center;"><h2 style="color:#3498db; margin:0; font-size:1.1rem;">Livingstone Academy</h2></div>
-            <ul style="list-style:none; padding:10px 0; overflow-y:auto; flex-grow:1;">
-                <li style="padding:10px 20px;"><a href="admin_dashboard.html" style="color:white; text-decoration:none; font-size:0.85rem;">📊 Dashboard</a></li>
-                <li style="padding:10px 20px;"><a href="student_class_hub.html" style="color:white; text-decoration:none; font-size:0.85rem;">👨‍🎓 Students</a></li>
-                <li style="padding:10px 20px;"><a href="staff_teacher_hub.html" style="color:white; text-decoration:none; font-size:0.85rem;">👨‍🏫 Staff</a></li>
-                <li style="padding:10px 20px;"><a href="fees_accounts_hub.html" style="color:white; text-decoration:none; font-size:0.85rem;">💳 Finance</a></li>
-                <li style="padding:10px 20px;"><a href="academic_overview.html" style="color:white; text-decoration:none; font-size:0.85rem;">📝 Academics</a></li>
-                <li style="padding:10px 20px;"><a href="parents_hub.html" style="color:white; text-decoration:none; font-size:0.85rem;">👪 Parents</a></li>
-            </ul>`;
+            // MAIN 7-ITEM DASHBOARD
+            menuHtml = `
+                <div style="padding:25px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align:center;">
+                    <h2 style="color:#3498db; margin:0; font-size:1.1rem;">Livingstone Academy</h2>
+                </div>
+                <ul style="list-style:none; padding:10px 0; overflow-y:auto; flex-grow:1;">
+                    <li style="padding:10px 20px;"><a href="admin_dashboard.html" style="color:white; text-decoration:none; font-size:0.9rem;">📊 Dashboard</a></li>
+                    <li style="padding:10px 20px;"><a href="student_class_hub.html" style="color:white; text-decoration:none; font-size:0.9rem;">👨‍🎓 Students & Classes</a></li>
+                    <li style="padding:10px 20px;"><a href="staff_teacher_hub.html" style="color:white; text-decoration:none; font-size:0.9rem;">👨‍🏫 Staff & Teachers</a></li>
+                    <li style="padding:10px 20px;"><a href="fees_accounts_hub.html" style="color:white; text-decoration:none; font-size:0.9rem;">💳 Fees & Accounts</a></li>
+                    <li style="padding:10px 20px;"><a href="academic_overview.html" style="color:white; text-decoration:none; font-size:0.9rem;">📝 Academics Hub</a></li>
+                    <li style="padding:10px 20px;"><a href="reports_hub.html" style="color:white; text-decoration:none; font-size:0.9rem;">📈 Reports & Analytics</a></li>
+                    <li style="padding:10px 20px;"><a href="system_admin_hub.html" style="color:white; text-decoration:none; font-size:0.9rem;">⚙️ System Admin</a></li>
+                </ul>`;
         }
 
         sb.innerHTML = `
