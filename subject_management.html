@@ -4,53 +4,61 @@
     <meta charset="UTF-8">
     <title>Subject Management - Livingstone Academy</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #27ae60; --bg: #f4f7f6; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
-        .sidebar { width: 260px; height: 100vh; background: var(--primary); color: white; position: fixed; padding: 20px; }
-        .main { margin-left: 280px; padding: 30px; width: 100%; }
+        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; }
+        body { display:flex; font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; }
+        .sidebar { width: 220px; height: 100vh; background: var(--primary); position: fixed; }
+        .main { margin-left: 220px; flex: 1; padding: 30px; }
         .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
-        .grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
-        input, select { padding: 10px; border: 1px solid #ddd; border-radius: 5px; width: 100%; margin-bottom: 15px; }
-        .btn { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; width: 100%; }
+        input, select { padding: 10px; border: 1px solid #ddd; border-radius: 8px; width: 100%; margin-bottom: 15px; }
+        .btn { background: var(--accent); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
         table { width: 100%; border-collapse: collapse; }
-        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
+        th, td { text-align: left; padding: 10px; border-bottom: 1px solid #eee; }
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <h2>Livingstone</h2>
-        <nav>
-            <p><a href="admin_dashboard.html" style="color:white; text-decoration:none;">🏠 Dashboard</a></p>
-            <p><a href="academic_overview.html" style="color:white; text-decoration:none;">📊 Academics</a></p>
-            <p><b>📚 Subject Management</b></p>
-        </nav>
-    </div>
+    <div class="sidebar"></div>
     <div class="main">
-        <h1>📚 Subject & Curriculum Management</h1>
-        <div class="grid">
+        <h1>📚 Subject Management</h1>
+        <div style="display:grid; grid-template-columns: 1fr 2fr; gap:20px;">
             <div class="card">
-                <h3>Add New Subject</h3>
-                <label>Subject Name</label>
-                <input type="text" placeholder="e.g. Further Mathematics">
-                <label>Subject Code</label>
-                <input type="text" placeholder="e.g. MATH-101">
-                <label>Department</label>
-                <select><option>Science</option><option>Arts</option><option>Mathematics</option></select>
-                <button class="btn" onclick="api.showNotification('Subject Added')">Register Subject</button>
+                <h3>➕ Add New Subject</h3>
+                <label>Name</label><input type="text" id="name" placeholder="e.g. Mathematics">
+                <label>Code</label><input type="text" id="code" placeholder="e.g. MATH-01">
+                <label>Level</label>
+                <select id="level"><option>Pre-School</option><option>Primary</option><option>JHS</option></select>
+                <button class="btn" onclick="save()">Save Subject</button>
             </div>
             <div class="card">
-                <h3>Active School Subjects</h3>
+                <h3>📖 Current Subjects</h3>
                 <table>
-                    <thead><tr><th>Subject Name</th><th>Code</th><th>Dept.</th><th>Actions</th></tr></thead>
-                    <tbody>
-                        <tr><td>English Language</td><td>ENG-101</td><td>Languages</td><td><button>Edit</button></td></tr>
-                        <tr><td>Integrated Science</td><td>SCI-101</td><td>Science</td><td><button>Edit</button></td></tr>
-                        <tr><td>Mathematics</td><td>MATH-101</td><td>Mathematics</td><td><button>Edit</button></td></tr>
-                    </tbody>
+                    <thead><tr><th>Name</th><th>Level</th><th>Action</th></tr></thead>
+                    <tbody id="list"></tbody>
                 </table>
             </div>
         </div>
     </div>
     <script src="api.js"></script>
+    <script>
+        async function load() {
+            const subs = await api.get('/subjects');
+            document.getElementById('list').innerHTML = subs.map(s => `
+                <tr><td><b>${s.name}</b><br><small>${s.code}</small></td>
+                <td>${s.school_level}</td>
+                <td><button onclick="del('${s.id}')" style="color:red; border:none; background:none; cursor:pointer;">Delete</button></td></tr>
+            `).join('');
+        }
+        async function save() {
+            const data = { name: document.getElementById('name').value, code: document.getElementById('code').value, level: document.getElementById('level').value };
+            const res = await api.post('/subjects/add', data);
+            if (res.success) { api.showNotification("Subject Added!"); load(); }
+        }
+        async function del(id) {
+            if (confirm("Delete this subject?")) {
+                const res = await api.post('/subjects/delete', { id });
+                if (res.success) { api.showNotification("Subject Deleted!"); load(); }
+            }
+        }
+        window.onload = load;
+    </script>
 </body>
 </html>
