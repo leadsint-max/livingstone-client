@@ -5,7 +5,7 @@ const api = {
     logout: () => { localStorage.clear(); window.location.href = 'index.html'; },
     showNotification: (msg, type='success') => {
         const n = document.createElement('div');
-        n.style.cssText = `position:fixed; top:20px; right:20px; padding:12px 20px; background:${type==='success'?'#27ae60':'#e74c3c'}; color:white; border-radius:8px; z-index:10000; font-weight:bold; font-size:0.85rem; box-shadow:0 4px 15px rgba(0,0,0,0.1);`;
+        n.style.cssText = `position:fixed; top:20px; right:20px; padding:12px 20px; background:${type==='success'?'#27ae60':'#e74c3c'}; color:white; border-radius:8px; z-index:10000; font-weight:bold; font-size:0.85rem; box-shadow:0 4px 15px rgba(0,0,0,0.2);`;
         n.textContent = msg; document.body.appendChild(n); setTimeout(()=>n.remove(), 3000);
     },
     post: async (e, d) => {
@@ -27,23 +27,25 @@ const api = {
         sb.style.cssText = "width:220px; height:100vh; background:#2c3e50; color:white; position:fixed; left:0; top:0; display:flex; flex-direction:column; overflow:hidden; z-index:1000;";
         const p = window.location.pathname;
         
-        const isStd = p.includes('student') || p.includes('class') || p.includes('admission') || p.includes('timetable') || p.includes('analytics');
+        const isStd = p.includes('student') || p.includes('class') || p.includes('admission') || p.includes('timetable');
         const isStf = p.includes('staff') || p.includes('payroll') || p.includes('teaching');
-        const isFin = p.includes('fee') || p.includes('payment') || p.includes('balance') || p.includes('financial');
-        const isAcd = p.includes('academic') || p.includes('mark') || p.includes('exam') || p.includes('subject');
-        const isRep = p.includes('report') || p.includes('attendance');
+        const isFin = p.includes('fee') || p.includes('payment') || p.includes('balance');
+        const isAcd = p.includes('academic') || p.includes('mark') || p.includes('exam') || p.includes('subject') || p.includes('report_card');
+        const isRep = p.includes('report') && !p.includes('card');
         const isSys = p.includes('admin_hub') || p.includes('settings') || p.includes('user');
 
         let menuHtml = '';
 
         if (isStd || isStf || isFin || isAcd || isRep || isSys) {
-            // FOCUS SUB-MENUS
             let title = isStd ? "Students" : isStf ? "Staff/HR" : isFin ? "Finance" : isAcd ? "Academics" : isRep ? "Reports" : "System Admin";
             let links = "";
             if(isStd) links = `<li><a href="student_admission.html">➕ Add Student</a></li><li><a href="student_list.html">📂 Directory</a></li><li><a href="class_management.html">🏫 Classes</a></li><li><a href="timetable.html">📅 Timetables</a></li>`;
             if(isStf) links = `<li><a href="staff_registration.html">➕ Hire Staff</a></li><li><a href="staff_directory.html">📂 Directory</a></li><li><a href="payroll.html">💰 Payroll</a></li>`;
             if(isFin) links = `<li><a href="fee_structure.html">📋 Fee Setup</a></li><li><a href="fee_summary.html">📊 Summary</a></li><li><a href="record_payment.html">💰 New Payment</a></li><li><a href="student_balances.html">⚖️ Debtors</a></li>`;
-            if(isAcd) links = `<li><a href="mark_entry.html">✍️ Enter Scores</a></li><li><a href="subject_management.html">📚 Subjects</a></li><li><a href="academic_overview.html">🏆 Merit Lists</a></li>`;
+            
+            // CORRECTED ACADEMIC LINKS
+            if(isAcd) links = `<li><a href="mark_entry.html">✍️ Enter Scores</a></li><li><a href="subject_management.html">📚 Subjects</a></li><li><a href="academic_overview.html">🏆 Merit Lists</a></li><li><a href="academic_overview.html">🖨️ Report Cards</a></li>`;
+            
             if(isRep) links = `<li><a href="financial_reports.html">💰 Financials</a></li><li><a href="attendance_reports.html">📅 Attendance</a></li><li><a href="student_analytics.html">📊 Enrollment</a></li>`;
             if(isSys) links = `<li><a href="user_management.html">👥 Users</a></li><li><a href="school_settings.html">🏫 Settings</a></li><li><a href="system_admin.html">💾 Audit/Backup</a></li>`;
 
@@ -54,7 +56,6 @@ const api = {
                     <ul style="list-style:none; padding:0; font-size:0.85rem; line-height:2.2;">${links.replace(/<a /g, '<a style="color:white; text-decoration:none;" ')}</ul>
                 </div>`;
         } else {
-            // MAIN 7-ITEM DASHBOARD
             menuHtml = `
                 <div style="padding:25px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align:center;">
                     <h2 style="color:#3498db; margin:0; font-size:1.1rem;">Livingstone Academy</h2>
