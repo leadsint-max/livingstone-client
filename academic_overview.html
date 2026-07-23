@@ -20,7 +20,13 @@
         <div class="card">
             <h3>🔍 Generate Report Cards</h3>
             <div style="display:flex; gap:10px; margin-bottom:20px;">
-                <select id="cls" style="padding:10px; border-radius:8px; flex:1;"><option value="">-- Select Class --</option><option>Nursery</option><option>Basic 1</option><option>Basic 2</option></select>
+                <select id="cls" style="padding:10px; border-radius:8px; flex:1;">
+                    <option value="">-- Select Class --</option>
+                    <option>Nursery</option><option>K.G.1</option><option>K.G.2</option>
+                    <option>Basic 1</option><option>Basic 2</option><option>Basic 3</option>
+                    <option>Basic 4</option><option>Basic 5</option><option>Basic 6</option>
+                    <option>Basic 7</option><option>Basic 8</option><option>Basic 9</option>
+                </select>
                 <button onclick="load()" style="padding:10px 20px; background:#27ae60; color:white; border:none; border-radius:8px; cursor:pointer;">Generate Class List</button>
             </div>
             <table id="table" style="display:none;">
@@ -36,7 +42,7 @@
             const data = await api.get('/academic/rankings/' + cls);
             document.getElementById('list').innerHTML = data.map(r => `
                 <tr><td><span class="badge">${r.position}</span></td><td><b>${r.first_name} ${r.last_name}</b></td><td>${parseFloat(r.average_score).toFixed(1)}%</td>
-                <td><button onclick="viewReport('${r.admission_no}')" style="cursor:pointer;">🖨️ View Report Card</button></td></tr>`).join('');
+                <td><button onclick="viewReport('${r.admission_no}')" style="cursor:pointer; padding:5px 10px; border-radius:5px; border:1px solid #ddd;">🖨️ View Report</button></td></tr>`).join('') || '<tr><td colspan="4">No students found.</td></tr>';
             document.getElementById('table').style.display = 'table';
         }
         function viewReport(id) { localStorage.setItem('target_student_id', id); window.location.href = 'report_card_template.html'; }
