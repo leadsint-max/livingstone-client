@@ -2,104 +2,88 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Academic Report Card</title>
+    <title>Livingstone Academy Report Card</title>
     <style>
         body { font-family: 'Times New Roman', serif; padding: 20px; background: #eee; }
-        .report-container { background: white; width: 800px; margin: auto; padding: 50px; border: 10px double #2c3e50; min-height: 1000px; }
-        .header { text-align: center; border-bottom: 3px solid #2c3e50; padding-bottom: 10px; margin-bottom: 30px; }
-        .school-name { font-size: 2.2rem; color: #2c3e50; margin: 0; }
-        .student-header { display: flex; gap: 30px; margin-bottom: 30px; align-items: center; }
-        .photo { width: 120px; height: 120px; border: 2px solid #ddd; object-fit: cover; }
-        .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; flex-grow: 1; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #333; padding: 12px; text-align: center; font-size: 1rem; }
-        th { background: #f2f2f2; }
-        .grade-a { color: #27ae60; font-weight: bold; }
-        .grade-f { color: #e74c3c; font-weight: bold; }
-        .footer-sigs { display: flex; justify-content: space-between; margin-top: 60px; text-align: center; }
-        .sig-box { width: 200px; border-top: 1px solid #333; padding-top: 10px; }
-        @media print { body { background: white; padding: 0; } .btn-print { display: none; } .report-container { border: 5px solid #000; box-shadow: none; } }
+        .report-box { background: white; width: 850px; margin: auto; padding: 40px; border: 12px double #2c3e50; position: relative; }
+        .header { text-align: center; border-bottom: 3px solid #2c3e50; padding-bottom: 10px; margin-bottom: 20px; }
+        .meta { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px; font-size: 0.95rem; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #333; padding: 10px; text-align: center; }
+        .finance-box { margin-top: 30px; background: #f9f9f9; padding: 20px; border: 1px solid #ddd; }
+        .btn-print { position: fixed; top: 20px; right: 20px; padding: 15px 30px; background: #27ae60; color: white; border: none; cursor: pointer; border-radius: 8px; font-weight: bold; }
+        @media print { .btn-print { display: none; } body { background: white; padding: 0; } .report-box { border: 5px solid #000; width: 100%; } }
     </style>
 </head>
 <body>
-    <div style="text-align:center; margin-bottom: 20px;">
-        <button class="btn-print" onclick="window.print()" style="padding:10px 25px; cursor:pointer; background:#2c3e50; color:white; border:none; border-radius:5px; font-weight:bold;">🖨️ PRINT REPORT CARD</button>
-    </div>
+    <button class="btn-print" onclick="window.print()">🖨️ PRINT REPORT CARD</button>
 
-    <div class="report-container" id="reportCard">
+    <div class="report-box">
         <div class="header">
-            <h1 class="school-name">LIVINGSTONE ACADEMY</h1>
-            <p style="text-transform:uppercase; letter-spacing:2px;">Terminal Performance Report</p>
+            <h1 style="margin:0;">LIVINGSTONE ACADEMY</h1>
+            <p>Quality Education for Global Excellence</p>
+            <h3 style="text-decoration: underline;">TERMINAL REPORT CARD</h3>
         </div>
 
-        <div class="student-header">
-            <img id="pPhoto" src="https://via.placeholder.com/120" class="photo">
-            <div class="meta-grid">
-                <div><b>Student Name:</b> <span id="pName">...</span></div>
-                <div><b>Academic Year:</b> 2026/2027</div>
-                <div><b>Admission No:</b> <span id="pID">...</span></div>
-                <div><b>Term:</b> First Term</div>
-                <div><b>Class:</b> <span id="pClass">...</span></div>
-                <div style="background:#f9f9f9; padding:5px;"><b>Position:</b> <span id="pPos">...</span></div>
-            </div>
+        <div class="meta">
+            <div><b>Student:</b> <span id="n">...</span></div>
+            <div><b>Admission ID:</b> <span id="id">...</span></div>
+            <div><b>Class:</b> <span id="c">...</span></div>
+            <div><b>Term:</b> First Term, 2026/27</div>
         </div>
 
         <table>
             <thead>
                 <tr>
                     <th style="text-align:left;">Subject</th>
-                    <th>Score (100)</th>
+                    <th>Mid-Term (30)</th>
+                    <th>Exam (70)</th>
+                    <th>Total (100)</th>
                     <th>Grade</th>
                     <th>Remarks</th>
                 </tr>
             </thead>
-            <tbody id="marksBody">
-                <tr><td colspan="4">Loading academic records...</td></tr>
-            </tbody>
+            <tbody id="list"></tbody>
         </table>
 
-        <div style="margin-top:40px;">
-            <p><b>Class Teacher's Remarks:</b> __________________________________________________</p>
-            <p><b>Principal's Remarks:</b> _____________________________________________________</p>
+        <div class="finance-box">
+            <h4 style="margin:0 0 10px 0; text-decoration: underline;">FINANCIAL SUMMARY (GH₵)</h4>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                <div>Previous Arrears: <b id="arr">...</b></div>
+                <div>Next Term Fees: <b>GH₵ 2,500.00</b></div>
+                <div style="grid-column: span 2; font-size:1.1rem; border-top:1px solid #ccc; padding-top:10px;">
+                    Total Amount Due Next Term: <b id="tot">...</b>
+                </div>
+            </div>
         </div>
 
-        <div class="footer-sigs">
-            <div class="sig-box">Class Teacher</div>
-            <div class="sig-box">School Principal</div>
+        <div style="margin-top:30px;">
+            <p><b>Next Term Begins:</b> Monday, 15th September, 2026</p>
+            <p><b>Class Teacher's Signature:</b> ____________________</p>
         </div>
     </div>
 
     <script src="api.js"></script>
     <script>
-        function getGrade(score) {
-            if (score >= 80) return { g: 'A', c: 'grade-a', r: 'Excellent' };
-            if (score >= 70) return { g: 'B', c: '', r: 'Very Good' };
-            if (score >= 60) return { g: 'C', c: '', r: 'Good' };
-            if (score >= 50) return { g: 'D', c: '', r: 'Pass' };
-            return { g: 'F', c: 'grade-f', r: 'Fail' };
-        }
-
-        async function init() {
-            const adm = localStorage.getItem('target_student_id');
-            const data = await api.get('/academic/report-card/' + adm);
+        async function load() {
+            const target = localStorage.getItem('target_student_id');
+            const d = await api.get('/academic/report-card/' + target);
             
-            document.getElementById('pName').textContent = data.student.first_name + " " + data.student.last_name;
-            document.getElementById('pID').textContent = data.student.admission_no;
-            document.getElementById('pClass').textContent = data.student.class_name;
-            document.getElementById('pPhoto').src = data.student.photo || 'https://via.placeholder.com/120';
-            document.getElementById('pPos').textContent = data.position + " out of " + data.student.class_total;
+            document.getElementById('n').textContent = d.student.first_name + " " + d.student.last_name;
+            document.getElementById('id').textContent = d.student.admission_no;
+            document.getElementById('c').textContent = d.student.class_name;
+            document.getElementById('arr').textContent = "GH₵ " + d.student.arrears;
+            
+            const nextFees = 2500;
+            document.getElementById('tot').textContent = "GH₵ " + (parseFloat(d.student.arrears) + nextFees).toLocaleString();
 
-            document.getElementById('marksBody').innerHTML = data.marks.map(m => {
-                const gr = getGrade(m.score);
-                return `<tr>
-                    <td style="text-align:left;"><b>${m.subject_name}</b></td>
-                    <td>${m.score}</td>
-                    <td class="${gr.c}">${gr.g}</td>
-                    <td>${m.remarks || gr.r}</td>
-                </tr>`;
+            document.getElementById('list').innerHTML = d.marks.map(m => {
+                const total = parseFloat(m.mid_term) + parseFloat(m.final_exam);
+                let grade = total >= 80 ? 'A' : (total >= 70 ? 'B' : 'C');
+                return `<tr><td style="text-align:left;">${m.subject_name}</td><td>${m.mid_term}</td><td>${m.final_exam}</td><td><b>${total}</b></td><td>${grade}</td><td>${total >= 50 ? 'Excellent':'Needs Effort'}</td></tr>`;
             }).join('');
         }
-        window.onload = init;
+        window.onload = load;
     </script>
 </body>
 </html>
