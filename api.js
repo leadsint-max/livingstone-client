@@ -39,7 +39,12 @@ const api = {
         if (isStd || isStf || isFin || isAcd || isRep || isSys) {
             let title = isStd ? "Students" : isStf ? "Staff/HR" : isFin ? "Finance" : isAcd ? "Academics" : isRep ? "Reports" : "System Admin";
             let links = "";
-            if(isStd) links = `<li><a href="student_admission.html">➕ Add Student</a></li><li><a href="student_list.html">📂 Directory</a></li><li><a href="class_management.html">🏫 Classes</a></li><li><a href="timetable.html">📅 Timetables</a></li>`;
+           if(isAcd) links = `
+    <li><a href="mark_entry.html">✍️ Enter Scores</a></li>
+    <li><a href="subject_management.html">📚 Subjects</a></li>
+    <li><a href="merit_list.html">🏆 Merit Lists</a></li>
+    <li><a href="report_center.html">🖨️ Report Cards</a></li>
+`;
             if(isStf) links = `<li><a href="staff_registration.html">➕ Hire Staff</a></li><li><a href="staff_directory.html">📂 Directory</a></li><li><a href="payroll.html">💰 Payroll</a></li>`;
             if(isFin) links = `<li><a href="fee_structure.html">📋 Fee Setup</a></li><li><a href="fee_summary.html">📊 Summary</a></li><li><a href="record_payment.html">💰 New Payment</a></li><li><a href="student_balances.html">⚖️ Debtors</a></li>`;
             
