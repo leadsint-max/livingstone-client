@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"><title>Student Directory</title>
+    <meta charset="UTF-8"><title>Student Directory - Livingstone Academy</title>
     <style>
         :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; }
         body { display: flex; font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; }
         .sidebar { width: 220px; height: 100vh; background: var(--primary); position: fixed; }
         .main { margin-left: 220px; flex: 1; padding: 30px; }
-        .search-container { background: white; padding: 20px; border-radius: 12px; display: flex; gap: 10px; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); align-items: center; }
+        .search-container { background: white; padding: 20px; border-radius: 12px; display: flex; gap: 10px; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         input, select { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 8px; }
-        .btn-filter { background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
         .student-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .card { background: white; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-top: 4px solid var(--accent); position: relative; transition: 0.3s; }
-        .photo { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid #eee; margin-bottom: 10px; }
+        .card { background: white; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-top: 4px solid var(--accent); position: relative; }
+        .photo { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; border: 2px solid #eee; }
         .class-badge { background: #e1f5fe; color: #0288d1; padding: 3px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: bold; position: absolute; top: 10px; right: 10px; }
+        .btn-view { width: 100%; padding: 8px; margin-top: 15px; border-radius: 6px; border: 1px solid #ddd; background: #fff; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -21,27 +21,41 @@
     <div class="main">
         <h1>📂 Student Directory</h1>
         <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Search name or ID...">
-            <select id="classFilter">
+            <input type="text" id="searchInput" placeholder="Search by name or ID..." onkeyup="runFilter()">
+            <select id="classFilter" onchange="runFilter()">
                 <option value="">-- All Classes --</option>
                 <option>Nursery</option><option>K.G.1</option><option>K.G.2</option>
                 <option>Basic 1</option><option>Basic 2</option><option>Basic 3</option>
                 <option>Basic 4</option><option>Basic 5</option><option>Basic 6</option>
                 <option>Basic 7</option><option>Basic 8</option><option>Basic 9</option>
             </select>
-            <button class="btn-filter" onclick="filterData()">🔍 Filter Students</button>
         </div>
-        <div class="student-grid" id="container">
-            <p>Select a class and click filter to load students...</p>
-        </div>
+        
+        <div id="statusMessage" style="text-align:center; padding:50px; color:#666;">Loading student database...</div>
+        <div class="student-grid" id="container"></div>
     </div>
     <script src="api.js"></script>
     <script>
-        let allStudents = [];
-        async function loadAll() {
-            allStudents = await api.get('/students');
-            render(allStudents);
+        let masterList = [];
+
+        async function init() {
+            try {
+                // 1. Fetch all students from the database
+                const response = await api.get('/students');
+                
+                if (response && response.length >= 0) {
+                    masterList = response;
+                    render(masterList);
+                    document.getElementById('statusMessage').style.display = 'none';
+                } else {
+                    document.getElementById('statusMessage').textContent = "No students found in the system.";
+                }
+            } catch (err) {
+                document.getElementById('statusMessage').textContent = "Connection failed. Please refresh.";
+                document.getElementById('statusMessage').style.color = "red";
+            }
         }
+
         function render(list) {
             const container = document.getElementById('container');
             container.innerHTML = list.map(s => `
@@ -50,21 +64,34 @@
                     <img src="${s.photo || 'https://via.placeholder.com/80'}" class="photo">
                     <h4 style="margin:0;">${s.first_name} ${s.last_name}</h4>
                     <p style="color:#666; font-size:0.8rem; margin:5px 0;">ID: ${s.admission_no}</p>
-                    <button onclick="localStorage.setItem('view_student_id','${s.admission_no}'); window.location.href='student_profile.html'" style="width:100%; padding:8px; margin-top:10px; cursor:pointer; border-radius:5px; border:1px solid #ddd; background:#fff;">View Profile</button>
-                </div>`).join('') || '<p>No students found for this selection.</p>';
+                    <button class="btn-view" onclick="openProfile('${s.admission_no}')">View Full Profile</button>
+                </div>
+            `).join('');
+            
+            if (list.length === 0 && masterList.length > 0) {
+                container.innerHTML = '<p style="grid-column: span 3; text-align:center; padding:40px;">No students found matching your search.</p>';
+            }
         }
-        function filterData() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
+
+        function runFilter() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
             const cls = document.getElementById('classFilter').value;
-            const filtered = allStudents.filter(s => {
-                const name = (s.first_name + " " + s.last_name).toLowerCase();
-                const matchesSearch = name.includes(query) || s.admission_no.toLowerCase().includes(query);
+            
+            const filtered = masterList.filter(s => {
+                const fullName = (s.first_name + " " + s.last_name).toLowerCase();
+                const matchesSearch = fullName.includes(search) || s.admission_no.toLowerCase().includes(search);
                 const matchesClass = cls === "" || s.class_name === cls;
                 return matchesSearch && matchesClass;
             });
             render(filtered);
         }
-        window.onload = loadAll;
+
+        function openProfile(id) {
+            localStorage.setItem('view_student_id', id);
+            window.location.href = 'student_profile.html';
+        }
+
+        window.onload = init;
     </script>
 </body>
 </html>
