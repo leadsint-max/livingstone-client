@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Student Directory - Livingstone Academy</title>
+    <meta charset="UTF-8"><title>Student Directory</title>
     <style>
         :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; }
         body { display: flex; font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; }
         .sidebar { width: 220px; height: 100vh; background: var(--primary); position: fixed; }
         .main { margin-left: 220px; flex: 1; padding: 30px; }
-        .search-container { background: white; padding: 15px; border-radius: 12px; display: flex; gap: 15px; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        input, select { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem; }
-        .student-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
-        .card { background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-top: 4px solid var(--accent); transition: 0.2s; }
-        .card:hover { transform: translateY(-3px); }
-        .photo { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 12px; border: 2px solid #eee; }
-        .btn-profile { background: var(--accent); color: white; border: none; padding: 8px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; font-size: 0.8rem; margin-top: 10px; }
+        .search-container { background: white; padding: 20px; border-radius: 12px; display: flex; gap: 10px; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); align-items: center; }
+        input, select { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 8px; }
+        .btn-filter { background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .student-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .card { background: white; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-top: 4px solid var(--accent); position: relative; transition: 0.3s; }
+        .photo { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid #eee; margin-bottom: 10px; }
+        .class-badge { background: #e1f5fe; color: #0288d1; padding: 3px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: bold; position: absolute; top: 10px; right: 10px; }
     </style>
 </head>
 <body>
@@ -22,23 +21,24 @@
     <div class="main">
         <h1>📂 Student Directory</h1>
         <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Search by name or ID..." onkeyup="filter()">
-            <select id="classFilter" onchange="filter()">
-                <option value="">All Classes</option>
+            <input type="text" id="searchInput" placeholder="Search name or ID...">
+            <select id="classFilter">
+                <option value="">-- All Classes --</option>
                 <option>Nursery</option><option>K.G.1</option><option>K.G.2</option>
                 <option>Basic 1</option><option>Basic 2</option><option>Basic 3</option>
                 <option>Basic 4</option><option>Basic 5</option><option>Basic 6</option>
                 <option>Basic 7</option><option>Basic 8</option><option>Basic 9</option>
             </select>
+            <button class="btn-filter" onclick="filterData()">🔍 Filter Students</button>
         </div>
         <div class="student-grid" id="container">
-            <p>Loading Students...</p>
+            <p>Select a class and click filter to load students...</p>
         </div>
     </div>
     <script src="api.js"></script>
     <script>
         let allStudents = [];
-        async function load() {
+        async function loadAll() {
             allStudents = await api.get('/students');
             render(allStudents);
         }
@@ -46,25 +46,25 @@
             const container = document.getElementById('container');
             container.innerHTML = list.map(s => `
                 <div class="card">
+                    <span class="class-badge">${s.class_name || 'N/A'}</span>
                     <img src="${s.photo || 'https://via.placeholder.com/80'}" class="photo">
-                    <h4 style="margin:0; font-size:1rem;">${s.first_name} ${s.last_name}</h4>
-                    <p style="color:#666; font-size:0.8rem; margin:5px 0;">ID: ${s.admission_no} | ${s.class_name}</p>
-                    <button class="btn-profile" onclick="viewProfile('${s.admission_no}')">View Profile</button>
-                </div>
-            `).join('') || '<p>No students found.</p>';
+                    <h4 style="margin:0;">${s.first_name} ${s.last_name}</h4>
+                    <p style="color:#666; font-size:0.8rem; margin:5px 0;">ID: ${s.admission_no}</p>
+                    <button onclick="localStorage.setItem('view_student_id','${s.admission_no}'); window.location.href='student_profile.html'" style="width:100%; padding:8px; margin-top:10px; cursor:pointer; border-radius:5px; border:1px solid #ddd; background:#fff;">View Profile</button>
+                </div>`).join('') || '<p>No students found for this selection.</p>';
         }
-        function filter() {
+        function filterData() {
             const query = document.getElementById('searchInput').value.toLowerCase();
             const cls = document.getElementById('classFilter').value;
             const filtered = allStudents.filter(s => {
-                const matchesSearch = (s.first_name + " " + s.last_name).toLowerCase().includes(query) || s.admission_no.toLowerCase().includes(query);
+                const name = (s.first_name + " " + s.last_name).toLowerCase();
+                const matchesSearch = name.includes(query) || s.admission_no.toLowerCase().includes(query);
                 const matchesClass = cls === "" || s.class_name === cls;
                 return matchesSearch && matchesClass;
             });
             render(filtered);
         }
-        function viewProfile(id) { localStorage.setItem('view_student_id', id); window.location.href = 'student_profile.html'; }
-        window.onload = load;
+        window.onload = loadAll;
     </script>
 </body>
 </html>
