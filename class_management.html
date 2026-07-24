@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Class Management - Livingstone Academy</title>
+    <title>Manage Classes - Livingstone Academy</title>
     <style>
         :root { --primary: #2c3e50; --accent: #27ae60; --bg: #f4f7f6; }
         body { display: flex; font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; }
         .sidebar { width: 220px; height: 100vh; background: var(--primary); position: fixed; }
         .main { margin-left: 220px; flex: 1; padding: 30px; }
         .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
-        .grid { display: grid; grid-template-columns: 1.2fr 1.8fr; gap: 20px; }
-        input, select { padding: 10px; border: 1px solid #ddd; border-radius: 6px; width: 100%; margin-bottom: 15px; }
-        .btn { background: var(--accent); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
+        .grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 20px; }
+        input, select { padding: 12px; border: 1px solid #ddd; border-radius: 8px; width: 100%; margin-bottom: 15px; }
+        .btn { background: var(--accent); color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
+        table { width: 100%; border-collapse: collapse; }
         th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
     </style>
 </head>
@@ -22,15 +22,15 @@
         <h1>🏫 Class & Stream Management</h1>
         <div class="grid">
             <div class="card">
-                <h3>➕ Create New Stream</h3>
-                <label>Parent Class</label>
-                <select id="classSelect"><option>Loading...</option></select>
+                <h3>➕ Add New Stream</h3>
+                <label>Select Parent Class</label>
+                <select id="classSelect"><option>Loading Classes...</option></select>
                 
-                <label>Stream Name (e.g. A, Science)</label>
+                <label>Stream Name (e.g. A, B, or Gold)</label>
                 <input type="text" id="streamName" placeholder="e.g. A">
                 
                 <label>Assign Class Teacher</label>
-                <select id="teacherSelect"><option>Loading teachers...</option></select>
+                <select id="teacherSelect"><option>Loading Teachers...</option></select>
                 
                 <label>Max Capacity</label>
                 <input type="number" id="capacity" value="40">
@@ -39,7 +39,7 @@
             </div>
             
             <div class="card">
-                <h3>🌊 Active Streams Directory</h3>
+                <h3>📖 Current School Structure</h3>
                 <table>
                     <thead><tr><th>Class</th><th>Stream</th><th>Teacher</th><th>Cap.</th></tr></thead>
                     <tbody id="streamList"></tbody>
@@ -50,13 +50,13 @@
     <script src="api.js"></script>
     <script>
         async function setup() {
-            // 1. Load the official classes (Nursery to Basic 9)
+            // Load Classes
             const classes = await api.get('/classes');
             document.getElementById('classSelect').innerHTML = classes.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
             
-            // 2. Load the teachers list
-            const staff = await api.get('/staff');
-            document.getElementById('teacherSelect').innerHTML = staff.map(t => `<option value="${t.id}">${t.first_name} ${t.last_name}</option>`).join('') || '<option>No Teachers found</option>';
+            // Load Teachers
+            const teachers = await api.get('/teachers');
+            document.getElementById('teacherSelect').innerHTML = teachers.map(t => `<option value="${t.id}">${t.first_name} ${t.last_name}</option>`).join('') || '<option value="">No Teachers Found</option>';
             
             loadStreams();
         }
@@ -67,9 +67,9 @@
             tbody.innerHTML = streams.map(s => `
                 <tr>
                     <td><b>${s.class_name}</b></td>
-                    <td><span style="color:#3498db; font-weight:bold;">${s.stream_name}</span></td>
-                    <td>${s.first_name} ${s.last_name}</td>
-                    <td>${s.capacity} Students</td>
+                    <td><span style="color:#3498db; font-weight:bold;">Stream ${s.stream_name}</span></td>
+                    <td>${s.first_name ? s.first_name + ' ' + s.last_name : 'Unassigned'}</td>
+                    <td>${s.capacity}</td>
                 </tr>
             `).join('') || '<tr><td colspan="4">No streams created yet.</td></tr>';
         }
@@ -82,7 +82,7 @@
                 teacherId: document.getElementById('teacherSelect').value 
             };
             const res = await api.post('/streams/add', data);
-            if (res.success) { api.showNotification("Stream Created!"); loadStreams(); }
+            if (res.success) { api.showNotification("Stream Created Successfully!"); loadStreams(); }
             else { alert("Error: " + res.error); }
         }
 
